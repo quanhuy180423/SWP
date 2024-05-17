@@ -6,6 +6,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import RegistrationFormv2 from './components/RegistrationFormv2';
 import LoginFormv2 from './components/LoginFormv2';
+//add demo
+// import { GoogleOAuthProvider } from '@react-oauth/google';
+
 const App = () => {
   return (
     <Router>

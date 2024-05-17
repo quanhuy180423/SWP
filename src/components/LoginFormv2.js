@@ -1,11 +1,14 @@
 // src/components/LoginForm.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+//add demo
+// import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -22,8 +25,9 @@ const LoginForm = () => {
 
   const validateForm = () => {
     let formErrors = {};
-    if (!formData.username) formErrors.username = 'Username or Email is required';
-    if (!formData.password) formErrors.password = 'Password is required';
+    if (!formData.username)
+      formErrors.username = "Username or Email is required";
+    if (!formData.password) formErrors.password = "Password is required";
     return formErrors;
   };
 
@@ -38,30 +42,32 @@ const LoginForm = () => {
   };
 
   const goToRegister = () => {
-    navigate('/register');
+    navigate("/register");
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit} className="login-form">
-    
+        <div className="logo-login-form">
+          <img src="./logo.png" alt="logo cua hang" className="logo" />
+        </div>
         <div>
-          <label>Username/Email</label>
           <input
             type="text"
             name="username"
             value={formData.username}
+            placeholder="Username/Email"
             onChange={handleChange}
           />
           {errors.username && <span className="error">{errors.username}</span>}
         </div>
 
         <div>
-          <label>Password</label>
           <input
             type="password"
             name="password"
             value={formData.password}
+            placeholder="Password"
             onChange={handleChange}
           />
           {errors.password && <span className="error">{errors.password}</span>}
@@ -69,13 +75,16 @@ const LoginForm = () => {
 
         {success && <span className="success">Login successful!</span>}
 
-        <button type="submit">Login</button>
-      </form>
+        <div className="login-button">
+          <button type="submit" >Login</button>
+        </div>
+        
 
-      <div className="register-link">
-        <span>Don't have an account?</span>
-        <button onClick={goToRegister}>Register here</button>
-      </div>
+        <div className="register-link">
+          <span>Don't have an account?</span>
+          <button onClick={goToRegister}>Register here</button>
+        </div>
+      </form>
     </div>
   );
 };

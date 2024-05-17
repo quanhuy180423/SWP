@@ -1,5 +1,5 @@
 /* src/styles.css */
-.registration-form, .login-form, .register-link {
+.registration-form, .login-form {
   max-width: 400px;
   margin: 5% auto;
   padding: 1em;
@@ -10,6 +10,8 @@
 
 .registration-form div, .login-form div {
   margin-bottom: 1em;
+  /* display: flex;
+  justify-content: center; */
 }
 
 .registration-form label, .login-form label {
@@ -24,26 +26,41 @@
   font-size: 1em;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 1.2em;
 }
 
-.registration-form button, .login-form button, .register-link button {
+.login-form button{
   padding: 0.7em;
-  color: #fff;
-  background-color: #007BFF;
+  color: #ffffff;
+  background-color: #9baec3;
   border: none;
-  border-radius: .3em;
+  border-radius: 1.2em;
   cursor: pointer;
+  width: 50%;
+  font-size: 15px;
 }
 
-.registration-form button:hover, .login-form button:hover {
-  background-color: #0056b3;
+.login-button {
+    width: 100%;
+    padding: 10px 0;
+    /* background-color: #333; */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.registration-form button:hover, .login-button button:hover {
+  background-color: #000000;
 }
 
 .error{
   color: red;
   font-size: 0.875em;
 }
-.App-title{
+.App-title, .logo-login-form{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,6 +68,20 @@
 
 .register-link{
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+}
+
+.register-link button{
+  background: none;
+    border: none;
+    color: #ded833;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  margin-bottom: 20px;
 }
