@@ -1,17 +1,46 @@
 /* src/styles.css */
-.registration-form, .login-form {
-  max-width: 400px;
-  margin: 5% auto;
-  padding: 1em;
-  border: 1px solid #ccc;
-  border-radius: 1em;
+.mdl-js{
+  background-color: rgb(148, 232, 232);
+}
 
+.login-container{
+  /* background-color: rgb(148, 232, 232); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.login-page{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: 50%; */
+  background-color: #ffffff;
+  padding: 30px;
+  margin: 80px;
+  border-radius: 1.2em;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+ 
+}
+
+.hinhLogin{
+  /* width: 60%; */
+  height: 400px;
+  width: 450px;
+  display: flex;
+  justify-content: center;
+  border-radius: 1.2em;
+  margin-left: 50px;
+}
+
+.login-form{
+  width: 350px;
 }
 
 .registration-form div, .login-form div {
   margin-bottom: 1em;
-  /* display: flex;
-  justify-content: center; */
+
 }
 
 .registration-form label, .login-form label {
@@ -52,8 +81,28 @@
     font-size: 15px;
 }
 
-.registration-form button:hover, .login-button button:hover {
+.login-button button:hover, .register-button button:hover{
   background-color: #000000;
+}
+
+
+
+.register-button{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.register-button button{
+  border-radius: 1.2em;
+  width: 40%;
+  padding: 0.7em;
+  font-weight: 100;
+  display: flex;
+  justify-content: center;
+  border: 0;
+  color: white;
+  background-color: #6f7a7b;
+  font-weight: bold;
 }
 
 .error{
@@ -66,22 +115,63 @@
   align-items: center;
 }
 
-.register-link{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.register-link button{
-  background: none;
-    border: none;
-    color: #ded833;
-    cursor: pointer;
-    text-decoration: underline;
-}
 
 .logo {
   width: 100px;
   height: auto;
   margin-bottom: 20px;
+}
+
+
+/* -------------------------------------REGISTER FORM---------------------------------------------------- */
+.registration-form-container{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* width: 50%; */
+  background-color: #ffffff;
+  padding: 30px;
+  margin: 20px;
+  border-radius: 1.2em;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.registration-form{
+  max-width: 400px;
+}
+.registration-page{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-Registration-form{
+  display: flex;
+  justify-content: center;
+}
+.logo-Registration-form img{
+  width: 75%;
+  display: flex;
+  justify-content: center;
+  border-radius: 1.2em;
+  /* margin-left: 50px; */
+}
+
+.back-button-container, .register-link{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.back-button-container button, .register-link button{
+  border: none;
+  background-color: white;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 20px;
+  color: #000000;
+}
+
+ .register-link button:hover,  .back-button-container button:hover{
+  color: rgb(48, 158, 158);
 }

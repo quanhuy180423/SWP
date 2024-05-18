@@ -46,45 +46,53 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="login-form">
-        <div className="logo-login-form">
-          <img src="./logo.png" alt="logo cua hang" className="logo" />
-        </div>
-        <div>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            placeholder="Username/Email"
-            onChange={handleChange}
-          />
-          {errors.username && <span className="error">{errors.username}</span>}
-        </div>
+    <div className="login-container">
+      <div className="login-page">
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="logo-login-form">
+            <img src="./logo.png" alt="logo cua hang" className="logo" />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              placeholder="Username/Email"
+              onChange={handleChange}
+            />
+            {errors.username && (
+              <span className="error">{errors.username}</span>
+            )}
+          </div>
 
-        <div>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            placeholder="Password"
-            onChange={handleChange}
-          />
-          {errors.password && <span className="error">{errors.password}</span>}
-        </div>
+          <div>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              placeholder="Password"
+              onChange={handleChange}
+            />
+            {errors.password && (
+              <span className="error">{errors.password}</span>
+            )}
+          </div>
 
-        {success && <span className="success">Login successful!</span>}
+          {success && <span className="success">Login successful!</span>}
 
-        <div className="login-button">
-          <button type="submit" >Login</button>
-        </div>
-        
+          <div className="login-button">
+            <button type="submit">Login</button>
+          </div>
+          <div className="register-link">
+            <span>Don't have an account?</span>
+            <button onClick={goToRegister}>Sign up</button>
+          </div>
+        </form>
 
-        <div className="register-link">
-          <span>Don't have an account?</span>
-          <button onClick={goToRegister}>Register here</button>
+        <div className="">
+          <img src="./hinhLogin.png" alt="hinh login" className="hinhLogin" />
         </div>
-      </form>
+      </div>
     </div>
   );
 };
