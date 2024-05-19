@@ -1,7 +1,8 @@
 // src/components/RegistrationForm.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Sử dụng useNavigate thay vì useHistory
-import { FaArrowLeft } from "react-icons/fa"; // Import icon from react-icons
+import { Link } from 'react-router-dom';
+// import { FaArrowLeft } from "react-icons/fa"; // Import icon from react-icons
 
 // import axios from 'axios';
 
@@ -90,7 +91,7 @@ const RegistrationFormv2 = () => {
   };
 
   const handleBackClick = () => {
-    navigate("./login"); // Điều hướng trở lại trang đăng nhập
+    navigate("/login"); // Điều hướng trở lại trang đăng nhập
   };
 
   return (
@@ -99,7 +100,9 @@ const RegistrationFormv2 = () => {
         <div className="registration-form-container">
           <form onSubmit={handleSubmit} className="registration-form">
             <div className="logo-login-form">
+              <Link to={'/'}>
               <img src="./logo.png" alt="logo cua hang" className="logo" />
+              </Link>
             </div>
 
             <div>
@@ -183,7 +186,7 @@ const RegistrationFormv2 = () => {
             </div>
 
             <div className="back-button-container">
-              Already have an account?
+              <span>Already have an account?</span>
               <button className="back-button" onClick={handleBackClick}>
                 Sign in
               </button>

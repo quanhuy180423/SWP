@@ -1,7 +1,7 @@
 // src/components/LoginForm.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from 'react-router-dom';
 //add demo
 // import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -50,7 +50,9 @@ const LoginForm = () => {
       <div className="login-page">
         <form onSubmit={handleSubmit} className="login-form">
           <div className="logo-login-form">
-            <img src="./logo.png" alt="logo cua hang" className="logo" />
+            <Link to={'/'} >
+              <img src="./logo.png" alt="logo cua hang" className="logo" />
+            </Link>
           </div>
           <div>
             <input
