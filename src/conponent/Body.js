@@ -46,85 +46,85 @@ const Body = () => {
 
   return (
     <>
-      <div>
-        <div class="banner">
-          <div class="carousel-container">
-            <div class="carousel">
-              <div class="carousel-item">
+      <div className="body">
+        <div className="banner">
+          <div className="carousel-container">
+            <div className="carousel">
+              <div className="carousel-item">
                 <img src="./img/banner1.png" alt="img 1" />
               </div>
-              <div class="carousel-item">
+              <div className="carousel-item">
                 <img src="./img/banner2.png" alt="img 2" />
               </div>
-              <div class="carousel-item">
+              <div className="carousel-item">
                 <img src="./img/banner3.png" alt="img 3" />
               </div>
-              <div class="carousel-item">
+              <div className="carousel-item">
                 <img src="./img/banner4.png" alt="img 4" />
               </div>
             </div>
-            <button class="prev-button">&#10094;</button>
-            <button class="next-button">&#10095;</button>
+            <button className="prev-button">&#10094;</button>
+            <button className="next-button">&#10095;</button>
           </div>
         </div>
 
-        <div class="products">
-          <div class="product-list">
-            <div class="product">
+        <div className="products">
+          <div className="product-list">
+            <div className="product">
               <a href="/">
                 <img src="./img/product1.jpg" alt="product1" />
               </a>
-              <ul class="product-shot-info">
+              <ul className="product-shot-info">
                 <li>Vàng 24k</li>
                 <li>|</li>
                 <li>NM70</li>
               </ul>
-              <a href="/">
+              <a href="/product">
                 <h4>Nhẫn Cưới Sapphire Xanh NM70</h4>
               </a>
               <span>Giá tiền: </span>
             </div>
 
-            <div class="product">
+            <div className="product">
               <a href="/">
                 <img src="./img/product2.jpg" alt="product2" />
               </a>
-              <ul class="product-shot-info">
+              <ul className="product-shot-info">
                 <li>Vàng 18k</li>
                 <li>|</li>
                 <li>NC65</li>
               </ul>
-              <a href="/">
+              <a href="/product">
                 <h4>Nhẫn Cưới Vintage Vàng 2 Màu NC65</h4>
               </a>
               <span>Giá tiền: </span>
             </div>
 
-            <div class="product">
+            <div className="product">
               <a href="/">
                 <img src="./img/product3.jpg" alt="product3" />
               </a>
-              <ul class="product-shot-info">
+              <ul className="product-shot-info">
                 <li>Vàng 18k</li>
                 <li>|</li>
                 <li>NC68</li>
               </ul>
-              <a href="/">
+              <a href="/product">
                 <h4>Nhẫn Cưới Vintage Vàng 2 Màu NC68</h4>
               </a>
               <span>Giá tiền: </span>
             </div>
 
-            <div class="product">
+            <div className="product">
               <a href="/">
                 <img src="./img/product4.jpg" alt="product4" />
               </a>
-              <ul class="product-shot-info">
+              <ul className="product-shot-info">
                 <li>Vàng hồng 18k</li>
                 <li>|</li>
                 <li>NC67</li>
               </ul>
-              <a href="/">
+              <a href="/product">
                 <h4>Nhẫn Cưới Vàng Hồng Kim Cương NC67</h4>
               </a>
               <span>Giá tiền: </span>

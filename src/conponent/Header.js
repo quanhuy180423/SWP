@@ -1,11 +1,23 @@
-import React from "react";
-import "../css/header.css";
+// src/components/Header.js
+import React, { useState } from 'react';
+import '../css/header.css';
+import AuthPopup from '../page/AuthPopup';
 
 const Header = () => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <div className="header-all">
-      <div class="header">
-        <div class="logo-h3-head">
+      <div className="header">
+        <div className="logo-h3-head">
           <div>
             <img src="./img/diamond.png" alt="logo" />
           </div>
@@ -14,38 +26,40 @@ const Header = () => {
           </div>
         </div>
 
-        <div class="menu-ngang">
-          <div class="search">
-            <div class="search-bar">
+        <div className="menu-ngang">
+          <div className="search">
+            <div className="search-bar">
               <input type="text" placeholder="Tìm kiếm..." />
-              <button class="search-icon">
+              <button className="search-icon">
                 <img src="./img/glass.png" alt="search-icon" />
               </button>
             </div>
           </div>
-          <div class="menu">
+          <div className="menu">
             <a href="/">Trang chủ</a>
             <a href="/">Trang sức</a>
             <a href="/">Kim cương</a>
-            <a href="/">Blog-tin tức</a>
+            <a href="/blog">Blog-tin tức</a>
             <a href="/">Liên hệ</a>
           </div>
         </div>
 
         <div>
-          <div class="user-request">
-            <div class="user">
+          <div className="user-request">
+            <div className="user">
               <img src="./img/profile-user.png" alt="profile" />
-              <a href="/">Tài khoản</a>
+              <button className="openButton" onClick={openPopup}>
+                Tài khoản
+              </button>
             </div>
-            <div class="request">
+            <div className="request">
               <img src="./img/document.png" alt="document" />
-              <a href="/">Đặt gia công</a>
+              <a href="/order-form">Đặt gia công</a>
             </div>
           </div>
         </div>
       </div>
-
+      {isPopupOpen && <AuthPopup onClose={closePopup} />}
     </div>
   );
 };

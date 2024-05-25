@@ -1,8 +1,11 @@
+.body{
+    height: 1200px;
+}
 .banner{
     display: flex;
     justify-content: center;
     align-items: center;
-
+    margin-top: 10px;
 }
 .carousel-container {
         position: relative;

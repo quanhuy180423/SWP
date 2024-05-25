@@ -4,6 +4,7 @@
     background-color: white; /* Thay đổi màu nền nếu cần */
     z-index: 1000; /* Đảm bảo header nằm trên các phần tử khác */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng bóng nếu muốn */
+    padding-bottom: 10px;
 }
 .header{
     display: flex;
@@ -54,19 +55,28 @@
     align-items: center;
 
 }
+.user button{
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    outline: none;
+    color: rgb(141, 140, 140);
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 15px;
+}
 .user-request img{
     width: 20px;
     height: 20px;
     padding: 5px 5px;
     margin-bottom: 5px;
 }
-.user a,.request a{
+.request a{
     text-decoration: none;
     font-size: 15px;
     color: rgb(141, 140, 140);
     font-family: 'Times New Roman', Times, serif;
 }
-.user a:hover, .request a:hover{
+.user button:hover, .request a:hover{
     color: black;
 }
 /* ==================================================================================== */

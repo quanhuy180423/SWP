@@ -1,0 +1,223 @@
+/* src/css/loginForm.css */
+/* src/css/AuthPopup.css */
+
+.auth-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Một lớp mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-popup-content {
+  background-color: #fff; /* Màu nền cho popup */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Hiển thị shadow cho popup */
+  width: 400px; /* Độ rộng của popup */
+  /* max-width: 90%; Độ rộng tối đa là 90% của viewport */
+  height: 600px;
+}
+
+.auth-popup-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+}
+
+.toggle-button.active {
+  background-color: #000000; /* Màu nền cho nút active */
+  color: #fff; /* Màu chữ cho nút active */
+}
+
+.close {
+  cursor: pointer;
+  position: absolute; /* Đặt vị trí tuyệt đối */
+  top: 10px; /* Khoảng cách từ top là 10px */
+  right: 10px; /* Khoảng cách từ right là 10px */
+  font-size: 40px; /* Cỡ chữ */
+}
+
+/* ========================================================================================= */
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.login-form-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-form {
+  width: 95%;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.login-form button {
+  width: 105%;
+  padding: 10px;
+  background-color: #717a84;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #000000;
+}
+
+.login-form p{
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+
+}
+.google-login {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  height: 30px;
+  width: 100%;
+}
+/* ========================================================================================= */
+
+.logo-h3-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo-h3-login img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.logo-h3-login h3 {
+  font-size: 1.8rem;
+  color: #333;
+}
+/* src/css/registrationForm.css */
+
+.registration-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.registration-form-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.registration-form {
+  width: 100%;
+}
+
+.registration-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.registration-form .password-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.registration-form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.registration-form label {
+  margin-right: 10px;
+}
+
+.registration-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.registration-form button:hover {
+  background-color: #0056b3;
+}
+
+.registration-form .agree-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.registration-form .agree-container input {
+  margin-right: 10px;
+}
+
+.registration-form .agree-container label {
+  font-size: 14px;
+  color: #333;
+}
+.gender-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* margin-bottom: 15px; */
+}
+.gender-container label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+.agree-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.agree-container input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  margin-right: 10px;
+  height: 20px;
+  width: 20px;
+}
