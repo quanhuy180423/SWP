@@ -1,0 +1,85 @@
+.body{
+    height: 1200px;
+}
+.banner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+.carousel-container {
+        position: relative;
+        width: 85%; /* Chiều rộng của carousel là 70% của màn hình */
+        height: 60%;
+        /* margin: auto; Canh giữa theo chiều ngang */
+        overflow: hidden;
+    }
+    .carousel {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+    .carousel-item {
+
+        flex: 0 0 100%;         /* Mỗi hình ảnh chiếm 25% của chiều rộng tổng */
+        height: 100%;
+        overflow: hidden;
+        transition: opacity 0.5s ease; /* Thêm hiệu ứng mượt mà cho chuyển đổi */
+    }
+    .carousel-item img {
+        width: 100%;
+        height: auto;
+        /* margin: auto; Canh giữa theo chiều ngang */
+    }
+    .prev-button,
+    .next-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 1;
+    }
+    .prev-button {
+        left: 0;
+    }
+    .next-button {
+        right: 0;
+    }
+    /* =================================================================== */
+    .products{
+        display: flex;
+        justify-content: center;
+        align-items: center
+    }
+    .product-list{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 85%;
+    }
+    .product{
+        width: 30%;
+        border: 0.5px solid #ccc;
+        margin: 5px;
+    }
+    .product ul{
+        text-decoration: none;
+        list-style: none;
+        margin: 5px;
+    }
+    .product-shot-info, .product a{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0;
+        text-decoration: none;
+    }
+    .product img{
+        object-fit: cover;
+        height: 200px;
+        width: 300px;
+    
+    }

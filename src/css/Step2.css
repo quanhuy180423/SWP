@@ -1,0 +1,60 @@
+/* Step2.css */
+.step2-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column
+}
+.form-step2 form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+
+  }
+  
+  .form-step2  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .form-step2 label {
+    display: block;
+    margin-bottom: 10px;
+    color: #666;
+  }
+  
+  .form-step2 select,
+  .form-step2 input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .form-step2 button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .form-step2 button[type="button"] {
+    background-color: #f44336;
+  }
+  
+  .form-step2 button:hover {
+    opacity: 0.8;
+  }
+  

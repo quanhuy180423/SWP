@@ -1,0 +1,105 @@
+/* UserInfo.css */
+
+.infoacc {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu-item {
+    padding: 10px 0;
+    cursor: pointer;
+  }
+  
+  .menu-item:hover {
+    background-color: #ddd;
+  }
+  
+  .login-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .login-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .user-info {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .user-info h3 {
+    margin-top: 0;
+  }
+  
+  .user-info-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 20px;
+    grid-column-gap: 20px;
+  }
+  
+  .form-label {
+    display: block;
+  }
+  
+  .form-label input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .submit-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .submit-button:hover {
+    background-color: #218838;
+  }
+  
+  .orders,
+  .cart {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .orders h3,
+  .cart h3 {
+    margin-top: 0;
+  }
+  
+  .order-list,
+  .cart-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .order-item,
+  .cart-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
