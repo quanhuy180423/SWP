@@ -1,0 +1,66 @@
+/* StepIndicator.css */
+.step-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.step {
+  width: 25%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.step.active .circle {
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
+
+.step .circle {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 50%;
+  background-color: lightgray;
+  margin-bottom: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.step.active .label {
+  color: green;
+}
+
+.step .label {
+  color: gray;
+  transition: color 0.3s;
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 4px;
+  background: lightgray;
+  z-index: 0;
+}
+
+.step.active::before {
+  background: green;
+}
+
+.step:first-child::before {
+  left: calc(50% + 15px);
+  width: calc(100% - 15px);
+}
+
+.step:last-child::before {
+  left: 0;
+  width: calc(50% - 15px);
+}
