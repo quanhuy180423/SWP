@@ -6,7 +6,12 @@ const AuthPopup = ({ onClose }) => {
   const [error, setError] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    // Dữ liệu của form
+    username: "",
+    password: "",
+    fullName: "",
+    phone: "",
+    email: "",
+    address: ""
   });
 
   const handleChange = (e) => {
@@ -19,7 +24,7 @@ const AuthPopup = ({ onClose }) => {
 
   const handleGoogleSuccess = async (tokenResponse) => {
     try {
-      const response = await fetch("http://your-server-address/google-login", {
+      const response = await fetch("http://localhost:8080/google-login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,18 +56,17 @@ const AuthPopup = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLogin) {
-      // Lưu thông tin đăng nhập vào localStorage với key là email và value là password
-      localStorage.setItem(formData.email, formData.password);
-
-      // Giao tiếp với server để thực hiện xác thực người dùng sử dụng key là username hoặc email
       try {
-        const response = await fetch("http://your-server-address/login", {
+        const url = "http://localhost:8081/login"; // Đảm bảo rằng URL này là chính xác trong MockAPI
+        console.log("Login URL:", url);
+
+        const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            usernameOrEmail: formData.email,
+            username: formData.username,
             password: formData.password,
           }),
         });
@@ -71,60 +75,58 @@ const AuthPopup = ({ onClose }) => {
           throw new Error("Login failed!");
         }
 
-        // Xử lý đăng nhập thành công
-        console.log("Login successful!");
+        const data = await response.json();
+        console.log("Login successful!", data);
         onClose();
       } catch (error) {
         setError(error.message);
       }
     } else {
-      // Lưu thông tin đăng ký vào localStorage với key là email và value là họ tên
-      localStorage.setItem(formData.email, formData.fullName);
-
-      // Giao tiếp với server để kiểm tra người dùng đã tồn tại hay chưa bằng cách tìm kiếm username hoặc email
       try {
-        const response = await fetch("http://your-server-address/check-user", {
-          method: "POST",
+        const checkUserUrl = "https://6655a3763c1d3b60293a7722.mockapi.io/api/login/users";
+        console.log("Check User URL:", checkUserUrl);
+
+        const checkUserResponse = await fetch(checkUserUrl, {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usernameOrEmail: formData.email,
-          }),
+          }
         });
 
-        if (!response.ok) {
+        if (!checkUserResponse.ok) {
           throw new Error("Failed to check user!");
         }
 
-        const data = await response.json();
+        const users = await checkUserResponse.json();
+        const userExists = users.some(user => user.email === formData.email);
 
-        if (data.exists) {
-          // Thông báo cho người dùng nếu người dùng đã tồn tại
+        if (userExists) {
           setError("User already exists!");
         } else {
-          // Nếu người dùng chưa tồn tại, thực hiện insert thông tin xuống database
-          const registrationResponse = await fetch(
-            "http://your-server-address/register",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email: formData.email,
-                fullName: formData.fullName,
-                // Các trường thông tin khác của người dùng
-              }),
-            }
-          );
+          const registerUrl = "https://6655a3763c1d3b60293a7722.mockapi.io/api/login/users";
+          console.log("Register URL:", registerUrl);
+
+          const registrationResponse = await fetch(registerUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: formData.username,
+              fullName: formData.fullName,
+              phone: formData.phone,
+              email: formData.email,
+              address: formData.address,
+              password: formData.password,
+            }),
+          });
 
           if (!registrationResponse.ok) {
             throw new Error("Registration failed!");
           }
 
-          // Xử lý đăng ký thành công
-          console.log("Registration successful!");
+          const registrationData = await registrationResponse.json();
+          console.log("Registration successful!", registrationData);
           onClose();
         }
       } catch (error) {
@@ -158,13 +160,12 @@ const AuthPopup = ({ onClose }) => {
 
             <h2>{isLogin ? "Login" : "Register"}</h2>
             <form onSubmit={handleSubmit} className="login-form">
-              {/* Form đăng nhập */}
               {isLogin && (
                 <>
                   <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
+                    type="text"
+                    name="username"
+                    placeholder="Username"
                     onChange={handleChange}
                     required
                   />
@@ -194,9 +195,15 @@ const AuthPopup = ({ onClose }) => {
                 </>
               )}
 
-              {/* Form đăng ký */}
               {!isLogin && (
                 <>
+                  <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    onChange={handleChange}
+                    required
+                  />
                   <input
                     type="text"
                     name="fullName"

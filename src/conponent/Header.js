@@ -37,10 +37,10 @@ const Header = () => {
           </div>
           <div className="menu">
             <a href="/">Trang chủ</a>
-            <a href="/">Trang sức đính kim cương</a>
+            <a href="/">Trang sức</a>
             <a href="/diamondpage">Kim cương viên</a>
             <a href="/blog">Blog-tin tức</a>
-            <a href="/">Liên hệ</a>
+            <a href="/order-form">Đặt hàng</a>
           </div>
         </div>
 
@@ -55,8 +55,8 @@ const Header = () => {
                 Tài khoản
               </button>
             </div>
-            <div className="request">
-              <img src="./img/document.png" alt="document" />
+            <div className="cart">
+              <img src="./img/shopping-bag.png" alt="document" />
               <a href="/order-form">Đặt gia công</a>
             </div>
           </div>
