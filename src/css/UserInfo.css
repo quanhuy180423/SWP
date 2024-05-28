@@ -1,0 +1,190 @@
+/* UserInfo.css */
+.logo-h3-userInfo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 45px;
+}
+.logo-h3-userInfo img{
+  width: 70px;
+  height: 70px;
+}
+.logo-h3-head h3{
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  color: rgb(141, 140, 140);
+  padding-left: 10px;
+}
+/* ================================================================================= */
+.infoAccForm  {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+/* UserInfo.css */
+
+.infoacc {
+  margin: 20px;
+  padding: 20px;
+  /* border: 1px solid #ccc; */
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  width: 20%;
+}
+
+.infoacc h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.menu-user {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-item-user {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #a0a0a0;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.menu-item-user.active {
+  background-color: #000000;
+}
+
+.menu-item-user:hover {
+  background-color: #000000;
+}
+
+.user-info {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 2px solid #ccc;
+  /* border-radius: 10px; */
+  background-color: #f9f9f9;
+  width: 60%;
+}
+
+.user-info-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.form-label input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 95%;
+}
+
+.submit-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #a0a0a0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #000000;
+}
+
+.orders-user, .cart-user {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.order-list-user, .cart-list-user {
+  list-style: none;
+  padding: 0;
+}
+
+.order-item-user, .cart-item-user {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+}
+
+/* Modal Styles */
+.Modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 999;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-button.confirm {
+  background-color: #dc3545;
+  color: white;
+}
+
+.modal-button.cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+.modal-button.confirm:hover {
+  background-color: #c82333;
+}
+
+.modal-button.cancel:hover {
+  background-color: #5a6268;
+}

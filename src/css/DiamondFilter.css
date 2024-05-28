@@ -1,0 +1,89 @@
+/* Container chứa toàn bộ form
+.diamond-filter-form {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+/* Các nhóm form */
+/* .form-group {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-around;
+} */
+
+/* Nhãn cho các input */
+/* .form-label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+} */
+
+/* Input */
+/* .form-input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+} */
+/* 
+.form-input:focus {
+  border-color: #007bff;
+  outline: none;
+} */
+
+/* Checkbox container */
+/* .checkbox-container-diamond-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+} */
+
+/* Checkbox */
+/* .checkbox-container-diamond-filter input[type="checkbox"] {
+  margin-right: 8px;
+} */
+
+/* Checkmark khi checkbox được chọn */
+/* .checkbox-container-diamond-filter input[type="checkbox"] + label::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+  margin-right: 8px;
+  text-align: center;
+  line-height: 16px;
+} */
+
+/* Checkmark Unicode character */
+/* .checkbox-container-diamond-filter input[type="checkbox"]:checked + label::before {
+  content: "\2713"; 
+  color: #007bff;
+  border-color: #007bff;
+} */
+
+/* Submit button */
+/* .submit-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+} */
+
+/* .submit-button:hover {
+  background-color: #0056b3;
+} */ 

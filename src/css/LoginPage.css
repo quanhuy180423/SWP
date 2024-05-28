@@ -1,0 +1,174 @@
+/* LoginPage.css */
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: row;
+  width: 800px;
+  max-width: 90%;
+  overflow: hidden;
+}
+
+.popup-content {
+  padding: 40px;
+  width: 60%;
+  position: relative; /* Thêm position: relative để định vị nút tắt */
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.logo-h3-login {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo-h3-login img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.logo-h3-login h3 {
+  font-size: 1.8rem;
+  color: #333;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form label {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.login-form input {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.login-button {
+  display: flex;
+  justify-content: center;
+}
+
+.login-button button {
+  background: #007BFF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-button button:hover {
+  background: #0056b3;
+}
+
+.google-login {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.google-login-content {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.google-login-content:hover {
+  background: #f5f5f5;
+}
+
+.google-login img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.google-login h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.link-signup {
+  text-align: center;
+  font-size: 1rem;
+  color: #007BFF;
+}
+
+.link-signup a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.link-signup a:hover {
+  text-decoration: underline;
+}
+
+.popup-img-container {
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-right: 20px;
+}
+
+.popup-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1.4em;
+
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
