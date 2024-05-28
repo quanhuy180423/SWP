@@ -50,7 +50,7 @@
     color: black;
 }
 /* ============================================================================== */
-.user,.request{
+.user,.cart{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -77,7 +77,7 @@
     color: rgb(141, 140, 140);
     font-family: 'Times New Roman', Times, serif;
 }
-.user button:hover, .request a:hover{
+.user button:hover, .cart a:hover{
     color: black;
 }
 /* ==================================================================================== */
