@@ -9,7 +9,7 @@
 }
 .carousel-container {
         position: relative;
-        width: 85%; /* Chiều rộng của carousel là 70% của màn hình */
+        width: 90%; /* Chiều rộng của carousel là 70% của màn hình */
         height: 60%;
         /* margin: auto; Canh giữa theo chiều ngang */
         overflow: hidden;

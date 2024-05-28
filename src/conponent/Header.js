@@ -37,8 +37,8 @@ const Header = () => {
           </div>
           <div className="menu">
             <a href="/">Trang chủ</a>
-            <a href="/">Trang sức</a>
-            <a href="/">Kim cương</a>
+            <a href="/">Trang sức đính kim cương</a>
+            <a href="/diamondpage">Kim cương viên</a>
             <a href="/blog">Blog-tin tức</a>
             <a href="/">Liên hệ</a>
           </div>
@@ -47,7 +47,7 @@ const Header = () => {
         <div>
           <div className="user-request">
             <div className="user">
-              <a href="/user">
+              <a href="/userinfo">
                 <img src="./img/profile-user.png" alt="profile" />
               </a>
 

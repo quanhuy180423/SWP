@@ -6,35 +6,17 @@
     "@ckeditor/ckeditor5-adapter-ckfinder": "^41.4.2",
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",
     "@ckeditor/ckeditor5-react": "^7.0.0",
-    "@ckeditor/ckeditor5-upload": "^41.4.2"
-  },
-
-  "name": "login-v1",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
-    "@ckeditor/ckeditor5-react": "^6.3.0",
-    "@fortawesome/fontawesome-svg-core": "^6.5.2",
-    "@fortawesome/free-brands-svg-icons": "^6.5.2",
-    "@fortawesome/free-regular-svg-icons": "^6.5.2",
-    "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "@fortawesome/react-fontawesome": "^0.2.1",
-
+    "@ckeditor/ckeditor5-upload": "^41.4.2",
     "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-
     "axios": "^1.7.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
-
-    "react-icons": "^5.2.1",
-    "react-tooltip": "^5.26.4",
-
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -61,13 +43,7 @@
       "last 1 safari version"
     ]
   },
-
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
-  },
-
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "index.js",
-  "author": "",
-  "license": "ISC"
+  }
 }
