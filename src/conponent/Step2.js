@@ -26,7 +26,7 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
       <form onSubmit={handleSubmit} className="form-step2">
         <h2>Step 2: Material and Category</h2>
         <label>
-          Material:
+          Chất liệu:
           <select
             name="material"
             value={formData.material}
@@ -34,13 +34,13 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
             required
           >
             <option value="">Select</option>
-            <option value="gold">Gold</option>
-            <option value="silver">Silver</option>
-            <option value="platinum">Platinum</option>
+            <option value="gold">Vàng/Gold</option>
+            <option value="silver">Bạc/Silver</option>
+            <option value="platinum">Bạch kim/Platinum</option>
           </select>
         </label>
         <label>
-          Weight:
+          Trọng lượng (chỉ):
           <input
             type="text"
             name="weight"
@@ -50,7 +50,7 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
           />
         </label>
         <label>
-          Size:
+          Kích thước sản phẩm gia công (Ni):
           <input
             type="text"
             name="size"
@@ -60,7 +60,7 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
           />
         </label>
         <label>
-          Category:
+          Thể loại đồ gia công:
           <select
             name="category"
             value={formData.category}
@@ -68,9 +68,9 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
             required
           >
             <option value="">Select</option>
-            <option value="necklace">Necklace</option>
-            <option value="ring">Ring</option>
-            <option value="bracelet">Bracelet</option>
+            <option value="necklace">Vòng cổ/Necklace</option>
+            <option value="ring">Nhẫn/Ring</option>
+            <option value="bracelet">Vòng đeo tay/Bracelet</option>
           </select>
         </label>
         <button type="button" onClick={prevStep}>

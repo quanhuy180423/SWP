@@ -57,9 +57,9 @@ const AuthPopup = ({ onClose }) => {
     e.preventDefault();
     if (isLogin) {
       try {
-        const url = "http://localhost:8081/login"; // Đảm bảo rằng URL này là chính xác trong MockAPI
+        const url = "https://6658c1015c3617052649ba18.mockapi.io/UserAPI/User"; // Đảm bảo rằng URL này là chính xác trong MockAPI
         console.log("Login URL:", url);
-
+        console.log(formData.username, formData.password)
         const response = await fetch(url, {
           method: "POST",
           headers: {

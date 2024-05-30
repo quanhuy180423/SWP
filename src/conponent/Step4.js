@@ -25,10 +25,17 @@ const Step4 = ({
       ...step1Data,
       ...step2Data,
       ...step3Data,
+      richText: richText,
       // Thêm dữ liệu của Step4 nếu cần
     };
+    console.log("Data before submit:", step1Data); // Kiểm tra giá trị của data trước khi gửi đi
+    console.log("Data before submit:", step2Data); // Kiểm tra giá trị của data trước khi gửi đi
+    console.log("Data before submit:", step3Data); // Kiểm tra giá trị của data trước khi gửi đi
+
+    console.log("Data before submit:", data); // Kiểm tra giá trị của data trước khi gửi đi
     // Gọi hàm onSubmit để gửi dữ liệu đi
     onSubmit(data);
+    console.log("Data after submit:", data); // Kiểm tra giá trị của data sau khi gửi đi
   };
 
   return (
@@ -41,6 +48,7 @@ const Step4 = ({
         onChange={handleChange}
       />
 
+      {/* Các bố cấp nhật dữ liệu trong Step4 nếu cần */}
       <button type="button" onClick={prevStep}>
         Back
       </button>
