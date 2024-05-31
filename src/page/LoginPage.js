@@ -9,32 +9,37 @@ const LoginPopup = ({ isOpen, onClose }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
     try {
-      const response = await fetch("http://your-server-address/login", {
-        method: "POST",
+      const response = await fetch("https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
       });
-
+  
       if (!response.ok) {
         throw new Error("Login failed!");
       }
-
-      const data = await response.json();
-
+  
+      const users = await response.json();
+      const user = users.find((user) => user.username === username && user.password === password);
+  
+      if (!user) {
+        throw new Error("Invalid username or password!");
+      }
+  
       // Lưu thông tin người dùng vào localStorage
-      localStorage.setItem("user", JSON.stringify(data));
-
+      localStorage.setItem("user", JSON.stringify(user));
+  
       // Xử lý đăng nhập thành công
-      console.log("Login successful:", data);
+      console.log("Login successful:", user);
       onClose();
     } catch (error) {
       setError(error.message);
     }
   };
+  
 
   const handleGoogleSuccess = async (tokenResponse) => {
     try {

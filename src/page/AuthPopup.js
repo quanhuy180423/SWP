@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { GoogleLogin } from '@react-oauth/google';
 import "../css/Registration.css";
-import { GoogleLogin } from "@react-oauth/google";
 
-const AuthPopup = ({ onClose }) => {
+const AuthPopup = ({ onClose, onLoginSuccess }) => {
   const [error, setError] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ const AuthPopup = ({ onClose }) => {
     fullName: "",
     phone: "",
     email: "",
-    address: ""
+    address: "",
   });
 
   const handleChange = (e) => {
@@ -24,7 +24,7 @@ const AuthPopup = ({ onClose }) => {
 
   const handleGoogleSuccess = async (tokenResponse) => {
     try {
-      const response = await fetch("http://localhost:8080/google-login", {
+      const response = await fetch("http://your-server-address/google-login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,13 +37,8 @@ const AuthPopup = ({ onClose }) => {
       }
 
       const data = await response.json();
-
-      // Lưu thông tin người dùng vào localStorage
       localStorage.setItem("user", JSON.stringify(data));
-
-      // Xử lý đăng nhập thành công
-      console.log("Google login successful:", data);
-      onClose();
+      onLoginSuccess(data);
     } catch (error) {
       setError(error.message);
     }
@@ -55,42 +50,43 @@ const AuthPopup = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isLogin) {
       try {
-        const url = "https://6658c1015c3617052649ba18.mockapi.io/UserAPI/User"; // Đảm bảo rằng URL này là chính xác trong MockAPI
-        console.log("Login URL:", url);
-        console.log(formData.username, formData.password)
+        const url = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
         const response = await fetch(url, {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            username: formData.username,
-            password: formData.password,
-          }),
         });
 
         if (!response.ok) {
           throw new Error("Login failed!");
         }
 
-        const data = await response.json();
-        console.log("Login successful!", data);
-        onClose();
+        const users = await response.json();
+        const user = users.find(
+          (user) => user.username === formData.username && user.password === formData.password
+        );
+
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+          onLoginSuccess(user);
+        } else {
+          setError("Invalid username or password!");
+        }
       } catch (error) {
         setError(error.message);
       }
     } else {
       try {
-        const checkUserUrl = "https://6655a3763c1d3b60293a7722.mockapi.io/api/login/users";
-        console.log("Check User URL:", checkUserUrl);
-
+        const checkUserUrl = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
         const checkUserResponse = await fetch(checkUserUrl, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-          }
+          },
         });
 
         if (!checkUserResponse.ok) {
@@ -98,14 +94,12 @@ const AuthPopup = ({ onClose }) => {
         }
 
         const users = await checkUserResponse.json();
-        const userExists = users.some(user => user.email === formData.email);
+        const userExists = users.some((user) => user.email === formData.email);
 
         if (userExists) {
           setError("User already exists!");
         } else {
-          const registerUrl = "https://6655a3763c1d3b60293a7722.mockapi.io/api/login/users";
-          console.log("Register URL:", registerUrl);
-
+          const registerUrl = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
           const registrationResponse = await fetch(registerUrl, {
             method: "POST",
             headers: {
@@ -126,8 +120,8 @@ const AuthPopup = ({ onClose }) => {
           }
 
           const registrationData = await registrationResponse.json();
-          console.log("Registration successful!", registrationData);
-          onClose();
+          localStorage.setItem("user", JSON.stringify(registrationData));
+          onLoginSuccess(registrationData);
         }
       } catch (error) {
         setError(error.message);
@@ -184,17 +178,8 @@ const AuthPopup = ({ onClose }) => {
                       onError={handleGoogleFailure}
                     />
                   </div>
-                  <div className="logo-h3-login">
-                    <div>
-                      <img src="./img/diamond.png" alt="logo" />
-                    </div>
-                    <div>
-                      <h3>Sun Shine</h3>
-                    </div>
-                  </div>
                 </>
               )}
-
               {!isLogin && (
                 <>
                   <input
@@ -232,39 +217,17 @@ const AuthPopup = ({ onClose }) => {
                     onChange={handleChange}
                     required
                   />
-                  <div className="password-container">
-                    <input
-                      type="password"
-                      name="password"
-                      placeholder="Password"
-                      onChange={handleChange}
-                      required
-                    />
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      placeholder="Confirm Password"
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="gender-container">
-                    {/* Các trường khác */}
-                  </div>
-                  <label className="agree-container">
-                    {/* Checkbox đồng ý */}
-                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleChange}
+                    required
+                  />
                   <button type="submit">Register</button>
-                  <div className="logo-h3-login">
-                    <div>
-                      <img src="./img/diamond.png" alt="logo" />
-                    </div>
-                    <div>
-                      <h3>Sun Shine</h3>
-                    </div>
-                  </div>
                 </>
               )}
+              {error && <p className="error">{error}</p>}
             </form>
           </div>
         </div>

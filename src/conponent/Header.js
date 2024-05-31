@@ -1,10 +1,27 @@
-// src/components/Header.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/header.css";
 import AuthPopup from "../page/AuthPopup";
 
 const Header = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+    setIsPopupOpen(false);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
 
   const openPopup = () => {
     setIsPopupOpen(true);
@@ -47,13 +64,22 @@ const Header = () => {
         <div>
           <div className="user-request">
             <div className="user">
-              <a href="/userinfo">
-                <img src="./img/profile-user.png" alt="profile" />
-              </a>
-
-              <button className="openButton" onClick={openPopup}>
-                Tài khoản
-              </button>
+              {user ? (
+                <div className="profile-menu">
+                  <a href="/userinfo">
+                    <img src="./img/profile-user.png" alt="profile" />
+                    {user.fullName} {/* Hiển thị tên người dùng */}
+                  </a>
+                  <button onClick={handleLogout}>Logout</button>
+                </div>
+              ) : (
+                <div>
+                  <img src="./img/profile-user.png" alt="profile" />
+                  <button className="openButton" onClick={openPopup}>
+                    Tài khoản
+                  </button>
+                </div>
+              )}
             </div>
             <div className="cart">
               <img src="./img/shopping-bag.png" alt="document" />
@@ -62,7 +88,9 @@ const Header = () => {
           </div>
         </div>
       </div>
-      {isPopupOpen && <AuthPopup onClose={closePopup} />}
+      {isPopupOpen && (
+        <AuthPopup onClose={closePopup} onLoginSuccess={handleLoginSuccess} />
+      )}
     </div>
   );
 };
