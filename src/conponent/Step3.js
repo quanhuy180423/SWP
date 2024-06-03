@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import '../css/Step3.css';
-import ResultsTable from '../conponent/Resultstable'; // Đảm bảo bạn import đúng đường dẫn
+import ResultsTable from './Resultstable'; // Ensure correct path
 
 const Step3 = ({ nextStep, prevStep, updateFormData }) => {
   const [formData, setFormData] = useState({
@@ -47,7 +46,6 @@ const Step3 = ({ nextStep, prevStep, updateFormData }) => {
       setResults([]);
     }
   };
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,65 +53,75 @@ const Step3 = ({ nextStep, prevStep, updateFormData }) => {
   };
 
   return (
-    <div>
-      <form className="form-step3" onSubmit={handleSearch}>
-        <h2>Step 3: Chi tiết kim cương</h2>
-        <label>
+    <div className="flex justify-center items-center flex-col">
+      <form className="bg-gray-100 p-6 rounded-lg shadow-md w-2/6 mx-auto" onSubmit={handleSearch}>
+        <h2 className="text-center mb-5 text-2xl text-gray-800">Step 3: Chi tiết kim cương</h2>
+        <label className="block mb-4 text-gray-600">
           Màu sắc:
-          <input type="text" name="color" value={formData.color} onChange={handleChange} required />
-          {/* <select name="color" value={formData.color} onChange={handleChange} required>
-            <option value="">Chọn</option>
-            {[...'DEFGHIJKLM'].map((char) => (
-              <option key={char} value={char}>{char}</option>
-            ))}
-          </select> */}
+          <input 
+            type="text" 
+            name="color" 
+            value={formData.color} 
+            onChange={handleChange} 
+            required 
+            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
+          />
         </label>
-        <label>
+        <label className="block mb-4 text-gray-600">
           Độ trong:
-          <input type="text" name="clarity" value={formData.clarity} onChange={handleChange} required />
-          {/* <select name="clarity" value={formData.clarity} onChange={handleChange} required>
-            <option value="">Chọn</option>
-            <option value="FL">FL</option>
-            <option value="IF">IF</option>
-            <option value="VVS1">VVS1</option>
-            <option value="VVS2">VVS2</option>
-            <option value="SI1">SI1</option>
-            <option value="SI2">SI2</option>
-            <option value="SI3">SI3</option>
-            <option value="I1">I1</option>
-            <option value="I2">I2</option>
-            <option value="I3">I3</option>
-          </select> */}
+          <input 
+            type="text" 
+            name="clarity" 
+            value={formData.clarity} 
+            onChange={handleChange} 
+            required 
+            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
+          />
         </label>
-        <label>
+        <label className="block mb-4 text-gray-600">
           Giác cắt:
-          <input type="text" name="cut" value={formData.cut} onChange={handleChange} required />
-          {/* <select name="cut" value={formData.cut} onChange={handleChange} required>
-            <option value="">Chọn</option>
-            <option value="Excellent">Xuất sắc</option>
-            <option value="Very Good">Rất tốt</option>
-            <option value="Good">Tốt</option>
-            <option value="Fair">Khá</option>
-            <option value="Poor">Kém</option>
-          </select> */}
+          <input 
+            type="text" 
+            name="cut" 
+            value={formData.cut} 
+            onChange={handleChange} 
+            required 
+            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
+          />
         </label>
-        <label>
+        <label className="block mb-4 text-gray-600">
           Carat:
-          <input type="text" name="carat" value={formData.carat} onChange={handleChange} required />
+          <input 
+            type="text" 
+            name="carat" 
+            value={formData.carat} 
+            onChange={handleChange} 
+            required 
+            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
+          />
         </label>
-        
-        <div className="search-button-container">
-          <button type="submit">Tìm kiếm</button>
+        <div className="text-center mb-5">
+          <button type="submit" className="bg-gray-800 text-white py-2 px-4 rounded-lg hover:opacity-80">Tìm kiếm</button>
         </div>
-        
-        <div className="navigation-buttons">
-          <button type="button" onClick={prevStep}>Trở lại</button>
-          <button type="button" onClick={handleSubmit}>Tiếp tục</button>
+        <div className="flex justify-between">
+          <button 
+            type="button" 
+            onClick={prevStep} 
+            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+          >
+            Trở lại
+          </button>
+          <button 
+            type="button" 
+            onClick={handleSubmit} 
+            className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+          >
+            Tiếp tục
+          </button>
         </div>
       </form>
-      {error && <p className="error">{error}</p>}
+      {error && <p className="text-red-500 text-center mt-4">{error}</p>}
       {results.length > 0 && <ResultsTable results={results} />}
-      
     </div>
   );
 };

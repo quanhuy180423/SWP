@@ -4,7 +4,7 @@ import Step2 from "../conponent/Step2";
 import Step3 from "../conponent/Step3";
 import Step4 from "../conponent/Step4";
 import StepIndicator from "../conponent/StepIndicator";
-import Header from "../conponent/Header";
+// import Header from "../conponent/Header";
 
 const OrderForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -87,7 +87,7 @@ const OrderForm = () => {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <StepIndicator currentStep={currentStep} />
       {renderStep()}
     </div>

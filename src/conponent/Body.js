@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-// import { initializeCarousel } from "./CarouselForBody";
-import "../css/body.css";
+// import "../css/body.css";
 
 const Body = () => {
   useEffect(() => {
@@ -45,94 +44,114 @@ const Body = () => {
   }, []);
 
   return (
-    <>
-      <div className="body">
-        <div className="banner">
-          <div className="carousel-container">
-            <div className="carousel">
-              <div className="carousel-item">
+    <div className="body min-h-screen bg-gray-100">
+      <div >
+        <div className="banner flex justify-center items-center">
+          <div className="carousel-container w-3/4 relative overflow-hidden">
+            <div className="carousel flex transition-transform duration-500 ease-in-out">
+              <div className="carousel-item flex-none w-full">
                 <img src="./img/banner1.png" alt="img 1" />
               </div>
-              <div className="carousel-item">
+              <div className="carousel-item flex-none w-full">
                 <img src="./img/banner2.png" alt="img 2" />
               </div>
-              <div className="carousel-item">
+              <div className="carousel-item flex-none w-full">
                 <img src="./img/banner3.png" alt="img 3" />
               </div>
-              <div className="carousel-item">
+              <div className="carousel-item flex-none w-full">
                 <img src="./img/banner4.png" alt="img 4" />
               </div>
             </div>
-            <button className="prev-button">&#10094;</button>
-            <button className="next-button">&#10095;</button>
-          </div>
-        </div>
-
-        <div className="products">
-          <div className="product-list">
-            <div className="product">
-              <a href="/">
-                <img src="./img/product1.jpg" alt="product1" />
-              </a>
-              <ul className="product-shot-info">
-                <li>Vàng 24k</li>
-                <li>|</li>
-                <li>NM70</li>
-              </ul>
-              <a href="/product">
-                <h4>Nhẫn Cưới Sapphire Xanh NM70</h4>
-              </a>
-              <span>Giá tiền: </span>
-            </div>
-
-            <div className="product">
-              <a href="/">
-                <img src="./img/product2.jpg" alt="product2" />
-              </a>
-              <ul className="product-shot-info">
-                <li>Vàng 18k</li>
-                <li>|</li>
-                <li>NC65</li>
-              </ul>
-              <a href="/product">
-                <h4>Nhẫn Cưới Vintage Vàng 2 Màu NC65</h4>
-              </a>
-              <span>Giá tiền: </span>
-            </div>
-
-            <div className="product">
-              <a href="/">
-                <img src="./img/product3.jpg" alt="product3" />
-              </a>
-              <ul className="product-shot-info">
-                <li>Vàng 18k</li>
-                <li>|</li>
-                <li>NC68</li>
-              </ul>
-              <a href="/product">
-                <h4>Nhẫn Cưới Vintage Vàng 2 Màu NC68</h4>
-              </a>
-              <span>Giá tiền: </span>
-            </div>
-
-            <div className="product">
-              <a href="/">
-                <img src="./img/product4.jpg" alt="product4" />
-              </a>
-              <ul className="product-shot-info">
-                <li>Vàng hồng 18k</li>
-                <li>|</li>
-                <li>NC67</li>
-              </ul>
-              <a href="/product">
-                <h4>Nhẫn Cưới Vàng Hồng Kim Cương NC67</h4>
-              </a>
-              <span>Giá tiền: </span>
-            </div>
+            <button className="prev-button absolute top-1/2 transform -translate-y-1/2 left-0 bg-black text-white py-2 px-3">
+              &#10094;
+            </button>
+            <button className="next-button absolute top-1/2 transform -translate-y-1/2 right-0 bg-black text-white py-2 px-3">
+              &#10095;
+            </button>
           </div>
         </div>
       </div>
-    </>
+
+      <div className="products flex justify-center items-center">
+        <div className="product-list w-3/4 flex justify-center items-center">
+          <div className="product w-1/4 border-2 border-gray-300 m-5">
+            <a href="/">
+              <img
+                src="./img/product1.jpg"
+                alt="product1"
+                className="w-full h-auto"
+              />
+            </a>
+            <ul className="product-shot-info flex justify-between items-center p-2">
+              <li>Vàng 24k</li>
+              <li>|</li>
+              <li>NM70</li>
+            </ul>
+            <a href="/product" className="block text-center p-2">
+              <h4>Nhẫn Cưới Sapphire Xanh NM70</h4>
+            </a>
+            <span className="block text-center p-2">Giá tiền: </span>
+          </div>
+
+          <div className="product w-1/4 border-2 border-gray-300 m-5">
+            <a href="/">
+              <img
+                src="./img/product2.jpg"
+                alt="product2"
+                className="w-full h-auto"
+              />
+            </a>
+            <ul className="product-shot-info flex justify-between items-center p-2">
+              <li>Vàng 18k</li>
+              <li>|</li>
+              <li>NC65</li>
+            </ul>
+            <a href="/product" className="block text-center p-2">
+              <h4>Nhẫn Cưới Vintage Vàng 2 Màu NC65</h4>
+            </a>
+            <span className="block text-center p-2">Giá tiền: </span>
+          </div>
+
+          <div className="product w-1/4 border-2 border-gray-300 m-5">
+            <a href="/">
+              <img
+                src="./img/product3.jpg"
+                alt="product3"
+                className="w-full h-auto"
+              />
+            </a>
+            <ul className="product-shot-info flex justify-between items-center p-2">
+              <li>Vàng 18k</li>
+              <li>|</li>
+              <li>NC68</li>
+            </ul>
+            <a href="/product" className="block text-center p-2">
+              <h4>Nhẫn Cưới Vintage Vàng 2 Màu NC68</h4>
+            </a>
+            <span className="block text-center p-2">Giá tiền: </span>
+          </div>
+
+          <div className="product w-1/4 border-2 border-gray-300 m-5">
+            <a href="/">
+              <img
+                src="./img/product4.jpg"
+                alt="product4"
+                className="w-full h-auto"
+              />
+            </a>
+            <ul className="product-shot-info flex justify-between items-center p-2">
+              <li>Vàng hồng 18k</li>
+              <li>|</li>
+              <li>NC67</li>
+            </ul>
+            <a href="/product" className="block text-center p-2">
+              <h4>Nhẫn Cưới Vàng Hồng Kim Cương NC67</h4>
+            </a>
+            <span className="block text-center p-2">Giá tiền: </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

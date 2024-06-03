@@ -50,7 +50,7 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (isLogin) {
       try {
         const url = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
@@ -60,18 +60,19 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
             "Content-Type": "application/json",
           },
         });
-
+  
         if (!response.ok) {
           throw new Error("Login failed!");
         }
-
+  
         const users = await response.json();
         const user = users.find(
           (user) => user.username === formData.username && user.password === formData.password
         );
-
+  
         if (user) {
-          localStorage.setItem("user", JSON.stringify(user));
+          // Lưu ID của người dùng làm khóa và các thông tin khác làm giá trị
+          localStorage.setItem(user.id, JSON.stringify(user));
           onLoginSuccess(user);
         } else {
           setError("Invalid username or password!");
@@ -88,14 +89,14 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
             "Content-Type": "application/json",
           },
         });
-
+  
         if (!checkUserResponse.ok) {
           throw new Error("Failed to check user!");
         }
-
+  
         const users = await checkUserResponse.json();
         const userExists = users.some((user) => user.email === formData.email);
-
+  
         if (userExists) {
           setError("User already exists!");
         } else {
@@ -114,13 +115,14 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
               password: formData.password,
             }),
           });
-
+  
           if (!registrationResponse.ok) {
             throw new Error("Registration failed!");
           }
-
+  
           const registrationData = await registrationResponse.json();
-          localStorage.setItem("user", JSON.stringify(registrationData));
+          // Lưu ID của người dùng làm khóa và các thông tin khác làm giá trị
+          localStorage.setItem(registrationData.id, JSON.stringify(registrationData));
           onLoginSuccess(registrationData);
         }
       } catch (error) {
@@ -128,6 +130,8 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
       }
     }
   };
+  
+  
 
   return (
     <>
