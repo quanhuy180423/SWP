@@ -50,88 +50,89 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (isLogin) {
       try {
-        const url = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
+        const url = "http://localhost:8080/test/login";
         const response = await fetch(url, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         });
-  
+
         if (!response.ok) {
           throw new Error("Login failed!");
         }
-  
-        const users = await response.json();
-        const user = users.find(
-          (user) => user.username === formData.username && user.password === formData.password
-        );
-  
-        if (user) {
+
+        // const users = await response.json();
+        // const user = users.find(
+        //   (user) => user.username === formData.username && user.password === formData.password
+        // );
+        const successLogin = await response.json();
+        if (successLogin.status === "success") {
           // Lưu ID của người dùng làm khóa và các thông tin khác làm giá trị
-          localStorage.setItem(user.id, JSON.stringify(user));
-          onLoginSuccess(user);
+          // localStorage.setItem(user.id, JSON.stringify(user));
+          // onLoginSuccess(user);
         } else {
           setError("Invalid username or password!");
         }
       } catch (error) {
         setError(error.message);
       }
-    } else {
-      try {
-        const checkUserUrl = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
-        const checkUserResponse = await fetch(checkUserUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-  
-        if (!checkUserResponse.ok) {
-          throw new Error("Failed to check user!");
-        }
-  
-        const users = await checkUserResponse.json();
-        const userExists = users.some((user) => user.email === formData.email);
-  
-        if (userExists) {
-          setError("User already exists!");
-        } else {
-          const registerUrl = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
-          const registrationResponse = await fetch(registerUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: formData.username,
-              fullName: formData.fullName,
-              phone: formData.phone,
-              email: formData.email,
-              address: formData.address,
-              password: formData.password,
-            }),
-          });
-  
-          if (!registrationResponse.ok) {
-            throw new Error("Registration failed!");
-          }
-  
-          const registrationData = await registrationResponse.json();
-          // Lưu ID của người dùng làm khóa và các thông tin khác làm giá trị
-          localStorage.setItem(registrationData.id, JSON.stringify(registrationData));
-          onLoginSuccess(registrationData);
-        }
-      } catch (error) {
-        setError(error.message);
-      }
     }
+    //  else {
+    //   try {
+    //     const checkUserUrl = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
+    //     const checkUserResponse = await fetch(checkUserUrl, {
+    //       method: "GET",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     });
+
+    //     if (!checkUserResponse.ok) {
+    //       throw new Error("Failed to check user!");
+    //     }
+
+    //     const users = await checkUserResponse.json();
+    //     const userExists = users.some((user) => user.email === formData.email);
+
+    //     if (userExists) {
+    //       setError("User already exists!");
+    //     } else {
+    //       const registerUrl = "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
+    //       const registrationResponse = await fetch(registerUrl, {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           username: formData.username,
+    //           fullName: formData.fullName,
+    //           phone: formData.phone,
+    //           email: formData.email,
+    //           address: formData.address,
+    //           password: formData.password,
+    //         }),
+    //       });
+
+    //       if (!registrationResponse.ok) {
+    //         throw new Error("Registration failed!");
+    //       }
+
+    //       const registrationData = await registrationResponse.json();
+    //       // Lưu ID của người dùng làm khóa và các thông tin khác làm giá trị
+    //       localStorage.setItem(registrationData.id, JSON.stringify(registrationData));
+    //       onLoginSuccess(registrationData);
+    //     }
+    //   } catch (error) {
+    //     setError(error.message);
+    //   }
+    // }
   };
-  
-  
+
+
 
   return (
     <>
