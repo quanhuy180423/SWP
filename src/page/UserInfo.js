@@ -1,8 +1,6 @@
-
-
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import axios from 'axios';
+import axios from "axios";
 
 Modal.setAppElement("#root");
 
@@ -25,18 +23,19 @@ const UserInfo = () => {
       const userId = localStorage.getItem("id"); // Assuming user ID is stored in localStorage
       console.log("User ID:", userId);
       if (userId) {
-        
         try {
-          const response = await axios.get(`https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User/${userId}`);
+          const response = await axios.get(
+            `https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User/${userId}`
+          );
           setUser(response.data);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
-      }else{
+      } else {
         console.error("User ID not found in localStorage");
       }
     };
-    
+
     fetchUserData();
   }, []);
 
@@ -68,7 +67,10 @@ const UserInfo = () => {
     const userId = localStorage.getItem("userId");
     console.log("User ID:", userId);
     try {
-      await axios.put(`https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User/${userId}`, user);
+      await axios.put(
+        `https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User/${userId}`,
+        user
+      );
       setIsUpdateModalOpen(false);
       alert("Thông tin người dùng đã được cập nhật!");
     } catch (error) {
@@ -217,38 +219,54 @@ const UserInfo = () => {
 
             {activeSection === "orders" && (
               <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+                <h3 className="text-4xl font-semibold text-gray-800 mb-4 flex justify-center">
                   Đơn hàng
                 </h3>
-                <ul className="space-y-2">
-                  {orders.map((order, index) => (
-                    <li
-                      key={index}
-                      className="bg-blue-500 text-white p-2 rounded-md"
-                    >
-                      {order}
-                    </li>
-                  ))}
-                </ul>
+                {cart.length === 0 ? (
+                  <img
+                    src="./img/empty-cart-shopping.png"
+                    alt="Empty cart"
+                    className="mx-auto"
+                  />
+                ) : (
+                  <ul className="space-y-2">
+                    {cart.map((item, index) => (
+                      <li
+                        key={index}
+                        className="bg-blue-500 text-white p-2 rounded-md"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
 
             {activeSection === "cart" && (
               <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+                <h3 className="text-4xl font-semibold text-gray-800 mb-4 flex justify-center">
                   Giỏ hàng
                 </h3>
-                
-                <ul className="space-y-2">
-                  {cart.map((item, index) => (
-                    <li
-                      key={index}
-                      className="bg-blue-500 text-white p-2 rounded-md"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+
+                {cart.length === 0 ? (
+                  <img
+                    src="./img/empty-cart-shopping.png"
+                    alt="Empty cart"
+                    className="mx-auto"
+                  />
+                ) : (
+                  <ul className="space-y-2">
+                    {cart.map((item, index) => (
+                      <li
+                        key={index}
+                        className="bg-blue-500 text-white p-2 rounded-md"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
           </div>
@@ -262,7 +280,9 @@ const UserInfo = () => {
           overlayClassName="Overlay"
         >
           <div className="p-5 bg-white">
-            <h2 className="text-2xl font-semibold flex justify-center">Đăng xuất</h2>
+            <h2 className="text-2xl font-semibold flex justify-center">
+              Đăng xuất
+            </h2>
             <p className="mt-2">Bạn có chắc chắn muốn đăng xuất không?</p>
             <div className="mt-4 flex justify-between">
               <button
@@ -289,8 +309,12 @@ const UserInfo = () => {
           overlayClassName="Overlay"
         >
           <div className="p-5 bg-white">
-            <h2 className="text-2xl font-semibold flex justify-center">Cập nhật thông tin</h2>
-            <p className="mt-2">Bạn có chắc chắn muốn cập nhật thông tin không?</p>
+            <h2 className="text-2xl font-semibold flex justify-center">
+              Cập nhật thông tin
+            </h2>
+            <p className="mt-2">
+              Bạn có chắc chắn muốn cập nhật thông tin không?
+            </p>
             <div className="mt-4 flex justify-between">
               <button
                 onClick={handleConfirmUpdate}

@@ -45,9 +45,9 @@ const Body = () => {
 
   return (
     <div className="body min-h-screen bg-gray-100">
-      <div >
+      <div>
         <div className="banner flex justify-center items-center">
-          <div className="carousel-container w-3/4 relative overflow-hidden">
+          <div className="carousel-container  relative overflow-hidden">
             <div className="carousel flex transition-transform duration-500 ease-in-out">
               <div className="carousel-item flex-none w-full">
                 <img src="./img/banner1.png" alt="img 1" />
@@ -62,10 +62,10 @@ const Body = () => {
                 <img src="./img/banner4.png" alt="img 4" />
               </div>
             </div>
-            <button className="prev-button absolute top-1/2 transform -translate-y-1/2 left-0 bg-black text-white py-2 px-3">
+            <button className="prev-button absolute top-1/2 transform -translate-y-1/2 left-0 bg-gray-500 text-white py-2 px-3 rounded-full">
               &#10094;
             </button>
-            <button className="next-button absolute top-1/2 transform -translate-y-1/2 right-0 bg-black text-white py-2 px-3">
+            <button className="next-button absolute top-1/2 transform -translate-y-1/2 right-0 bg-gray-500 text-white py-2 px-3 rounded-full">
               &#10095;
             </button>
           </div>

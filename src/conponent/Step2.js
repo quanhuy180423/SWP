@@ -20,9 +20,14 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
   };
 
   return (
-    <div className="flex justify-center items-center flex-col">
-      <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow-md max-w-md mx-auto">
-        <h2 className="text-center mb-5 text-2xl text-gray-800">Step 2: Material and Category</h2>
+    <div className="flex justify-center items-center flex-col ">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-100 p-6 rounded-lg shadow-md max-w-md mx-auto mb-2"
+      >
+        <h2 className="text-center mb-5 text-2xl text-gray-800">
+          Step 2: Material and Category
+        </h2>
         <label className="block mb-4 text-gray-600">
           Chất liệu:
           <select
@@ -76,13 +81,13 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
           </select>
         </label>
         <div className="flex justify-between">
-          <button
+          {/* <button
             type="button"
             onClick={prevStep}
             className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
           >
             Back
-          </button>
+          </button> */}
           <button
             type="submit"
             className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"

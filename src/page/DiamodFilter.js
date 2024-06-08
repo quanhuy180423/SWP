@@ -73,7 +73,7 @@ const DiamondFilter = ({ onSearch }) => {
     <>
       <form
         onSubmit={handleSubmit}
-        className="p-6 bg-white shadow-md rounded-md"
+        className="p-6 bg-white shadow-md rounded-md mr-36 ml-36 mb-10"
       >
         <div className="mb-4">
           <div className="flex justify-between items-center">

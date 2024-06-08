@@ -33,9 +33,12 @@ const DiamondPage = () => {
     <div>
       <img src="./img/kimcuong_banner.png" alt="img 1" className="article-img mb-5"/>
       <h1 className="title font-bold text-4xl flex justify-center">
-        Trang Kim Cương
+        Trang Giá Kim Cương
       </h1>
       <DiamondFilter onSearch={handleSearch} />
+      <h1 className="title font-bold text-4xl flex justify-center mb-5">
+        Bảng Giá Kim Cương
+      </h1>
       <DiamondList diamonds={diamonds} />
     </div>
   );

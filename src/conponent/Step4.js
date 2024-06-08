@@ -38,8 +38,13 @@ const Step4 = ({
   };
 
   return (
-    <form className="bg-gray-100 p-6 rounded-lg shadow-md max-w-2xl mx-auto" onSubmit={handleSubmit}>
-      <h2 className="text-center mb-5 text-2xl text-gray-800">Step 4: Additional Details</h2>
+    <form
+      className="bg-gray-100 p-6 rounded-lg shadow-md max-w-2xl mx-auto mb-2"
+      onSubmit={handleSubmit}
+    >
+      <h2 className="text-center mb-5 text-2xl text-gray-800">
+        Step 4: Additional Details
+      </h2>
       <CKEditor
         editor={ClassicEditor}
         config={editorConfiguration}
@@ -49,13 +54,13 @@ const Step4 = ({
 
       {/* Các bố cập nhật dữ liệu trong Step4 nếu cần */}
       <div className="flex justify-between mt-6">
-        <button
+        {/* <button
           type="button"
           onClick={prevStep}
           className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
         >
           Back
-        </button>
+        </button> */}
         <button
           type="submit"
           className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"

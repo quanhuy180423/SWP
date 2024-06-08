@@ -4,92 +4,103 @@ import Step2 from "../conponent/Step2";
 import Step3 from "../conponent/Step3";
 import Step4 from "../conponent/Step4";
 import StepIndicator from "../conponent/StepIndicator";
-// import Header from "../conponent/Header";
 
 const OrderForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [visibleSteps, setVisibleSteps] = useState([true, false, false, false]);
   const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    address: "",
-    email: "",
-    material: "",
-    weight: "",
-    size: "",
-    category: "",
-    color: "",
-    clarity: "",
-    cut: "",
-    carat: "",
-    richText: "",
+    step1: {},
+    step2: {},
+    step3: {},
+    step4: {},
   });
 
-  const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
-  const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
-
-  const updateFormData = (data) => {
-    setFormData({ ...formData, ...data });
+  const updateFormData = (step, data) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [step]: {
+        ...prevData[step],
+        ...data,
+      },
+    }));
   };
 
-  const handleSubmit = () => {
-    // Gửi dữ liệu formData đi ở đây
-    const jsonFormData = JSON.stringify(formData);
-    console.log(jsonFormData);
-    console.log(formData)
+  const toggleStepVisibility = (stepIndex) => {
+    setVisibleSteps((prevVisibleSteps) => {
+      const newVisibleSteps = [...prevVisibleSteps];
+      newVisibleSteps[stepIndex] = !newVisibleSteps[stepIndex];
+      return newVisibleSteps;
+    });
+  };
 
-    // const objJson = JSON.parse(formData);
-    // console.log(objJson);
-    // Lưu dữ liệu vào localStorage
-    localStorage.setItem("orderFormData", jsonFormData);
-    const storedFormData = localStorage.getItem("orderFormData");
-    if (storedFormData) {
-      const formDataObject = JSON.parse(storedFormData);
-      // Sử dụng dữ liệu đã lưu ở đây
-      console.log(formDataObject);
-    } else {
-      // Không có dữ liệu được lưu trữ
-      console.log("Không tìm thấy dữ liệu đã lưu");
+  const handleNextStep = (stepIndex) => {
+    if (stepIndex < visibleSteps.length - 1) {
+      setVisibleSteps((prevVisibleSteps) => {
+        const newVisibleSteps = [...prevVisibleSteps];
+        newVisibleSteps[stepIndex] = false;
+        newVisibleSteps[stepIndex + 1] = true;
+        return newVisibleSteps;
+      });
+      setCurrentStep(stepIndex + 2);
     }
   };
 
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return <Step1 nextStep={nextStep} updateFormData={updateFormData} />;
-      case 2:
-        return (
-          <Step2
-            nextStep={nextStep}
-            prevStep={prevStep}
-            updateFormData={updateFormData}
-          />
-        );
-      case 3:
-        return (
-          <Step3
-            nextStep={nextStep}
-            prevStep={prevStep}
-            updateFormData={updateFormData}
-          />
-        );
-      case 4:
-        return (
-          <Step4
-            prevStep={prevStep}
-            updateFormData={updateFormData}
-            onSubmit={handleSubmit}
-          />
-        );
-      default:
-        return null;
+  const handlePrevStep = (stepIndex) => {
+    if (stepIndex > 0) {
+      setVisibleSteps((prevVisibleSteps) => {
+        const newVisibleSteps = [...prevVisibleSteps];
+        newVisibleSteps[stepIndex] = false;
+        newVisibleSteps[stepIndex - 1] = true;
+        return newVisibleSteps;
+      });
+      setCurrentStep(stepIndex);
     }
+  };
+
+  const handleSubmit = (data) => {
+    console.log("Final Data:", data);
+    // Handle final form submission
   };
 
   return (
-    <div>
-      {/* <Header /> */}
-      <StepIndicator currentStep={currentStep} />
-      {renderStep()}
+    <div className="container mx-auto p-6 flex">
+      <div className="w-2/4 mr-6">
+        {/* <StepIndicator currentStep={currentStep} /> */}
+      </div>
+      <div className="w-2/4 bg-white p-2 rounded-lg shadow-md">
+        {[Step1, Step2, Step3, Step4].map((StepComponent, index) => (
+          <div key={index}>
+            <button
+              type="button"
+              onClick={() => toggleStepVisibility(index)}
+              className="w-full text-left bg-gray-200 py-2 px-4 rounded-lg mb-2"
+            >
+              Step {index + 1}:{" "}
+              {
+                [
+                  "Thông tin người đặt hàng",
+                  "Chất liệu và loại trang sức gia công",
+                  "Mô tả kim cương",
+                  "Mô tả thêm từ khách hàng",
+                ][index]
+              }
+            </button>
+            {visibleSteps[index] && (
+              <StepComponent
+                nextStep={() => handleNextStep(index)}
+                prevStep={() => handlePrevStep(index)}
+                updateFormData={(data) =>
+                  updateFormData(`step${index + 1}`, data)
+                }
+                step1Data={formData.step1}
+                step2Data={formData.step2}
+                step3Data={formData.step3}
+                onSubmit={handleSubmit}
+              />
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

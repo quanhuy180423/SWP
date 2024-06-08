@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AuthPopup from "../page/AuthPopup";
-import '../css/header.css'
+import "../css/header.css";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -67,7 +67,7 @@ const Header = () => {
               Trang chủ
             </Link>
             <Link
-              to="/"
+              to="/jewelry"
               className="text-xl text-gray-500 font-serif hover:text-black"
             >
               Trang sức
@@ -104,12 +104,12 @@ const Header = () => {
                 />
                 <span>{user.fullName}</span>
               </Link>
-              {/* <button
+              <button
                 onClick={handleLogout}
                 className="text-gray-500 hover:text-black"
               >
                 Logout
-              </button> */}
+              </button>
             </div>
           ) : (
             <div className="flex items-center space-x-2">
