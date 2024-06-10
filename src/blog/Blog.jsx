@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
@@ -166,8 +166,8 @@ const Blog = () => {
               <td>{blog.DateCreated}</td>
               <td>{blog.UserID}</td>
               <td>
-              <button onClick={() => setEditBlog(blog)} style={styles.actionButton}>Edit</button>
-              <button onClick={() => deleteBlog(blog.BlogID)} style={styles.actionButton}>Delete</button>
+                <button onClick={() => setEditBlog(blog)} style={styles.actionButton}>Edit</button>
+                <button onClick={() => deleteBlog(blog.BlogID)} style={styles.actionButton}>Delete</button>
               </td>
             </tr>
           ))}

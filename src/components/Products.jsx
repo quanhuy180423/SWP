@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-
+import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 const Product = () => {
   const initialProductState = {
     ProductID: '',
@@ -10,7 +11,7 @@ const Product = () => {
     MaterialCost: '',
     GemCost: '',
     ProductCost: '',
-    Image: '',
+    Images: [], // Cập nhật để lưu trữ nhiều ảnh
     QuantityGame: '',
     Size: '',
     WarrantyCard: '',
@@ -20,7 +21,7 @@ const Product = () => {
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState(initialProductState);
   const [editProduct, setEditProduct] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -40,13 +41,15 @@ const Product = () => {
   const addProduct = async () => {
     try {
       // Perform validation on newProduct data
-      // Check if imageFile is selected
+      // Check if imageFiles are selected
 
-      // Send POST request to API to add new product with imageFile
+      // Send POST request to API to add new product with imageFiles
       // FormData can be used to send image files along with other data
       // const formData = new FormData();
       // formData.append('Name', newProduct.Name);
-      // formData.append('Image', imageFile);
+      // newProduct.Images.forEach((image, index) => {
+      //   formData.append(`Images[${index}]`, image);
+      // });
       // ...
       // await fetch('API_ENDPOINT/products', {
       //   method: 'POST',
@@ -56,9 +59,8 @@ const Product = () => {
       // Update local state with new product
       // setProducts([...products, newProduct]);
 
-      // Clear newProduct state and imageFile
+      // Clear newProduct state
       // setNewProduct({ ...initialProductState });
-      // setImageFile(null);
     } catch (error) {
       console.error('Error adding product:', error);
     }
@@ -112,7 +114,8 @@ const Product = () => {
   };
 
   const handleImageChange = (e) => {
-    setImageFile(e.target.files[0]);
+    const files = Array.from(e.target.files);
+    setNewProduct({ ...newProduct, Images: files });
   };
 
   const handleSubmit = (e) => {
@@ -120,190 +123,147 @@ const Product = () => {
     addProduct();
   };
 
-  const styles = {
-    container: {
-      fontFamily: 'Arial, sans-serif',
-      margin: 'auto',
-      padding: '20px'
-    },
-    formGroup: {
-      marginBottom: '20px'
-    },
-    label: {
-      display: 'block',
-      marginBottom: '5px',
-      fontWeight: 'bold'
-    },
-    input: {
-      width: '100%',
-      padding: '8px',
-      fontSize: '16px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      boxSizing: 'border-box'
-    },
-    fileInput: {
-      width: '100%',
-      padding: '8px',
-      fontSize: '16px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      boxSizing: 'border-box',
-      marginBottom: '20px'
-    },
-    button: {
-      padding: '10px 20px',
-      fontSize: '16px',
-      backgroundColor: '#007bff',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer'
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-      marginTop: '20px'
-    },
-    tableRow: {
-      backgroundColor: '#f2f2f2'
-    },
-    
-  };
-
   return (
-    <div style={styles.container}>
-      <h2>Add New Product</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Product Name:</label>
-          <input
-            type="text"
-            name="Name"
-            value={newProduct.Name}
-            onChange={handleInputChange}
-            style={styles.input}
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Material ID:</label>
-          <input
-            type="text"
-            name="MaterialID"
-            value={newProduct.MaterialID}
-            onChange={handleInputChange}
-            style={styles.input}
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Gem ID:</label>
-          <input
-            type="text"
-            name="GemID"
-            value={newProduct.GemID}
-            onChange={handleInputChange}
-            style={styles.input}
-          />
-        </div>
-        {/* Add more input fields for other product properties */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Image:</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            style={styles.fileInput}
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Quantity Game:</label>
-          <input
-            type="text"
-            name="QuantityGame"
-            value={newProduct.QuantityGame}
-            onChange={handleInputChange}
-            style={styles.input}
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Size:</label>
-          <input
-            type="text"
-            name="Size"
-            value={newProduct.Size}
-            onChange={handleInputChange}
-            style={styles.input}
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Warranty Card:</label>
-          <input
-            type="text"
-            name="WarrantyCard"
-            value={newProduct.WarrantyCard}
-            onChange={handleInputChange}
-            style={styles.input}
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Description:</label>
-          <textarea
-            name="Description"
-            value={newProduct.Description}
-            onChange={handleInputChange}
-            style={{ ...styles.input, height: '100px' }}
-          ></textarea>
-        </div>
-        <button type="submit" style={styles.button}>Add Product</button>
-      </form >
-      <br></br>
-      <h2>Product List</h2>
-        <tbody>
-        <table style={styles.table}>
+    <div className="font-sans mx-auto p-5">
+      <h2 className="text-4xl font-bold mb-5">Product</h2>
+      <button
+        onClick={() => setIsFormVisible(!isFormVisible)}
+        className="px-5 py-2 mb-5 text-lg text-white bg-blue-500 rounded"
+      >
+        {isFormVisible ? 'Hide Form' : 'Add Product'}
+      </button>
+      {isFormVisible && (
+        <form onSubmit={handleSubmit} className="mb-5">
+          <div className="mb-5">
+            <label className="block mb-2 font-bold">Product Name:</label>
+            <input
+              type="text"
+              name="Name"
+              value={newProduct.Name}
+              onChange={handleInputChange}
+              className="w-full p-2 text-lg border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-5">
+            <label className="block mb-2 font-bold">Material ID:</label>
+            <input
+              type="text"
+              name="MaterialID"
+              value={newProduct.MaterialID}
+              onChange={handleInputChange}
+              className="w-full p-2 text-lg border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-5">
+            <label className="block mb-2 font-bold">Gem ID:</label>
+            <input
+              type="text"
+              name="GemID"
+              value={newProduct.GemID}
+              onChange={handleInputChange}
+              className="w-full p-2 text-lg border border-gray-300 rounded"
+            />
+          </div>
+          {/* Add more input fields for other product properties */}
+          <div className="mb-5">
+            <label className="block mb-2 font-bold">Images:</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+              className="w-full p-2 text-lg border border-gray-300 rounded mb-5"
+            />
+          </div>
+          <div className="mb-5">
+            <label className="block mb-2 font-bold">Quantity Game:</label>
+            <input
+              type="text"
+              name="QuantityGame"
+              value={newProduct.QuantityGame}
+              onChange={handleInputChange}
+              className="w-full p-2 text-lg border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-5">
+            <label className="block mb-2 font-bold">Size:</label>
+            <input
+              type="text"
+              name="Size"
+              value={newProduct.Size}
+              onChange={handleInputChange}
+              className="w-full p-2 text-lg border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-5">
+            <label className="block mb-2 font-bold">Warranty Card:</label>
+            <input
+              type="text"
+              name="WarrantyCard"
+              value={newProduct.WarrantyCard}
+              onChange={handleInputChange}
+              className="w-full p-2 text-lg border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-5">
+            <label className="block mb-2 font-bold">Description:</label>
+            <textarea
+              name="Description"
+              value={newProduct.Description}
+              onChange={handleInputChange}
+              className="w-full p-2 text-lg border border-gray-300 rounded h-24"
+            ></textarea>
+          </div>
+          <button type="submit" className="px-5 py-2 text-lg text-white bg-green-500 hover:bg-green-600 rounded ">Create Product</button>
+        </form>
+      )}
+      <h2 className="text-2xl font-bold mb-5">Product List</h2>
+      <table className="w-full border-collapse mt-5">
         <thead>
-          <tr style={styles.tableRow}>
-            <th>Name</th>
-            <th>MaterialID</th>
-            <th>GemID</th>
-            <th>CategoryID</th>
-            <th>MaterialCost</th>
-            <th>GemCost</th>
-            <th>ProductCost</th>
-            <th>Image</th>
-            <th>QuantityGame</th>
-            <th>Size</th>
-            <th>WarrantyCard</th>
-            <th>Description</th>
-            <th>Actions</th>
+          <tr className="bg-gray-200">
+            <th className="border p-2 border-black">Name</th>
+            <th className="border p-2 border-black">MaterialID</th>
+            <th className="border p-2 border-black">GemID</th>
+            <th className="border p-2 border-black">CategoryID</th>
+            <th className="border p-2 border-black">MaterialCost</th>
+            <th className="border p-2 border-black">GemCost</th>
+            <th className="border p-2 border-black">ProductCost</th>
+            <th className="border p-2 border-black">Images</th>
+            <th className="border p-2 border-black">QuantityGame</th>
+            <th className="border p-2 border-black">Size</th>
+            <th className="border p-2 border-black">WarrantyCard</th>
+            <th className="border p-2 border-black">Description</th>
+            <th className="border p-2 border-black">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {/* Map through products and render each product */}
           {products.map(product => (
-            <tr key={product.ProductID}>
-              <td>{product.Name}</td>
-              <td>{product.MaterialID}</td>
-              <td>{product.GemID}</td>
-              <td>{product.CategoryID}</td>
-              <td>{product.MaterialCost}</td>
-              <td>{product.GemCost}</td>
-              <td>{product.ProductCost}</td>
-              <td><img src={product.Image} alt={product.Name} style={styles.image} /></td>
-              <td>{product.QuantityGame}</td>
-              <td>{product.Size}</td>
-              <td>{product.WarrantyCard}</td>
-              <td>{product.Description}</td>
-              <td>
-                <button onClick={() => setEditProduct(product)}>Edit</button>
-                <button onClick={() => deleteProduct(product.ProductID)}>Delete</button>
+            <tr key={product.ProductID} className="bg-gray-100">
+              <td className="border p-2 border-black">{product.Name}</td>
+              <td className="border p-2 border-black">{product.MaterialID}</td>
+              <td className="border p-2 border-black">{product.GemID}</td>
+              <td className="border p-2 border-black">{product.CategoryID}</td>
+              <td className="border p-2 border-black">{product.MaterialCost}</td>
+              <td className="border p-2 border-black">{product.GemCost}</td>
+              <td className="border p-2 border-black">{product.ProductCost}</td>
+              <td className="border p-2 border-black">
+                {product.Images && product.Images.map((image, index) => (
+                  <img key={index} src={image} alt={product.Name} className="w-16 h-16 object-cover inline-block" />
+                ))}
+              </td>
+              <td className="border p-2 border-black">{product.QuantityGame}</td>
+              <td className="border p-2 border-black">{product.Size}</td>
+              <td className="border p-2 border-black">{product.WarrantyCard}</td>
+              <td className="border p-2 border-black">{product.Description}</td>
+              <td className="border p-2 border-black">
+                <button onClick={() => setEditProduct(product)} className="px-2 py-1 text-white bg-green-500 rounded mr-2"><FontAwesomeIcon icon={faEdit} /></button>
+                <button onClick={() => deleteProduct(product.ProductID)} className="px-2 py-1 text-white bg-red-500 rounded"><FontAwesomeIcon icon={faTrash} /></button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-        </tbody>
-      
-    </div >
+    </div>
   );
 };
 

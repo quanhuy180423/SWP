@@ -16,6 +16,7 @@ import Blogs from './blog/Blog';
 import Product from './components/Products';
 import Material from './components/Material';
 import Category from './components/Category';
+import Diamond from './diamond/Diamond';
 
 const App = () => {
   const [content, setContent] = useState('Dashboard');

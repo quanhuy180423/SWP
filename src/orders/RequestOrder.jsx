@@ -29,7 +29,7 @@ const RequestOrder = () => {
     axios.put(`https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/Order/${id}`, { status, description })
       .then(() => {
         // Update order in the state
-        setOrders(orders.map(order => 
+        setOrders(orders.map(order =>
           order.id === id ? { ...order, status, description } : order
         ));
         setEditingOrder(null);
@@ -46,7 +46,7 @@ const RequestOrder = () => {
   return (
     <div className="p-6 bg-gray-100 h-screen">
       <h1 className="text-2xl font-bold mb-4">Pending Orders</h1>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full bg-white border-spacing-1">
         <thead>
           <tr>
             <th className="py-2 px-4 border-b border-gray-200">ID</th>
