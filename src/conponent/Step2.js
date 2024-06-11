@@ -1,22 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const Step2 = ({ nextStep, prevStep, updateFormData }) => {
-  const [formData, setFormData] = useState({
+const Step2 = ({ nextStep, prevStep, updateFormData, formData }) => {
+  const [localData, setLocalData] = useState({
     material: "",
     weight: "",
     size: "",
     category: "",
   });
 
+  useEffect(() => {
+    setLocalData(formData);
+  }, [formData]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setLocalData({ ...localData, [name]: value });
     updateFormData({ [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     nextStep();
+    console.log(localData);
   };
 
   return (
@@ -29,68 +34,68 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
           Step 2: Material and Category
         </h2>
         <label className="block mb-4 text-gray-600">
-          Chất liệu:
+          Material:
           <select
             name="material"
-            value={formData.material}
+            value={localData.material}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
           >
             <option value="">Select</option>
-            <option value="gold">Vàng/Gold</option>
-            <option value="silver">Bạc/Silver</option>
-            <option value="platinum">Bạch kim/Platinum</option>
+            <option value="gold">Gold</option>
+            <option value="silver">Silver</option>
+            <option value="platinum">Platinum</option>
           </select>
         </label>
         <label className="block mb-4 text-gray-600">
-          Trọng lượng (chỉ):
+          Weight (chi):
           <input
             type="text"
             name="weight"
-            value={formData.weight}
+            value={localData.weight}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
           />
         </label>
         <label className="block mb-4 text-gray-600">
-          Kích thước sản phẩm gia công (Ni):
+          Product Size (Ni):
           <input
             type="text"
             name="size"
-            value={formData.size}
+            value={localData.size}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
           />
         </label>
         <label className="block mb-4 text-gray-600">
-          Thể loại đồ gia công:
+          Category:
           <select
             name="category"
-            value={formData.category}
+            value={localData.category}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
           >
             <option value="">Select</option>
-            <option value="necklace">Vòng cổ/Necklace</option>
-            <option value="ring">Nhẫn/Ring</option>
-            <option value="bracelet">Vòng đeo tay/Bracelet</option>
+            <option value="necklace">Necklace</option>
+            <option value="ring">Ring</option>
+            <option value="bracelet">Bracelet</option>
           </select>
         </label>
         <div className="flex justify-between">
-          {/* <button
+          <button
             type="button"
             onClick={prevStep}
-            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+            className="bg-red-500 text-white py-2 px-4 rounded-lg text-lg hover:bg-red-600"
           >
-            Back
-          </button> */}
+            Previous
+          </button>
           <button
             type="submit"
-            className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+            className="bg-green-500 text-white py-2 px-4 rounded-lg text-lg hover:bg-green-600"
           >
             Next
           </button>

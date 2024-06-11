@@ -15,7 +15,7 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
     email: "",
     address: "",
   });
-
+  const API_URL = "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/User";
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -51,8 +51,9 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
       }
 
       const data = await response.json();
-      localStorage.setItem("user", JSON.stringify(data));
-      onLoginSuccess(data);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      onLoginSuccess(data.user);
     } catch (error) {
       setError(error.message);
     }
@@ -105,82 +106,94 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
     }
 
     if (isLogin) {
-      try {
-        const url =
-          "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/User";
-        const response = await axios.post(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            UserName: formData.userName,
-            PassWord: formData.passWord,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Login failed!");
-        }
-
-        const data = await response.json();
-        localStorage.setItem("user", JSON.stringify(data));
-        onLoginSuccess(data);
-      } catch (error) {
-        setError(error.message);
-      }
+      await handleLogin();
     } else {
-      try {
-        const checkUserUrl =
-          "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
-        const checkUserResponse = await fetch(checkUserUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      await handleRegister();
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const url = API_URL;
+      const response = await axios.post(url, {
+        userName: formData.userName,
+        passWord: formData.passWord,
+      });
+      // // console.log(response);
+      // if (response.status !== 200 || response.data.length === 0) {
+      //   throw new Error("Login failed!");
+      // }
+
+      // const user = response.data.find(
+      //   (user) =>
+      //     user.userName === formData.userName &&
+      //     user.passWord === formData.passWord
+      // );
+      // if (user) {
+      //   console.log(user);
+      //   localStorage.setItem("user", JSON.stringify(user));
+      //   localStorage.setItem("userId", user.id);
+      //   onLoginSuccess(user);
+      // }
+      if (response.status !== 200 || response.data !== 201) {
+        throw new Error("Login failed!");
+      }
+      console.log(response.data);
+      const data = response.data;
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      onLoginSuccess(data.user);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleRegister = async () => {
+    try {
+      // Check if user already exists
+      const checkUserResponse = await axios.get(API_URL);
+      const users = checkUserResponse.data;
+      const userExists = users.some(
+        (user) => user.userName === formData.userName
+      );
+
+      if (userExists) {
+        setError("User already exists!");
+      } else {
+        // If user doesn't exist, create a new one
+        // const registerUrl = API_URL;
+        // const registrationResponse = await axios.post(registerUrl, {
+        //   userName: formData.userName,
+        //   fullName: formData.fullName,
+        //   phone: formData.phone,
+        //   email: formData.email,
+        //   address: formData.address,
+        //   passWord: formData.passWord,
+        // });
+
+        const registerUrl = API_URL;
+        const registrationResponse = await axios.post(registerUrl, {
+          userName: formData.userName,
+          fullName: formData.fullName,
+          phone: formData.phone,
+          email: formData.email,
+          address: formData.address,
+          passWord: formData.passWord,
         });
 
-        if (!checkUserResponse.ok) {
-          throw new Error("Failed to check user!");
+        console.log(registrationResponse);
+
+        if (registrationResponse.status !== 201) {
+          throw new Error("Registration failed!");
         }
 
-        const users = await checkUserResponse.json();
-        const userExists = users.some((user) => user.email === formData.email);
-
-        if (userExists) {
-          setError("User already exists!");
-        } else {
-          const registerUrl =
-            "https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/User";
-          const registrationResponse = await fetch(registerUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: formData.userName,
-              fullName: formData.fullName,
-              phone: formData.phone,
-              email: formData.email,
-              address: formData.address,
-              password: formData.passWord,
-            }),
-          });
-
-          if (!registrationResponse.ok) {
-            throw new Error("Registration failed!");
-          }
-
-          const registrationData = await registrationResponse.json();
-          localStorage.setItem(
-            registrationData.id,
-            JSON.stringify(registrationData)
-          );
-          onLoginSuccess(registrationData);
-        }
-      } catch (error) {
-        setError(error.message);
+        const registrationData = registrationResponse.data;
+        localStorage.setItem("accessToken", registrationData.accessToken);
+        localStorage.setItem("user", JSON.stringify(registrationData));
+        onLoginSuccess(registrationData.user);
       }
+    } catch (error) {
+      setError(error.response.data.message || "An error occurred");
     }
   };
 
@@ -236,7 +249,6 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 onFocus={handleFocus}
                 value={formData.passWord}
                 className="w-full p-2 border border-gray-300 rounded"
-                // required
               />
               {formErrors.passWord && (
                 <p className="text-red-500">{formErrors.passWord}</p>
@@ -266,7 +278,6 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 onFocus={handleFocus}
                 value={formData.userName}
                 className="w-full p-2 border border-gray-300 rounded"
-                // required
               />
               {formErrors.userName && (
                 <p className="text-red-500">{formErrors.userName}</p>
@@ -279,7 +290,6 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 onFocus={handleFocus}
                 value={formData.fullName}
                 className="w-full p-2 border border-gray-300 rounded"
-                // required
               />
               {formErrors.fullName && (
                 <p className="text-red-500">{formErrors.fullName}</p>
@@ -292,7 +302,6 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 onFocus={handleFocus}
                 value={formData.phone}
                 className="w-full p-2 border border-gray-300 rounded"
-                // required
               />
               {formErrors.phone && (
                 <p className="text-red-500">{formErrors.phone}</p>
@@ -305,7 +314,6 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 onFocus={handleFocus}
                 value={formData.email}
                 className="w-full p-2 border border-gray-300 rounded"
-                // required
               />
               {formErrors.email && (
                 <p className="text-red-500">{formErrors.email}</p>
@@ -318,7 +326,6 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 onFocus={handleFocus}
                 value={formData.address}
                 className="w-full p-2 border border-gray-300 rounded"
-                // required
               />
               {formErrors.address && (
                 <p className="text-red-500">{formErrors.address}</p>
@@ -331,7 +338,6 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 onFocus={handleFocus}
                 value={formData.passWord}
                 className="w-full p-2 border border-gray-300 rounded"
-                // required
               />
               {formErrors.passWord && (
                 <p className="text-red-500">{formErrors.passWord}</p>

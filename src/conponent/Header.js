@@ -8,7 +8,7 @@ const Header = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("userId");
+    const savedUser = localStorage.getItem("user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
@@ -96,7 +96,10 @@ const Header = () => {
         <div className="flex items-center space-x-4">
           {user ? (
             <div className="flex items-center space-x-2">
-              <Link to="/userinfo" className="flex items-center space-x-1">
+              <Link
+                to={`/userinfo/${user.id}`}
+                className="flex items-center space-x-1"
+              >
                 <img
                   src="./img/profile-user.png"
                   alt="profile"

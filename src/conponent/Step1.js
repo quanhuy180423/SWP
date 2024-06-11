@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const Step1 = ({ nextStep, updateFormData }) => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    address: "",
-    email: "",
+const Step1 = ({ nextStep, updateFormData, formData }) => {
+  const [localData, setLocalData] = useState({
+    fullName: formData.fullName || "",
+    phone: formData.phone || "",
+    address: formData.address || "",
+    email: formData.email || "",
   });
 
+  useEffect(() => {
+    setLocalData(formData);
+  }, [formData]);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value } = e.target.value;
+    setLocalData({ ...localData, [name]: value });
+    // console.log(...localData);
     updateFormData({ [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    updateFormData(localData); // Truyền toàn bộ dữ liệu từ localData
     nextStep();
+    console.log(localData);
   };
 
   return (
@@ -33,18 +40,20 @@ const Step1 = ({ nextStep, updateFormData }) => {
           <input
             type="text"
             name="fullName"
-            value={formData.fullName}
+            value={localData.fullName}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
           />
+          {console.log(localData.fullName)}
         </label>
+
         <label className="block mb-4 text-gray-600">
           Phone:
           <input
             type="text"
             name="phone"
-            value={formData.phone}
+            value={localData.phone}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
@@ -55,7 +64,7 @@ const Step1 = ({ nextStep, updateFormData }) => {
           <input
             type="text"
             name="address"
-            value={formData.address}
+            value={localData.address}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
@@ -66,7 +75,7 @@ const Step1 = ({ nextStep, updateFormData }) => {
           <input
             type="email"
             name="email"
-            value={formData.email}
+            value={localData.email}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"

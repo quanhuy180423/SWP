@@ -19,22 +19,18 @@ const Step4 = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Kết hợp dữ liệu từ các bước trước đó
+    // Gom tất cả dữ liệu từ các bước trước đó vào một đối tượng dữ liệu hoàn chỉnh
     const data = {
-      ...step1Data,
-      ...step2Data,
-      ...step3Data,
+      step1: step1Data,
+      step2: step2Data,
+      step3: step3Data,
       richText: richText,
-      // Thêm dữ liệu của Step4 nếu cần
     };
-    console.log("Data before submit:", step1Data); // Kiểm tra giá trị của data trước khi gửi đi
-    console.log("Data before submit:", step2Data); // Kiểm tra giá trị của data trước khi gửi đi
-    console.log("Data before submit:", step3Data); // Kiểm tra giá trị của data trước khi gửi đi
 
-    console.log("Data before submit:", data); // Kiểm tra giá trị của data trước khi gửi đi
+    console.log("Complete Data:", data); // Kiểm tra dữ liệu hoàn chỉnh trước khi gửi
+
     // Gọi hàm onSubmit để gửi dữ liệu đi
     onSubmit(data);
-    console.log("Data after submit:", data); // Kiểm tra giá trị của data sau khi gửi đi
   };
 
   return (
@@ -52,15 +48,14 @@ const Step4 = ({
         onChange={handleChange}
       />
 
-      {/* Các bố cập nhật dữ liệu trong Step4 nếu cần */}
       <div className="flex justify-between mt-6">
-        {/* <button
+        <button
           type="button"
           onClick={prevStep}
           className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
         >
           Back
-        </button> */}
+        </button>
         <button
           type="submit"
           className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
