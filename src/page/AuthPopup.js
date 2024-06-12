@@ -15,7 +15,8 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
     email: "",
     address: "",
   });
-  const API_URL = "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/User";
+  const API_URL_Login = "LOCALHOST_HERE";
+  const API_URL_Register = "LOCALHOST_HERE";
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -114,7 +115,7 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
 
   const handleLogin = async () => {
     try {
-      const url = API_URL;
+      const url = API_URL_Login;
       const response = await axios.post(url, {
         userName: formData.userName,
         passWord: formData.passWord,
@@ -151,47 +152,46 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
   const handleRegister = async () => {
     try {
       // Check if user already exists
-      const checkUserResponse = await axios.get(API_URL);
-      const users = checkUserResponse.data;
-      const userExists = users.some(
-        (user) => user.userName === formData.userName
-      );
+      // const checkUserResponse = await axios.get(API_URL_Register);
+      // const users = checkUserResponse.data;
+      // const userExists = users.some(
+      //   (user) => user.userName === formData.userName
+      // );
 
-      if (userExists) {
-        setError("User already exists!");
-      } else {
-        // If user doesn't exist, create a new one
-        // const registerUrl = API_URL;
-        // const registrationResponse = await axios.post(registerUrl, {
-        //   userName: formData.userName,
-        //   fullName: formData.fullName,
-        //   phone: formData.phone,
-        //   email: formData.email,
-        //   address: formData.address,
-        //   passWord: formData.passWord,
-        // });
+      // if (userExists) {
+      //   setError("User already exists!");
+      // } else {
+      // If user doesn't exist, create a new one
+      // const registerUrl = API_URL;
+      // const registrationResponse = await axios.post(registerUrl, {
+      //   userName: formData.userName,
+      //   fullName: formData.fullName,
+      //   phone: formData.phone,
+      //   email: formData.email,
+      //   address: formData.address,
+      //   passWord: formData.passWord,
+      // });
 
-        const registerUrl = API_URL;
-        const registrationResponse = await axios.post(registerUrl, {
-          userName: formData.userName,
-          fullName: formData.fullName,
-          phone: formData.phone,
-          email: formData.email,
-          address: formData.address,
-          passWord: formData.passWord,
-        });
+      const registerUrl = API_URL_Register;
+      const registrationResponse = await axios.post(registerUrl, {
+        userName: formData.userName,
+        fullName: formData.fullName,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        passWord: formData.passWord,
+      });
 
-        console.log(registrationResponse);
+      console.log(registrationResponse);
 
-        if (registrationResponse.status !== 201) {
-          throw new Error("Registration failed!");
-        }
-
-        const registrationData = registrationResponse.data;
-        localStorage.setItem("accessToken", registrationData.accessToken);
-        localStorage.setItem("user", JSON.stringify(registrationData));
-        onLoginSuccess(registrationData.user);
+      if (registrationResponse.status !== 201) {
+        throw new Error("Registration failed!");
       }
+
+      const registrationData = registrationResponse.data;
+      localStorage.setItem("accessToken", registrationData.accessToken);
+      localStorage.setItem("user", JSON.stringify(registrationData));
+      onLoginSuccess(registrationData.user);
     } catch (error) {
       setError(error.response.data.message || "An error occurred");
     }
