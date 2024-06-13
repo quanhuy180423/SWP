@@ -18,8 +18,9 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLocalData({ ...localData, [name]: value });
-    updateFormData({ [name]: value });
+    const updatedData = { ...localData, [name]: value };
+    setLocalData(updatedData);
+    updateFormData(updatedData);
   };
 
   const handleSearch = async (e) => {
@@ -53,8 +54,9 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    updateFormData(localData);
     nextStep();
-    console.log(localData);
+    // console.log(localData);
   };
 
   return (

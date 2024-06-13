@@ -21,7 +21,7 @@ const Header = () => {
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem("userId");
+    localStorage.removeItem("user");
   };
 
   const openPopup = () => {

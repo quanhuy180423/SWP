@@ -14,18 +14,20 @@ const Step2 = ({ nextStep, prevStep, updateFormData, formData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLocalData({ ...localData, [name]: value });
-    updateFormData({ [name]: value });
+    const updatedData = { ...localData, [name]: value };
+    setLocalData(updatedData);
+    updateFormData(updatedData);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    updateFormData(localData);
     nextStep();
-    console.log(localData);
+    // console.log(localData);
   };
 
   return (
-    <div className="flex justify-center items-center flex-col ">
+    <div>
       <form
         onSubmit={handleSubmit}
         className="bg-gray-100 p-6 rounded-lg shadow-md max-w-md mx-auto mb-2"

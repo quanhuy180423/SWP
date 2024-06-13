@@ -13,17 +13,17 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
   }, [formData]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target.value;
-    setLocalData({ ...localData, [name]: value });
-    // console.log(...localData);
-    updateFormData({ [name]: value });
+    const { name, value } = e.target;
+    const updatedData = { ...localData, [name]: value };
+    setLocalData(updatedData);
+    updateFormData(updatedData);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateFormData(localData); // Truyền toàn bộ dữ liệu từ localData
+    updateFormData(localData); // Pass entire localData
     nextStep();
-    console.log(localData);
+    // console.log(localData);
   };
 
   return (
@@ -45,9 +45,7 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
           />
-          {console.log(localData.fullName)}
         </label>
-
         <label className="block mb-4 text-gray-600">
           Phone:
           <input
