@@ -33,7 +33,7 @@ const Header = () => {
   };
 
   return (
-    <div className="sticky top-0 bg-white z-1000 shadow-md pb-2 mb-4 header">
+    <div className="sticky top-0 bg-white z-1000 shadow-md pb-2 header">
       <div className="flex justify-between items-center px-6">
         <div className="flex items-center">
           <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />

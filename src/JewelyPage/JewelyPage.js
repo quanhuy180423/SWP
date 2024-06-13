@@ -1,17 +1,37 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import JewelryItem from "./JewelryItem";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const JewelyPage = () => {
+const JewelryPage = () => {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const API_URL =
+    "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product"; //Link Api get product, show all
+  const Category1 = "Ring";
+  const Category2 = "Necklace";
+  const Category3 = "Bracelet";
+  const Category4 = "Yellow Gold";
+  const Category5 = "White Gold";
+  const Category6 = "Sliver";
+
   const productsPerPage = 25;
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const categoryFromUrl = searchParams.get("category");
+    if (categoryFromUrl) {
+      setSelectedCategory(categoryFromUrl);
+    }
+
     axios
-      .get("https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product")
+      .get(API_URL)
       .then((response) => {
         setProducts(response.data);
         setLoading(false);
@@ -20,26 +40,38 @@ const JewelyPage = () => {
         console.error("Error fetching data:", error);
         setLoading(false);
       });
-  }, []);
+  }, [location.search]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  // Filter products based on selected category
+  const filteredProducts = selectedCategory
+    ? products.filter((product) => product.category === selectedCategory)
+    : products;
+
   // Calculate the products to display on the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(
+  const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
 
   // Calculate total number of pages
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   // Handler for navigating pages
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  // Handler for changing category
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // Reset to the first page whenever the category changes
+    navigate(`?category=${category}`); // Update URL with selected category
   };
 
   return (
@@ -53,39 +85,64 @@ const JewelyPage = () => {
       <div className="flex justify-center">
         <div className="flex justify-around">
           <div className="m-2">
-            <Link to="/jewely">
-              <button className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black">
-                Vòng cổ
-              </button>
-            </Link>
+            <button
+              onClick={() => handleCategoryChange("float")} //category1
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === "float" ? "bg-gray-300" : "" //category1
+              }`}
+            >
+              Nhẫn
+            </button>
           </div>
           <div className="m-2">
-            <Link to="/jewely">
-              <button className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black">
-                Vòng tay
-              </button>
-            </Link>
+            <button
+              onClick={() => handleCategoryChange(Category2)}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category2 ? "bg-gray-300" : ""
+              }`}
+            >
+              Vòng cổ
+            </button>
           </div>
           <div className="m-2">
-            <Link to="/jewely">
-              <button className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black">
-                Trang sức vàng
-              </button>
-            </Link>
+            <button
+              onClick={() => handleCategoryChange(Category3)}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category3 ? "bg-gray-300" : ""
+              }`}
+            >
+              Vòng tay
+            </button>
           </div>
           <div className="m-2">
-            <Link to="/jewely">
-              <button className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black">
-                Trang sức bạc
-              </button>
-            </Link>
+            <button
+              onClick={() => handleCategoryChange(Category4)}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category4 ? "bg-gray-300" : ""
+              }`}
+            >
+              Trang sức vàng
+            </button>
           </div>
           <div className="m-2">
-            <Link to="/jewely">
-              <button className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black">
-                Trang sức vàng trắng
-              </button>
-            </Link>
+            <button
+              onClick={() => handleCategoryChange(Category5)}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category5 ? "bg-gray-300" : ""
+              }`}
+            >
+              Trang sức vàng trắng
+            </button>
+          </div>
+          <div className="m-2">
+            <button
+              onClick={() => handleCategoryChange(Category6)}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category6 ? "bg-gray-300" : ""
+              }`}
+            >
+              Trang sức bạc
+            </button>
           </div>
         </div>
       </div>
@@ -99,13 +156,13 @@ const JewelyPage = () => {
           {currentProducts.map((product) => (
             <JewelryItem
               key={product.productId}
-              to={`/product/${product.productId}`}
+              to={`/product/${product.productId}?category=${selectedCategory}`}
               firstImage={product.Image}
               title={product.Name}
               material={product.Material}
               gem={product.Gem}
               productCost={product.productCost}
-              description={product.Desciption}
+              description={product.Description}
             />
           ))}
         </div>
@@ -135,4 +192,4 @@ const JewelyPage = () => {
   );
 };
 
-export default JewelyPage;
+export default JewelryPage;

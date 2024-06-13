@@ -97,7 +97,7 @@ const Product = () => {
           </div>
           <div className="flex-1 p-5">
             <h1 className="text-2xl font-bold text-gray-800 mb-4">
-              {product.name}
+              {product.Name}
             </h1>
             <div className="mb-5">
               {/* <span className="line-through text-gray-500 mr-2">466.000 ₫</span> */}
@@ -106,7 +106,7 @@ const Product = () => {
               </span>
             </div>
             <div className="mb-5">
-              <p className="font-bold mb-2">Thuế:</p>
+              <p className="font-bold mb-2">Desciption:</p>
               <ul className="list-disc pl-5">
                 {product.Desciption.split(",").map((desc, index) => (
                   <li key={index}>{desc}</li>
@@ -161,7 +161,7 @@ const Product = () => {
                 <th className="border p-2 text-left bg-gray-100">
                   Thương hiệu
                 </th>
-                <td className="border p-2">{product.brand}</td>
+                <td className="border p-2">{product.Category}</td>
               </tr>
               <tr>
                 <th className="border p-2 text-left bg-gray-100">Chất liệu</th>
