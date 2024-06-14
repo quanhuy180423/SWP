@@ -124,9 +124,9 @@ const Diamond = () => {
             {message && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{message}</div>}
             <button
                 onClick={() => setIsFormVisible(!isFormVisible)}
-                className="px-5 py-2 m-5 text-lg text-white bg-gray-500 hover:bg-gray-700 rounded"
+                className="px-5 py-2 m-5 text-lg text-white bg-blue-500 hover:bg-blue-700 rounded"
             >
-                {isFormVisible ? 'Canncel' : 'Add new diamond'}
+                {isFormVisible ? 'Hide Form' : 'Add Diamond'}
             </button>
             {isFormVisible && (
                 <form onSubmit={handleSubmit} className="flex-col justify-center grid grid-cols-2">
@@ -252,7 +252,7 @@ const Diamond = () => {
                             required
                         />
                     </div>
-                    <button type='submit' className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 h-10 m-5 mt-14 rounded"> Add new diamond </button>
+                    <button type='submit' className="bg-blue-500 hover:bg-blue-500 text-white font-bold py-2 px-4 h-10 m-5 mt-14 rounded"> Add new diamond </button>
                 </form>
             )}
 

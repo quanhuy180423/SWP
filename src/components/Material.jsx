@@ -110,7 +110,7 @@ const Material = () => {
         onClick={() => setIsFormVisible(!isFormVisible)}
         className="px-5 py-2 mb-5 text-lg text-white bg-blue-500 rounded"
       >
-        {isFormVisible ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
+        {isFormVisible ? 'Hide Form' : 'Add Material'}
       </button>
       {isFormVisible && (
         <form onSubmit={handleSubmit} className="flex flex-col justify-center">

@@ -214,7 +214,7 @@ const Product = () => {
               className="w-full p-2 text-lg border border-gray-300 rounded h-24"
             ></textarea>
           </div>
-          <button type="submit" className="px-5 py-2 text-lg text-white bg-green-500 hover:bg-green-600 rounded ">Create Product</button>
+          <button type="submit" className="px-5 py-2 mb-5 text-lg text-white bg-blue-500 rounded">Create Product</button>
         </form>
       )}
       <h2 className="text-2xl font-bold mb-5">Product List</h2>

@@ -11,16 +11,15 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-900">
+    <nav className="bg-blue-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-20">
           {/* Left-aligned content */}
           <ul className="flex items-center">
-            <li className="flex-shrink-0">
-              <a href="#" className="text-white font-bold">
-                Sun Shine
-              </a>
-            </li>
+          <div className="flex items-center">
+          <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />
+          <h3 className="text-2xl font-serif text-black pl-2 font-bold">Sun Shine</h3>
+        </div>
           </ul>
           {/* Right-aligned content */}
           <div className="flex items-center">

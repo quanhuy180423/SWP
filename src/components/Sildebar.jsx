@@ -8,12 +8,12 @@ const Sidebar = ({ onChangeContent }) => {
   };
 
   return (
-    <div className="h-screen bg-gray-900 text-white w-64 flex flex-col ">
-      <ul className="flex-1 flex flex-col justify-center items-center fixed top-0 left-0 h-full bg-gray-900 text-white w-60 overflow-y-auto">
+    <div className="h-screen bg-blue-100 text-black w-64 flex flex-col ">
+      <ul className="flex-1 flex flex-col justify-center items-center fixed top-0 left-0 h-full bg-blue-100 text-black w-60 overflow-y-auto">
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Dashboard')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faChartBar} className="text-xl mr-2" />
             Dashboard
@@ -22,7 +22,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Blog')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faBlog} className="text-xl mr-2" />
             Blog
@@ -31,7 +31,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Chat')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faComments} className="text-xl mr-2" />
             Chat
@@ -40,7 +40,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Order')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faClipboardList} className="text-xl mr-2" />
             Order
@@ -49,7 +49,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('RequestOrder')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faClipboardList} className="text-xl mr-2" />
             Request Order
@@ -58,7 +58,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Product')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faBox} className="text-xl mr-2" />
             Product
@@ -67,7 +67,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Diamond')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faGem} className="text-xl mr-2" />
             Diamond
@@ -76,7 +76,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Material')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faCube} className="text-xl mr-2" />
             Material
@@ -85,7 +85,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Category')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faListAlt} className="text-xl mr-2" />
             Category
@@ -94,7 +94,7 @@ const Sidebar = ({ onChangeContent }) => {
         <li className="mb-8 w-full">
           <button
             onClick={() => handleButtonClick('Account')}
-            className="text-white flex items-center justify-center w-full py-2 hover:bg-gray-600"
+            className="text-black flex items-center justify-center w-full py-2 hover:bg-blue-300"
           >
             <FontAwesomeIcon icon={faUser} className="text-xl mr-2" />
             Account
