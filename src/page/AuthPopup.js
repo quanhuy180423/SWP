@@ -15,8 +15,8 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
     email: "",
     address: "",
   });
-  const API_URL_Login = "LOCALHOST_HERE";
-  const API_URL_Register = "LOCALHOST_HERE";
+  const API_URL_Login = "http://localhost:8090/test/login";
+  const API_URL_Register = "http://localhost:8090/test/register";
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -136,13 +136,15 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
       //   localStorage.setItem("userId", user.id);
       //   onLoginSuccess(user);
       // }
-      if (response.status !== 200 || response.data !== 201) {
+      if (response.status !== 200 && response.data !== 201) {
+        console.log(response.status);
         throw new Error("Login failed!");
       }
       console.log(response.data);
       const data = response.data;
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("user", JSON.stringify(data.user));
+      console.log(data);
       onLoginSuccess(data.user);
     } catch (error) {
       setError(error.message);
@@ -209,17 +211,15 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
         </div>
         <div className="flex justify-around mb-6">
           <button
-            className={`py-2 px-4 rounded ${
-              isLogin ? "bg-black text-white" : "bg-transparent text-black"
-            }`}
+            className={`py-2 px-4 rounded ${isLogin ? "bg-black text-white" : "bg-transparent text-black"
+              }`}
             onClick={() => setIsLogin(true)}
           >
             Login
           </button>
           <button
-            className={`py-2 px-4 rounded ${
-              !isLogin ? "bg-black text-white" : "bg-transparent text-black"
-            }`}
+            className={`py-2 px-4 rounded ${!isLogin ? "bg-black text-white" : "bg-transparent text-black"
+              }`}
             onClick={() => setIsLogin(false)}
           >
             Register
