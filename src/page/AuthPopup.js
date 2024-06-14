@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import "tailwindcss/tailwind.css";
+import { jwtDecode } from "jwt-decode";
 
+// về giả  mà accessToken, giải mà payload để lấy user
 const AuthPopup = ({ onClose, onLoginSuccess }) => {
   const [error, setError] = useState("");
   const [formErrors, setFormErrors] = useState({});
@@ -120,30 +122,28 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
         userName: formData.userName,
         passWord: formData.passWord,
       });
-      // // console.log(response);
-      // if (response.status !== 200 || response.data.length === 0) {
-      //   throw new Error("Login failed!");
-      // }
 
-      // const user = response.data.find(
-      //   (user) =>
-      //     user.userName === formData.userName &&
-      //     user.passWord === formData.passWord
-      // );
-      // if (user) {
-      //   console.log(user);
-      //   localStorage.setItem("user", JSON.stringify(user));
-      //   localStorage.setItem("userId", user.id);
-      //   onLoginSuccess(user);
-      // }
       if (response.status !== 200 || response.data !== 201) {
         throw new Error("Login failed!");
       }
       console.log(response.data);
       const data = response.data;
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      onLoginSuccess(data.user);
+      const { accessToken } = data;
+      localStorage.setItem("accessToken", accessToken);
+
+      // Decode the access token to get user info
+      const decodedToken = jwtDecode(accessToken);
+      console.log(decodedToken); // Kiểm tra cấu trúc của token đã giải mã
+
+      // Thông thường, thông tin người dùng sẽ nằm trong payload của token.
+      // Chúng ta cần kiểm tra cấu trúc của decodedToken để chắc chắn rằng thông tin nằm ở đâu.
+      const user = decodedToken.user || decodedToken; // Điều chỉnh này tùy thuộc vào cấu trúc của payload.
+
+      // Store user info in local storage
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Call the onLoginSuccess callback with the user info
+      onLoginSuccess(user);
     } catch (error) {
       setError(error.message);
     }
@@ -151,27 +151,6 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
 
   const handleRegister = async () => {
     try {
-      // Check if user already exists
-      // const checkUserResponse = await axios.get(API_URL_Register);
-      // const users = checkUserResponse.data;
-      // const userExists = users.some(
-      //   (user) => user.userName === formData.userName
-      // );
-
-      // if (userExists) {
-      //   setError("User already exists!");
-      // } else {
-      // If user doesn't exist, create a new one
-      // const registerUrl = API_URL;
-      // const registrationResponse = await axios.post(registerUrl, {
-      //   userName: formData.userName,
-      //   fullName: formData.fullName,
-      //   phone: formData.phone,
-      //   email: formData.email,
-      //   address: formData.address,
-      //   passWord: formData.passWord,
-      // });
-
       const registerUrl = API_URL_Register;
       const registrationResponse = await axios.post(registerUrl, {
         userName: formData.userName,
@@ -188,10 +167,21 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
         throw new Error("Registration failed!");
       }
 
-      const registrationData = registrationResponse.data;
-      localStorage.setItem("accessToken", registrationData.accessToken);
-      localStorage.setItem("user", JSON.stringify(registrationData));
-      onLoginSuccess(registrationData.user);
+      const data = registrationResponse.data;
+      const { accessToken } = data;
+      localStorage.setItem("accessToken", accessToken);
+
+      // Decode the access token to get user info
+      const decodedToken = jwtDecode(accessToken);
+      console.log(decodedToken); // Kiểm tra cấu trúc của token đã giải mã
+
+      // Thông thường, thông tin người dùng sẽ nằm trong payload của token.
+      // Chúng ta cần kiểm tra cấu trúc của decodedToken để chắc chắn rằng thông tin nằm ở đâu.
+      const user = decodedToken.user || decodedToken; // Điều chỉnh này tùy thuộc vào cấu trúc của payload.
+
+      // Store user info in local storage
+      localStorage.setItem("user", JSON.stringify(user));
+      onLoginSuccess(user);
     } catch (error) {
       setError(error.response.data.message || "An error occurred");
     }

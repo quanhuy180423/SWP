@@ -1,30 +1,66 @@
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-// import { Base64UploadAdapter } from "@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter"; // Import the Base64UploadAdapter
+import React from "react";
+import Editor from "ckeditor5-custom-build";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 
-// // Define custom upload adapter plugin
-// function MyCustomUploadAdapterPlugin(editor) {
-//   editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-//     return new Base64UploadAdapter(loader); // Use Base64UploadAdapter for image uploads
-//   };
-// }
+function CKEditorConfig({ initData, setData }) {
+  const editorConfiguration = {
+    toolbar: {
+      items: [
+        "heading",
+        "|",
+        "bold",
+        "italic",
+        "link",
+        "bulletedList",
+        "numberedList",
+        "|",
+        "outdent",
+        "indent",
+        "|",
+        "imageUpload",
+        "blockQuote",
+        "insertTable",
+        "mediaEmbed",
+        "redo",
+        "undo",
+        "alignment",
+        "code",
+        "codeBlock",
+        "fontfamily",
+        "fontsize",
+        "fontColor",
+        "fontBackgroundColor",
+        "imageInsert",
+      ],
+    },
+    language: "vi",
+    image: {
+      toolbar: [
+        "imageTextAlternative",
+        "toggleImageCaption",
+        "imageStyle:inline",
+        "imageStyle:block",
+        "imageStyle:side",
+      ],
+    },
+    table: {
+      contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"],
+    },
+  };
+  return (
+    <>
+      <CKEditor
+        editor={Editor}
+        config={editorConfiguration}
+        data={initData}
+        onChange={(event, editor) => {
+          const data = editor.getData();
+          console.log(data);
+          setData(data);
+        }}
+      />
+    </>
+  );
+}
 
-// Define editor configuration
-export const editorConfiguration = {
-  toolbar: [
-    "heading",
-    "|",
-    "bold",
-    "italic",
-    "link",
-    "bulletedList",
-    "numberedList",
-    "blockQuote",
-    "|",
-    "imageUpload",
-    "undo",
-    "redo",
-  ],
-  // extraPlugins: [MyCustomUploadAdapterPlugin],
-};
-
-export default ClassicEditor;
+export default CKEditorConfig;
