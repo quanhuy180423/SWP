@@ -87,8 +87,9 @@ const JewelryPage = () => {
           <div className="m-2">
             <button
               onClick={() => handleCategoryChange(Category1)}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${selectedCategory === Category1 ? "bg-gray-300" : ""
-                }`}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category1 ? "bg-gray-300" : ""
+              }`}
             >
               Nhẫn
             </button>
@@ -96,8 +97,9 @@ const JewelryPage = () => {
           <div className="m-2">
             <button
               onClick={() => handleCategoryChange(Category2)}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${selectedCategory === Category2 ? "bg-gray-300" : ""
-                }`}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category2 ? "bg-gray-300" : ""
+              }`}
             >
               Vòng cổ
             </button>
@@ -105,8 +107,9 @@ const JewelryPage = () => {
           <div className="m-2">
             <button
               onClick={() => handleCategoryChange(Category3)}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${selectedCategory === Category3 ? "bg-gray-300" : ""
-                }`}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category3 ? "bg-gray-300" : ""
+              }`}
             >
               Vòng tay
             </button>
@@ -114,8 +117,9 @@ const JewelryPage = () => {
           <div className="m-2">
             <button
               onClick={() => handleCategoryChange(Category4)}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${selectedCategory === Category4 ? "bg-gray-300" : ""
-                }`}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category4 ? "bg-gray-300" : ""
+              }`}
             >
               Trang sức vàng
             </button>
@@ -123,8 +127,9 @@ const JewelryPage = () => {
           <div className="m-2">
             <button
               onClick={() => handleCategoryChange(Category5)}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${selectedCategory === Category5 ? "bg-gray-300" : ""
-                }`}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category5 ? "bg-gray-300" : ""
+              }`}
             >
               Trang sức vàng trắng
             </button>
@@ -132,8 +137,9 @@ const JewelryPage = () => {
           <div className="m-2">
             <button
               onClick={() => handleCategoryChange(Category6)}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${selectedCategory === Category6 ? "bg-gray-300" : ""
-                }`}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
+                selectedCategory === Category6 ? "bg-gray-300" : ""
+              }`}
             >
               Trang sức bạc
             </button>
@@ -150,13 +156,14 @@ const JewelryPage = () => {
           {currentProducts.map((product) => (
             <JewelryItem
               key={product.ProductId}
-              to={`/product/${product.ProductId}?CategoryName=${selectedCategory}`}
+              to={`/product/${product.ProductId}`}
+              //?CategoryName=${selectedCategory
               firstImage={product.Image}
-              title={product.Name"}
-              material = { product.Material }
-              gem = { product.Gem }
-              productCost = { product.productCost }
-              description = { product.Description }
+              title={product.Name}
+              material={product.Material}
+              gem={product.Gem}
+              productCost={product.productCost}
+              description={product.Description}
             />
           ))}
         </div>
@@ -169,10 +176,11 @@ const JewelryPage = () => {
               <li key={index} className="mx-1">
                 <button
                   onClick={() => handlePageChange(index + 1)}
-                  className={`px-4 py-2 border ${currentPage === index + 1
+                  className={`px-4 py-2 border ${
+                    currentPage === index + 1
                       ? "bg-gray-300"
                       : "bg-white hover:bg-gray-200"
-                    }`}
+                  }`}
                 >
                   {index + 1}
                 </button>
