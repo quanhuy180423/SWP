@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Product = () => {
-  const { productId } = useParams();
+  const { ProductId } = useParams();
   const [product, setProduct] = useState(null);
+  const [size, setSize] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [showLoginForm, setShowLoginForm] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
       .get(
-        `https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product/${productId}`
+        `https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product/${ProductId}`
       )
       .then((response) => setProduct(response.data))
       .catch((error) => console.error("Error fetching product:", error));
-  }, [productId]);
+  }, [ProductId]);
 
   if (!product) {
     return <div>Loading...</div>;
@@ -25,7 +29,7 @@ const Product = () => {
 
     axios
       .post("http://your-server-address/add-to-cart", {
-        productId: product.id,
+        ProductId: product.id,
         productName: product.name,
       })
       .then((response) => {
@@ -40,59 +44,44 @@ const Product = () => {
       });
   };
 
-  const handleBuyNow = () => {
-    localStorage.setItem(product.id, product.name);
-    sessionStorage.setItem(product.id, product.name);
+  const handleOrder = () => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn) {
+      setShowLoginForm(true);
+      return;
+    }
 
-    axios
-      .post("http://your-server-address/buy-now", {
-        productId: product.id,
-        productName: product.name,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Product purchased successfully!");
-          window.location.href = "/checkout";
-        } else {
-          console.error("Failed to purchase product.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    const orderDetails = {
+      ProductId: product.id,
+      Name: product.name,
+      CategoryName: product.CategoryName,
+      ProductCost: product.ProductCost,
+      Image: product.Image,
+      Size: size,
+      Quantity: quantity,
+    };
+
+    localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
+    navigate("/order-review");
   };
+
+  const availableSizes =
+    product.CategoryName === "Nhẫn"
+      ? [9, 10, 11, 12, 13, 14]
+      : [35, 36, 37, 38, 39, 40, 41, 42, 43, 44];
 
   return (
     <>
       <div className="flex flex-col items-center p-5 bg-gray-100 w-full">
         <div className="flex flex-row max-w-5xl w-full bg-white shadow-md mb-5">
           <div className="flex-1 flex flex-col items-center justify-center overflow-hidden">
-            {/* <img
-              className="max-w-full max-h-96 object-cover transition-transform duration-200 ease-in-out"
-              src={product.images[product.currentImageIndex]}
-              alt={product.name}
-            /> */}
             <img
               className="max-w-full max-h-96 object-cover transition-transform duration-200 ease-in-out"
               src={product.Image}
               alt={product.Name}
             />
             <div className="flex mt-4">
-              {/* {product.images.map((img, index) => (
-                <img
-                  key={index}
-                  className={`w-16 h-16 object-cover cursor-pointer border-2 ${
-                    product.currentImageIndex === index
-                      ? "border-red-600"
-                      : "border-transparent"
-                  }`}
-                  src={img}
-                  alt={`thumbnail ${index + 1}`}
-                  onClick={() =>
-                    setProduct({ ...product, currentImageIndex: index })
-                  }
-                />
-              ))} */}
+              {/* Image thumbnails (if needed) */}
             </div>
           </div>
           <div className="flex-1 p-5">
@@ -100,44 +89,64 @@ const Product = () => {
               {product.Name}
             </h1>
             <div className="mb-5">
-              {/* <span className="line-through text-gray-500 mr-2">466.000 ₫</span> */}
               <span className="text-2xl text-red-600 font-bold">
-                {product.productCost}₫
+                {product.ProductCost}₫
               </span>
             </div>
             <div className="mb-5">
-              <p className="font-bold mb-2">Desciption:</p>
+              <p className="font-bold mb-2">Description:</p>
               <ul className="list-disc pl-5">
-                {product.Desciption.split(",").map((desc, index) => (
+                {product.Description.split(",").map((desc, index) => (
                   <li key={index}>{desc}</li>
                 ))}
               </ul>
             </div>
+            <div className="mb-5">
+              <label htmlFor="size" className="mr-2 font-bold">
+                Size:
+              </label>
+              <select
+                id="size"
+                value={size}
+                onChange={(e) => setSize(e.target.value)}
+                className="p-2 border border-gray-300 rounded"
+              >
+                <option value="" disabled>
+                  Select size
+                </option>
+                {availableSizes.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="flex items-center mb-5">
               <label htmlFor="quantity" className="mr-2 font-bold">
-                Số lượng:
+                Quantity:
               </label>
               <input
                 type="number"
                 id="quantity"
                 name="quantity"
                 min="1"
-                defaultValue="1"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
                 className="w-16 p-2 border border-gray-300 rounded"
               />
             </div>
             <div className="flex gap-2">
               <button
                 className="flex-1 p-3 bg-red-600 text-white font-bold rounded hover:bg-red-700"
-                onClick={handleAddToCart}
+                onClick={handleOrder}
               >
-                THÊM VÀO GIỎ HÀNG
+                ORDER
               </button>
               <button
-                className="flex-1 p-3 bg-red-600 text-white font-bold rounded hover:bg-red-700"
-                onClick={handleBuyNow}
+                className="flex-1 p-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700"
+                onClick={handleAddToCart}
               >
-                MUA NGAY
+                ADD TO CART
               </button>
             </div>
           </div>
@@ -155,17 +164,17 @@ const Product = () => {
                 <th className="border p-2 text-left bg-gray-100">
                   Mã sản phẩm
                 </th>
-                <td className="border p-2">{product.productId}</td>
+                <td className="border p-2">{product.ProductId}</td>
               </tr>
               <tr>
                 <th className="border p-2 text-left bg-gray-100">
-                  Thương hiệu
+                  Loại sản phẩm
                 </th>
-                <td className="border p-2">{product.Category}</td>
+                <td className="border p-2">{product.CategoryName}</td>
               </tr>
               <tr>
                 <th className="border p-2 text-left bg-gray-100">Chất liệu</th>
-                <td className="border p-2">{product.Material}</td>
+                <td className="border p-2">{product.MaterialName}</td>
               </tr>
               <tr>
                 <th className="border p-2 text-left bg-gray-100">Kiểu dáng</th>
@@ -173,7 +182,7 @@ const Product = () => {
               </tr>
               <tr>
                 <th className="border p-2 text-left bg-gray-100">Bảo hành</th>
-                <td className="border p-2">{product.warrantyCard}</td>
+                <td className="border p-2">{product.WarrantyCard}</td>
               </tr>
             </tbody>
           </table>
