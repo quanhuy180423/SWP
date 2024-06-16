@@ -10,13 +10,13 @@ const JewelryPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const API_URL =
-    "http://localhost:8090/test/getAllProduct"; //Link Api get product, show all
+    "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product"; // Link API get product, show all
   const Category1 = "Ring";
   const Category2 = "Necklace";
   const Category3 = "Bracelet";
   const Category4 = "Yellow Gold";
   const Category5 = "White Gold";
-  const Category6 = "Sliver";
+  const Category6 = "Silver";
 
   const productsPerPage = 25;
 
@@ -25,7 +25,7 @@ const JewelryPage = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const categoryFromUrl = searchParams.get("category");
+    const categoryFromUrl = searchParams.get("CategoryName");
     if (categoryFromUrl) {
       setSelectedCategory(categoryFromUrl);
     }
@@ -46,9 +46,9 @@ const JewelryPage = () => {
     return <div>Loading...</div>;
   }
 
-  // Filter products based on selected category
+  // Filter products based on selected CategoryName
   const filteredProducts = selectedCategory
-    ? products.filter((product) => product.category === selectedCategory)
+    ? products.filter((product) => product.CategoryName === selectedCategory)
     : products;
 
   // Calculate the products to display on the current page
@@ -67,11 +67,11 @@ const JewelryPage = () => {
     setCurrentPage(pageNumber);
   };
 
-  // Handler for changing category
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // Reset to the first page whenever the category changes
-    navigate(`?category=${category}`); // Update URL with selected category
+  // Handler for changing CategoryName
+  const handleCategoryChange = (CategoryName) => {
+    setSelectedCategory(CategoryName);
+    setCurrentPage(1); // Reset to the first page whenever the CategoryName changes
+    navigate(`?CategoryName=${CategoryName}`); // Update URL with selected CategoryName
   };
 
   return (
@@ -86,8 +86,8 @@ const JewelryPage = () => {
         <div className="flex justify-around">
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange("float")} //category1
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${selectedCategory === "float" ? "bg-gray-300" : "" //category1
+              onClick={() => handleCategoryChange(Category1)}
+              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${selectedCategory === Category1 ? "bg-gray-300" : ""
                 }`}
             >
               Nhẫn
@@ -149,8 +149,8 @@ const JewelryPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-10/12">
           {currentProducts.map((product) => (
             <JewelryItem
-              key={product.ProductID}
-              to={`/product/${product.productId}?category=${selectedCategory}`}
+              key={product.ProductId}
+              to={`/product/${product.ProductId}?CategoryName=${selectedCategory}`}
               firstImage={product.Image}
               title={product.Name"}
               material = { product.Material }
@@ -170,8 +170,8 @@ const JewelryPage = () => {
                 <button
                   onClick={() => handlePageChange(index + 1)}
                   className={`px-4 py-2 border ${currentPage === index + 1
-                    ? "bg-gray-300"
-                    : "bg-white hover:bg-gray-200"
+                      ? "bg-gray-300"
+                      : "bg-white hover:bg-gray-200"
                     }`}
                 >
                   {index + 1}

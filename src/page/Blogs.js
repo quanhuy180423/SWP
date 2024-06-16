@@ -114,13 +114,6 @@ const Blogs = () => {
                   <p>Description</p>
                 </Link>
               </div>
-              <div className="bg-white p-4 shadow-md">Box 4</div>
-              <div className="bg-white p-4 shadow-md">Box 4</div>
-              <div className="bg-white p-4 shadow-md">Box 4</div>
-              <div className="bg-white p-4 shadow-md">Box 4</div>
-              <div className="bg-white p-4 shadow-md">Box 4</div>
-              <div className="bg-white p-4 shadow-md">Box 4</div>
-              <div className="bg-white p-4 shadow-md">Box 4</div>
             </div>
           </div>
         </div>
