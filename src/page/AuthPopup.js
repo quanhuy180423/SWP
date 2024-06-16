@@ -17,8 +17,8 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
     email: "",
     address: "",
   });
-  const API_URL_Login = "LOCALHOST_HERE";
-  const API_URL_Register = "LOCALHOST_HERE";
+  const API_URL_Login = "http://localhost:8090/test/login";
+  const API_URL_Register = "http://localhost:8090/test/register";
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -124,26 +124,42 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
       });
 
       if (response.status !== 200 || response.data !== 201) {
-        throw new Error("Login failed!");
+        // const user = response.data.find(
+        //   (user) =>
+        //     user.userName === formData.userName &&
+        //     user.passWord === formData.passWord
+        // );
+        // if (user) {
+        //   console.log(user);
+        //   localStorage.setItem("user", JSON.stringify(user));
+        //   localStorage.setItem("userId", user.id);
+        //   onLoginSuccess(user);
+        // }
+        if (response.status !== 200 && response.data !== 201) {
+          console.log(response.status);
+
+          throw new Error("Login failed!");
+        }
+        console.log(response.data);
+        const data = response.data;
+
+        const { accessToken } = data;
+        localStorage.setItem("accessToken", accessToken);
+
+        // Decode the access token to get user info
+        const decodedToken = jwtDecode(accessToken);
+        console.log(decodedToken); // Kiểm tra cấu trúc của token đã giải mã
+
+        // Thông thường, thông tin người dùng sẽ nằm trong payload của token.
+        // Chúng ta cần kiểm tra cấu trúc của decodedToken để chắc chắn rằng thông tin nằm ở đâu.
+        const user = decodedToken.user || decodedToken; // Điều chỉnh này tùy thuộc vào cấu trúc của payload.
+
+        // Store user info in local storage
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Call the onLoginSuccess callback with the user info
+        onLoginSuccess(user);
       }
-      console.log(response.data);
-      const data = response.data;
-      const { accessToken } = data;
-      localStorage.setItem("accessToken", accessToken);
-
-      // Decode the access token to get user info
-      const decodedToken = jwtDecode(accessToken);
-      console.log(decodedToken); // Kiểm tra cấu trúc của token đã giải mã
-
-      // Thông thường, thông tin người dùng sẽ nằm trong payload của token.
-      // Chúng ta cần kiểm tra cấu trúc của decodedToken để chắc chắn rằng thông tin nằm ở đâu.
-      const user = decodedToken.user || decodedToken; // Điều chỉnh này tùy thuộc vào cấu trúc của payload.
-
-      // Store user info in local storage
-      localStorage.setItem("user", JSON.stringify(user));
-
-      // Call the onLoginSuccess callback with the user info
-      onLoginSuccess(user);
     } catch (error) {
       setError(error.message);
     }
