@@ -152,11 +152,11 @@ const JewelryPage = () => {
               key={product.ProductID}
               to={`/product/${product.productId}?category=${selectedCategory}`}
               firstImage={product.Image}
-              title={product.Name}
-              material={product.Material}
-              gem={product.Gem}
-              productCost={product.productCost}
-              description={product.Description}
+              title={product.Name"}
+              material = { product.Material }
+              gem = { product.Gem }
+              productCost = { product.productCost }
+              description = { product.Description }
             />
           ))}
         </div>
