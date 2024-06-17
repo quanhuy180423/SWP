@@ -15,7 +15,7 @@ import RequestOrder from './orders/RequestOrder';  // Import RequestOrder
 import Blogs from './blog/Blog';
 import Product from './components/Products';
 import Material from './components/Material';
-import Category from './components/Category';
+import Category from './components/Category'
 import Diamond from './diamond/Diamond';
 import Account from './components/Account';
 
