@@ -4,7 +4,6 @@ import axios from "axios";
 import "tailwindcss/tailwind.css";
 import { jwtDecode } from "jwt-decode";
 
-// về giả  mà accessToken, giải mà payload để lấy user
 const AuthPopup = ({ onClose, onLoginSuccess }) => {
   const [error, setError] = useState("");
   const [formErrors, setFormErrors] = useState({});
@@ -12,18 +11,20 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
   const [formData, setFormData] = useState({
     userName: "",
     passWord: "",
-    fullName: "",
+    name: "",
     phone: "",
     email: "",
     address: "",
   });
+
   const API_URL_Login = "http://localhost:8090/test/login";
   const API_URL_Register = "http://localhost:8090/test/register";
+
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     });
     setFormErrors((prevErrors) => ({
       ...prevErrors,
@@ -69,30 +70,30 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
   const validate = (values) => {
     const errors = {};
     if (!values.userName) {
-      errors.userName = "Username is required.";
+      errors.userName = "userName is required.";
     }
     if (!values.passWord) {
-      errors.passWord = "Password is required.";
+      errors.passWord = "passWord is required.";
     } else if (values.passWord.length < 6) {
-      errors.passWord = "Password must be at least 6 characters.";
+      errors.passWord = "passWord must be at least 6 characters.";
     }
     if (!isLogin) {
-      if (!values.fullName) {
-        errors.fullName = "Full Name is required.";
+      if (!values.name) {
+        errors.name = "Full name is required.";
       }
       if (!values.phone) {
-        errors.phone = "Phone is required.";
+        errors.phone = "phone is required.";
       } else if (!/^\d{10}$/.test(values.phone)) {
-        errors.phone = "Phone must be a 10-digit number.";
+        errors.phone = "phone must be a 10-digit number.";
       }
       if (!values.email) {
-        errors.email = "Email is required.";
+        errors.email = "email is required.";
       } else if (!/\S+@\S+\.\S+/.test(values.email)) {
         errors.email =
-          "Email format is invalid. Email must be in the format of 'abc@gmail.com'";
+          "email format is invalid. email must be in the format of 'abc@gmail.com'";
       }
       if (!values.address) {
-        errors.address = "Address is required.";
+        errors.address = "address is required.";
       }
     }
     return errors;
@@ -123,43 +124,18 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
         passWord: formData.passWord,
       });
 
-      if (response.status !== 200 || response.data !== 201) {
-        // const user = response.data.find(
-        //   (user) =>
-        //     user.userName === formData.userName &&
-        //     user.passWord === formData.passWord
-        // );
-        // if (user) {
-        //   console.log(user);
-        //   localStorage.setItem("user", JSON.stringify(user));
-        //   localStorage.setItem("userId", user.id);
-        //   onLoginSuccess(user);
-        // }
-        if (response.status !== 200 && response.data !== 201) {
-          console.log(response.status);
-
-          throw new Error("Login failed!");
-        }
-        console.log(response.data);
-        const data = response.data;
-
-        const { accessToken } = data;
-        localStorage.setItem("accessToken", accessToken);
-
-        // Decode the access token to get user info
-        const decodedToken = jwtDecode(accessToken);
-        console.log(decodedToken); // Kiểm tra cấu trúc của token đã giải mã
-
-        // Thông thường, thông tin người dùng sẽ nằm trong payload của token.
-        // Chúng ta cần kiểm tra cấu trúc của decodedToken để chắc chắn rằng thông tin nằm ở đâu.
-        const user = decodedToken.user || decodedToken; // Điều chỉnh này tùy thuộc vào cấu trúc của payload.
-
-        // Store user info in local storage
-        localStorage.setItem("user", JSON.stringify(user));
-
-        // Call the onLoginSuccess callback with the user info
-        onLoginSuccess(user);
+      if (response.status !== 200) {
+        throw new Error("Login failed!");
       }
+      const data = response.data;
+      const { accessToken } = data;
+      localStorage.setItem("accessToken", accessToken);
+
+      const decodedToken = jwtDecode(accessToken);
+      const user = decodedToken.payload;
+
+      localStorage.setItem("user", JSON.stringify(user));
+      onLoginSuccess(user);
     } catch (error) {
       setError(error.message);
     }
@@ -170,14 +146,12 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
       const registerUrl = API_URL_Register;
       const registrationResponse = await axios.post(registerUrl, {
         userName: formData.userName,
-        fullName: formData.fullName,
+        name: formData.name,
         phone: formData.phone,
         email: formData.email,
         address: formData.address,
         passWord: formData.passWord,
       });
-
-      console.log(registrationResponse);
 
       if (registrationResponse.status !== 201) {
         throw new Error("Registration failed!");
@@ -187,19 +161,13 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
       const { accessToken } = data;
       localStorage.setItem("accessToken", accessToken);
 
-      // Decode the access token to get user info
       const decodedToken = jwtDecode(accessToken);
-      console.log(decodedToken); // Kiểm tra cấu trúc của token đã giải mã
+      const user = decodedToken.user || decodedToken;
 
-      // Thông thường, thông tin người dùng sẽ nằm trong payload của token.
-      // Chúng ta cần kiểm tra cấu trúc của decodedToken để chắc chắn rằng thông tin nằm ở đâu.
-      const user = decodedToken.user || decodedToken; // Điều chỉnh này tùy thuộc vào cấu trúc của payload.
-
-      // Store user info in local storage
       localStorage.setItem("user", JSON.stringify(user));
       onLoginSuccess(user);
     } catch (error) {
-      setError(error.response.data.message || "An error occurred");
+      setError(error.response?.data?.message || "An error occurred");
     }
   };
 
@@ -238,7 +206,7 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
               <input
                 type="text"
                 name="userName"
-                placeholder="Username"
+                placeholder="userName"
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.userName}
@@ -248,9 +216,9 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 <p className="text-red-500">{formErrors.userName}</p>
               )}
               <input
-                type="password"
+                type="passWord"
                 name="passWord"
-                placeholder="Password"
+                placeholder="passWord"
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.passWord}
@@ -279,7 +247,7 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
               <input
                 type="text"
                 name="userName"
-                placeholder="Username"
+                placeholder="userName"
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.userName}
@@ -290,20 +258,20 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
               )}
               <input
                 type="text"
-                name="fullName"
-                placeholder="Full Name"
+                name="name"
+                placeholder="Full name"
                 onChange={handleChange}
                 onFocus={handleFocus}
-                value={formData.fullName}
+                value={formData.name}
                 className="w-full p-2 border border-gray-300 rounded"
               />
-              {formErrors.fullName && (
-                <p className="text-red-500">{formErrors.fullName}</p>
+              {formErrors.name && (
+                <p className="text-red-500">{formErrors.name}</p>
               )}
               <input
                 type="text"
                 name="phone"
-                placeholder="Phone"
+                placeholder="phone"
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.phone}
@@ -315,7 +283,7 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
               <input
                 type="email"
                 name="email"
-                placeholder="Email"
+                placeholder="email"
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.email}
@@ -327,7 +295,7 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
               <input
                 type="text"
                 name="address"
-                placeholder="Address"
+                placeholder="address"
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.address}
@@ -337,9 +305,9 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
                 <p className="text-red-500">{formErrors.address}</p>
               )}
               <input
-                type="password"
+                type="passWord"
                 name="passWord"
-                placeholder="Password"
+                placeholder="passWord"
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.passWord}

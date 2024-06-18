@@ -9,14 +9,7 @@ const JewelryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  const API_URL =
-    "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product"; // Link API get product, show all
-  const Category1 = "Ring";
-  const Category2 = "Necklace";
-  const Category3 = "Bracelet";
-  const Category4 = "Yellow Gold";
-  const Category5 = "White Gold";
-  const Category6 = "Silver";
+  const API_URL = "http://localhost:8090/test/getAllProduct"; // Link API get product, show all
 
   const productsPerPage = 25;
 
@@ -46,12 +39,10 @@ const JewelryPage = () => {
     return <div>Loading...</div>;
   }
 
-  // Filter products based on selected CategoryName
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.CategoryName === selectedCategory)
     : products;
 
-  // Calculate the products to display on the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(
@@ -59,19 +50,16 @@ const JewelryPage = () => {
     indexOfLastProduct
   );
 
-  // Calculate total number of pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
-  // Handler for navigating pages
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  // Handler for changing CategoryName
   const handleCategoryChange = (CategoryName) => {
     setSelectedCategory(CategoryName);
-    setCurrentPage(1); // Reset to the first page whenever the CategoryName changes
-    navigate(`?CategoryName=${CategoryName}`); // Update URL with selected CategoryName
+    setCurrentPage(1);
+    navigate(`?CategoryName=${CategoryName}`);
   };
 
   return (
@@ -86,9 +74,9 @@ const JewelryPage = () => {
         <div className="flex justify-around">
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange(Category1)}
+              onClick={() => handleCategoryChange("Ring")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === Category1 ? "bg-gray-300" : ""
+                selectedCategory === "Ring" ? "bg-gray-300" : ""
               }`}
             >
               Nhẫn
@@ -96,9 +84,9 @@ const JewelryPage = () => {
           </div>
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange(Category2)}
+              onClick={() => handleCategoryChange("Necklace")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === Category2 ? "bg-gray-300" : ""
+                selectedCategory === "Necklace" ? "bg-gray-300" : ""
               }`}
             >
               Vòng cổ
@@ -106,9 +94,9 @@ const JewelryPage = () => {
           </div>
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange(Category3)}
+              onClick={() => handleCategoryChange("Bracelet")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === Category3 ? "bg-gray-300" : ""
+                selectedCategory === "Bracelet" ? "bg-gray-300" : ""
               }`}
             >
               Vòng tay
@@ -116,9 +104,9 @@ const JewelryPage = () => {
           </div>
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange(Category4)}
+              onClick={() => handleCategoryChange("Yellow Gold")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === Category4 ? "bg-gray-300" : ""
+                selectedCategory === "Yellow Gold" ? "bg-gray-300" : ""
               }`}
             >
               Trang sức vàng
@@ -126,9 +114,9 @@ const JewelryPage = () => {
           </div>
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange(Category5)}
+              onClick={() => handleCategoryChange("White Gold")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === Category5 ? "bg-gray-300" : ""
+                selectedCategory === "White Gold" ? "bg-gray-300" : ""
               }`}
             >
               Trang sức vàng trắng
@@ -136,9 +124,9 @@ const JewelryPage = () => {
           </div>
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange(Category6)}
+              onClick={() => handleCategoryChange("Silver")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === Category6 ? "bg-gray-300" : ""
+                selectedCategory === "Silver" ? "bg-gray-300" : ""
               }`}
             >
               Trang sức bạc
@@ -155,15 +143,13 @@ const JewelryPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-10/12">
           {currentProducts.map((product) => (
             <JewelryItem
-              key={product.ProductId}
-              to={`/product/${product.ProductId}`}
-              //?CategoryName=${selectedCategory
+              key={product.productId}
+              to={`/product/${product.productId}`}
               firstImage={product.Image}
               title={product.Name}
-              material={product.Material}
-              gem={product.Gem}
-              productCost={product.productCost}
-              description={product.Description}
+              material={product.MaterialName}
+              gem={product.GemName}
+              productCost={product.ProductCost}
             />
           ))}
         </div>

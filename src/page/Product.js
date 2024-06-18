@@ -1,9 +1,10 @@
+// Product.js
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Product = () => {
-  const { ProductId } = useParams();
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [size, setSize] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -11,26 +12,30 @@ const Product = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(
-        `https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product/${ProductId}`
-      )
-      .then((response) => setProduct(response.data))
-      .catch((error) => console.error("Error fetching product:", error));
-  }, [ProductId]);
+    if (productId) {
+      axios
+        .get(`http://localhost:8090/test/getProductById`, {
+          params: { productId },
+        })
+        .then((response) => setProduct(response.data))
+        .catch((error) => console.error("Error fetching product:", error));
+    } else {
+      console.error("ProductId is undefined");
+    }
+  }, [productId]);
 
   if (!product) {
     return <div>Loading...</div>;
   }
 
   const handleAddToCart = () => {
-    localStorage.setItem(product.id, product.name);
-    sessionStorage.setItem(product.id, product.name);
+    localStorage.setItem(product.ProductID, product.Name);
+    sessionStorage.setItem(product.ProductID, product.Name);
 
     axios
       .post("http://your-server-address/add-to-cart", {
-        ProductId: product.id,
-        productName: product.name,
+        productId: product.productId,
+        productName: product.Name,
       })
       .then((response) => {
         if (response.status === 200) {
@@ -52,23 +57,18 @@ const Product = () => {
     }
 
     const orderDetails = {
-      ProductId: product.id,
-      Name: product.name,
+      productId: product.productId,
+      Name: product.Name,
       CategoryName: product.CategoryName,
       ProductCost: product.ProductCost,
       Image: product.Image,
       Size: size,
       Quantity: quantity,
     };
-
+    console.log(orderDetails);
     localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
     navigate("/order-review");
   };
-
-  const availableSizes =
-    product.CategoryName === "Nhẫn"
-      ? [9, 10, 11, 12, 13, 14]
-      : [35, 36, 37, 38, 39, 40, 41, 42, 43, 44];
 
   return (
     <>
@@ -101,26 +101,48 @@ const Product = () => {
                 ))}
               </ul>
             </div>
-            <div className="mb-5">
-              <label htmlFor="size" className="mr-2 font-bold">
-                Size:
-              </label>
-              <select
-                id="size"
-                value={size}
-                onChange={(e) => setSize(e.target.value)}
-                className="p-2 border border-gray-300 rounded"
-              >
-                <option value="" disabled>
-                  Select size
-                </option>
-                {availableSizes.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {product.CategoryName === "Ring" ? (
+              <div className="mb-5">
+                <label htmlFor="size" className="mr-2 font-bold">
+                  Ring Size:
+                </label>
+                <select
+                  id="size"
+                  name="size"
+                  value={size}
+                  onChange={(e) => setSize(e.target.value)}
+                  className="p-2 border border-gray-300 rounded"
+                >
+                  {[9, 10, 11, 12, 13, 14].map((ringSize) => (
+                    <option key={ringSize} value={ringSize}>
+                      {ringSize}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : product.CategoryName === "Necklace" ? (
+              <div className="mb-5">
+                <label htmlFor="size" className="mr-2 font-bold">
+                  Necklace Size:
+                </label>
+                <select
+                  id="size"
+                  name="size"
+                  value={size}
+                  onChange={(e) => setSize(e.target.value)}
+                  className="p-2 border border-gray-300 rounded"
+                >
+                  {[35, 36, 37, 38, 39, 40, 41, 42, 43, 44].map(
+                    (necklaceSize) => (
+                      <option key={necklaceSize} value={necklaceSize}>
+                        {necklaceSize}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+            ) : null}
+
             <div className="flex items-center mb-5">
               <label htmlFor="quantity" className="mr-2 font-bold">
                 Quantity:
@@ -158,31 +180,37 @@ const Product = () => {
           <p className="text-lg text-gray-600 mb-4">
             Tham chiếu {product.Name}
           </p>
-          <table className="w-full border-collapse">
-            <tbody>
+          <table className="min-w-full divide-y divide-gray-200 text-left text-gray-600">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="border p-2 text-left bg-gray-100">
-                  Mã sản phẩm
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Chi tiết
                 </th>
-                <td className="border p-2">{product.ProductId}</td>
-              </tr>
-              <tr>
-                <th className="border p-2 text-left bg-gray-100">
-                  Loại sản phẩm
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Thông số
                 </th>
-                <td className="border p-2">{product.CategoryName}</td>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              <tr>
+                <td className="px-6 py-4">Danh mục</td>
+                <td className="px-6 py-4">{product.CategoryName}</td>
               </tr>
               <tr>
-                <th className="border p-2 text-left bg-gray-100">Chất liệu</th>
-                <td className="border p-2">{product.MaterialName}</td>
+                <td className="px-6 py-4">Tên</td>
+                <td className="px-6 py-4">{product.Name}</td>
               </tr>
               <tr>
-                <th className="border p-2 text-left bg-gray-100">Kiểu dáng</th>
-                <td className="border p-2">{product.style}</td>
+                <td className="px-6 py-4">Giá</td>
+                <td className="px-6 py-4">{product.ProductCost}₫</td>
               </tr>
               <tr>
-                <th className="border p-2 text-left bg-gray-100">Bảo hành</th>
-                <td className="border p-2">{product.WarrantyCard}</td>
+                <td className="px-6 py-4">Chất liệu</td>
+                <td className="px-6 py-4">{product.Material}</td>
+              </tr>
+              <tr>
+                <td className="px-6 py-4">Đá</td>
+                <td className="px-6 py-4">{product.Gem}</td>
               </tr>
             </tbody>
           </table>

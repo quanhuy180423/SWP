@@ -1,3 +1,4 @@
+// App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./page/HomePage";
@@ -9,7 +10,7 @@ import UserInfo from "./page/UserInfo";
 import DiamondPage from "./page/Diamond";
 import Layout from "./Layout";
 import AdminRoutes from "./AdminRoutes";
-import JewelyPage from "./JewelyPage/JewelyPage";
+import JewelryPage from "./JewelyPage/JewelyPage";
 
 const App = () => {
   return (
@@ -20,13 +21,10 @@ const App = () => {
           <Route path="login" element={<LoginForm />} />
           <Route path="order-form" element={<OrderForm />} />
           <Route path="blog" element={<Blogs />} />
-          <Route path="product" element={<Product />} />
-          {/* <Route path="/userinfo/:id" element={<UserInfo />} /> */}
-          <Route path="/userinfo" element={<UserInfo />} />
-          {/* test */}
+          <Route path="product/:productId" element={<Product />} />
+          <Route path="/userinfo/:Id" element={<UserInfo />} />
           <Route path="diamondpage" element={<DiamondPage />} />
-          <Route path="jewelry" element={<JewelyPage />} />
-          <Route path="product/:ProductId" element={<Product />} />
+          <Route path="jewelry" element={<JewelryPage />} />
         </Route>
         <Route path="/*" element={<AdminRoutes />} />
       </Routes>
