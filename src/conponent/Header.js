@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AuthPopup from "../page/AuthPopup";
 import "../css/header.css";
 import { Link } from "react-router-dom";
+import { CartContext } from "../cart/CartContext"; // Corrected import
 
 const Header = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const { cart } = useContext(CartContext); // Corrected useContext usage
+
+  const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -36,10 +40,13 @@ const Header = () => {
   return (
     <div className="sticky top-0 bg-white z-1000 shadow-md pb-2 header">
       <div className="flex justify-between items-center px-6">
-        <div className="flex items-center">
-          <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />
-          <h3 className="text-xl font-serif text-gray-500 pl-2">Sun Shine</h3>
-        </div>
+        <Link to="/">
+          <div className="flex items-center">
+            <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />
+            <h3 className="text-xl font-serif text-gray-500 pl-2">Sun Shine</h3>
+          </div>
+        </Link>
+
         <div className="w-3/6">
           <div className="flex justify-center">
             <div className="flex-1 m-2 w-3/5">
@@ -94,7 +101,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-col items-center space-x-4">
           {user ? (
             <div className="flex items-center space-x-2">
               <Link
@@ -110,13 +117,13 @@ const Header = () => {
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-gray-500 hover:text-black"
+                className="text-gray-500 hover:text-black "
               >
                 Logout
               </button>
             </div>
           ) : (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between space-x-2">
               <img
                 src="./img/profile-user.png"
                 alt="profile"
@@ -130,6 +137,21 @@ const Header = () => {
               </button>
             </div>
           )}
+          <div>
+            <Link to="/cart" className="flex items-center justify-center ">
+              <img
+                src="./img/shopping-bag.png"
+                alt="cart"
+                className="w-5 h-5"
+              />
+              <span className="text-sm text-gray-500">
+                {totalQuantity === 0 ? "0" : `${totalQuantity}`}
+                {/* <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                  {totalQuantity}
+                </span> */}
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
       {isPopupOpen && (

@@ -9,7 +9,9 @@ const JewelryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  const API_URL = "http://localhost:8090/test/getAllProduct"; // Link API get product, show all
+  // const API_URL = "http://localhost:8090/test/getAllProduct"; // Link API get product, show all
+  const API_URL =
+    "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product"; // Link API get product, show all
 
   const productsPerPage = 25;
 

@@ -1,7 +1,7 @@
-// Product.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { CartContext } from "../cart/CartContext";
 
 const Product = () => {
   const { productId } = useParams();
@@ -10,13 +10,14 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const navigate = useNavigate();
+  const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     if (productId) {
       axios
-        .get(`http://localhost:8090/test/getProductById`, {
-          params: { productId },
-        })
+        .get(
+          `https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product/${productId}`
+        )
         .then((response) => setProduct(response.data))
         .catch((error) => console.error("Error fetching product:", error));
     } else {
@@ -29,24 +30,9 @@ const Product = () => {
   }
 
   const handleAddToCart = () => {
-    localStorage.setItem(product.ProductID, product.Name);
-    sessionStorage.setItem(product.ProductID, product.Name);
-
-    axios
-      .post("http://your-server-address/add-to-cart", {
-        productId: product.productId,
-        productName: product.Name,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Product added to cart successfully!");
-        } else {
-          console.error("Failed to add product to cart.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    addToCart(product, parseInt(quantity));
+    console.log("Product added to cart successfully!");
+    console.log(product);
   };
 
   const handleOrder = () => {
