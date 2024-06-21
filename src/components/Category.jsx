@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { Editor } from '@tinymce/tinymce-react';
 
 const Category = () => {
-  const [categorys, setCategorys] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({
     CategoryID: '',
     Name: '',
@@ -13,25 +14,25 @@ const Category = () => {
   const [editCategory, setEditCategory] = useState(null);
   const [message, setMessage] = useState('');
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const API_URL = "";
+  const API_URL = "https://your-api-endpoint-here"; // Replace with your actual API endpoint
 
   useEffect(() => {
-    fetchCategorys();
+    fetchCategories();
   }, []);
 
-  const fetchCategorys = async () => {
+  const fetchCategories = async () => {
     try {
       const response = await axios.get(API_URL);
-      setCategorys(response.data);
+      setCategories(response.data);
     } catch (error) {
-      console.error('Error fetching Categorys:', error);
+      console.error('Error fetching categories:', error);
     }
   };
 
   const addCategory = async () => {
     try {
-      await axios.post(API_URL, newCategory);
-      setCategorys([...categorys, newCategory]);
+      const response = await axios.post(API_URL, newCategory);
+      setCategories([...categories, response.data]);
       setNewCategory({
         CategoryID: '',
         Name: '',
@@ -40,33 +41,35 @@ const Category = () => {
       setMessage('Category added successfully');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      console.error('Error adding Category:', error);
+      console.error('Error adding category:', error);
     }
   };
 
   const deleteCategory = async (CategoryID) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this Category?');
+    const confirmDelete = window.confirm('Are you sure you want to delete this category?');
     if (confirmDelete) {
       try {
         await axios.delete(`${API_URL}/${CategoryID}`);
-        setCategorys(categorys.filter(category => category.CategoryID !== CategoryID));
+        setCategories(categories.filter(category => category.CategoryID !== CategoryID));
         setMessage('Category deleted successfully');
         setTimeout(() => setMessage(''), 3000);
       } catch (error) {
-        console.error('Error deleting Category:', error);
+        console.error('Error deleting category:', error);
       }
     }
   };
 
   const updateCategory = async () => {
     try {
-      await axios.put(`${API_URL}/${editCategory.CategoryID}`, editCategory);
-      setCategorys(categorys.map(category => (category.CategoryID === editCategory.CategoryID ? editCategory : category)));
+      const response = await axios.put(`${API_URL}/${editCategory.CategoryID}`, editCategory);
+      setCategories(categories.map(category =>
+        category.CategoryID === editCategory.CategoryID ? response.data : category
+      ));
       setEditCategory(null);
       setMessage('Category updated successfully');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      console.error('Error updating Category:', error);
+      console.error('Error updating category:', error);
     }
   };
 
@@ -76,6 +79,14 @@ const Category = () => {
       setEditCategory({ ...editCategory, [name]: value });
     } else {
       setNewCategory({ ...newCategory, [name]: value });
+    }
+  };
+
+  const handleEditorChange = (content, editor) => {
+    if (editCategory) {
+      setEditCategory({ ...editCategory, Description: content });
+    } else {
+      setNewCategory({ ...newCategory, Description: content });
     }
   };
 
@@ -101,18 +112,34 @@ const Category = () => {
       {isFormVisible && (
         <form onSubmit={handleSubmit} className="flex flex-col justify-center">
           <div className="mb-4">
-          <label htmlFor="name" className="block">Name</label>
-          <select id="name" name="name" value={editCategory ? editCategory.Name : newCategory.Name} onChange={handleInputChange} className="w-full p-2 border border-gray-300 rounded">
-            <option value="customer">Dây chuyền</option>
-            <option value="staff">Nhẫn</option>
-            <option value="admin">Vòng tay</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label htmlFor="description" className="block">Description</label>
-          <input type="text" id="description" name="description" value={editCategory ? editCategory.Description : newCategory.Description} onChange={handleInputChange} className="w-full p-2 border border-gray-300 rounded" />
-        </div>
-          
+            <label htmlFor="Name" className="block">Name</label>
+            <select id="Name" name="Name" value={editCategory ? editCategory.Name : newCategory.Name} onChange={handleInputChange} className="w-full p-2 border border-gray-300 rounded">
+              <option value="">Select Category</option>
+              <option value="Dây chuyền">Dây chuyền</option>
+              <option value="Nhẫn">Nhẫn</option>
+              <option value="Vòng tay">Vòng tay</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="Description" className="block">Description</label>
+            <Editor
+              apiKey='0ywy09pu3fif7crqzb9n5eygtvh5hwbbpj4vold92e6q9r11'
+              value={editCategory ? editCategory.Description : newCategory.Description}
+              init={{
+                height: 300,
+                menubar: false,
+                plugins: [
+                  'advlist autolink lists link image charmap print preview anchor',
+                  'searchreplace visualblocks code fullscreen',
+                  'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar: 'undo redo | formatselect | bold italic backcolor | \
+                          alignleft aligncenter alignright alignjustify | \
+                          bullist numlist outdent indent | removeformat | help'
+              }}
+              onEditorChange={handleEditorChange}
+            />
+          </div>
           <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
             {editCategory ? 'Update Category' : 'Add Category'}
           </button>
@@ -125,14 +152,14 @@ const Category = () => {
           <tr className="bg-gray-200">
             <th className="border p-2 border-black">Name</th>
             <th className="border p-2 border-black">Description</th>
-            
+            <th className="border p-2 border-black">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {categorys.map((category) => (
+          {categories.map((category) => (
             <tr key={category.CategoryID} className="bg-gray-100">
               <td className="border p-2 border-black">{category.Name}</td>
-              <td className="border p-2 border-black">{category.Description}</td>   
+              <td className="border p-2 border-black" dangerouslySetInnerHTML={{ __html: category.Description }}></td>
               <td className="border p-2 border-black">
                 <button onClick={() => setEditCategory(category)} className="px-2 py-1 bg-green-500 text-white rounded mr-2">
                   <FontAwesomeIcon icon={faEdit} />

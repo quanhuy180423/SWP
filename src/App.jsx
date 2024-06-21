@@ -2,22 +2,17 @@ import { useState } from 'react';
 
 import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
-// import Chat from './components/Chat';
-// import Order from './components/Order';
-// import Product from './components/Product';
-// import Diamond from './components/Diamond';
-// import Material from './components/Material';
-// import Category from './components/Category';
-// import Account from './components/Account';
-
-import Sidebar from './components/Sildebar';
-import RequestOrder from './orders/RequestOrder';  // Import RequestOrder
+import Sidebar from './components/Sildebar';// Import RequestOrder
 import Blogs from './blog/Blog';
 import Product from './components/Products';
 import Material from './components/Material';
 import Category from './components/Category'
 import Diamond from './diamond/Diamond';
 import Account from './components/Account';
+// import OrderForm from './order/pages/OrderForm';
+import RequestOrder from './orders/RequestOrder';
+import Order from './orders/Order';
+import { OrderProvider } from './orders/OrderContext';
 
 const App = () => {
   const [content, setContent] = useState('Dashboard');
@@ -34,6 +29,8 @@ const App = () => {
         return <Blogs />;
       case 'Chat':
         return <Chat />;
+      case 'RequestOrder':
+        return <RequestOrder />;
       case 'Order':
         return <Order />;
       case 'Product':
@@ -46,23 +43,23 @@ const App = () => {
         return <Category />;
       case 'Account':
         return <Account />;
-      case 'RequestOrder':  // Add case for RequestOrder
-        return <RequestOrder />;
       default:
         return <Dashboard />;
     }
   };
 
   return (
-    <div className="flex h-screen">
-      <Sidebar onChangeContent={handleChangeContent} />
-      <div className="flex-1 flex flex-col">
-        <Navbar />
-        <div className="flex-1 p-6 overflow-auto">
-          {renderContent()}
+    <OrderProvider>
+      <div className="flex h-screen">
+        <Sidebar onChangeContent={handleChangeContent} />
+        <div className="flex-1 flex flex-col">
+          <Navbar />
+          <div className="flex-1 p-6 overflow-auto">
+            {renderContent()}
+          </div>
         </div>
       </div>
-    </div>
+    </OrderProvider>
   );
 };
 

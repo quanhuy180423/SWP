@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { OrderContext } from '../orders/OrderContext';
 
 const RequestOrder = () => {
   const [orders, setOrders] = useState([]);
   const [editingOrder, setEditingOrder] = useState(null);
   const [status, setStatus] = useState('');
   const [description, setDescription] = useState('');
+  const { addOrder } = useContext(OrderContext);
 
   useEffect(() => {
-    // Replace with your actual API endpoint
     axios.get('https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/Order')
       .then(response => {
         setOrders(response.data);
@@ -25,10 +26,8 @@ const RequestOrder = () => {
   };
 
   const handleSaveClick = (id) => {
-    // Replace with your actual API endpoint
     axios.put(`https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/Order/${id}`, { status, description })
       .then(() => {
-        // Update order in the state
         setOrders(orders.map(order =>
           order.id === id ? { ...order, status, description } : order
         ));
@@ -41,6 +40,10 @@ const RequestOrder = () => {
 
   const handleCancelClick = () => {
     setEditingOrder(null);
+  };
+
+  const handleSendClick = (order) => {
+    addOrder(order);
   };
 
   return (
@@ -97,12 +100,20 @@ const RequestOrder = () => {
                     </button>
                   </>
                 ) : (
-                  <button
-                    onClick={() => handleEditClick(order)}
-                    className="bg-yellow-500 text-black p-2 rounded mr-2"
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      onClick={() => handleEditClick(order)}
+                      className="bg-yellow-500 text-black p-2 rounded mr-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleSendClick(order)}
+                      className="bg-blue-500 text-white p-2 rounded"
+                    >
+                      Send Order
+                    </button>
+                  </>
                 )}
               </td>
             </tr>
