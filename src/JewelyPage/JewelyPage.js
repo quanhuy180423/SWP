@@ -9,9 +9,9 @@ const JewelryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  // const API_URL = "http://localhost:8090/test/getAllProduct"; // Link API get product, show all
-  const API_URL =
-    "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product"; // Link API get product, show all
+  const API_URL = "http://localhost:8090/test/getAllProduct"; // Link API get product, show all
+  // const API_URL =
+  //   "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product"; // Link API get product, show all
 
   const productsPerPage = 25;
 
@@ -145,9 +145,10 @@ const JewelryPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-10/12">
           {currentProducts.map((product) => (
             <JewelryItem
-              key={product.productId}
-              to={`/product/${product.productId}`}
-              firstImage={product.Image}
+              key={product.ProductID}
+              to={`/product/${product.ProductID}`}
+              firstImage="https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain"
+              // firstImage={product.Image}
               title={product.Name}
               material={product.MaterialName}
               gem={product.GemName}

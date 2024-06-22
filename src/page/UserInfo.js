@@ -7,10 +7,10 @@ Modal.setAppElement("#root");
 
 const UserInfo = () => {
   const [user, setUser] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    address: "",
+    Name: "",
+    Phone: "",
+    Email: "",
+    Address: "",
     password: "",
     confirmPassword: "",
   });
@@ -29,8 +29,10 @@ const UserInfo = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.Id) {
       const userId = storedUser.Id;
+      console.log(userId);
       try {
-        const response = await axios.get(API_URL, { params: { userId } });
+        const response = await axios.get(`${API_URL}?userId=${userId}`);
+        console.log(response.data);
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -161,7 +163,7 @@ const UserInfo = () => {
                           <span className="text-gray-700">Họ và tên:</span>
                           <input
                             type="text"
-                            value={user.name}
+                            value={user.Name}
                             readOnly // Đặt readOnly để ngăn người dùng chỉnh sửa trường này khi không ở chế độ chỉnh sửa
                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                           />
@@ -173,7 +175,7 @@ const UserInfo = () => {
                           <span className="text-gray-700">Số điện thoại:</span>
                           <input
                             type="text"
-                            value={user.phone}
+                            value={user.Phone}
                             readOnly // Đặt readOnly để ngăn người dùng chỉnh sửa trường này khi không ở chế độ chỉnh sửa
                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                           />
@@ -186,8 +188,8 @@ const UserInfo = () => {
                         <label className="block">
                           <span className="text-gray-700">Email:</span>
                           <input
-                            type="email"
-                            value={user.email}
+                            type="Email"
+                            value={user.Email}
                             readOnly // Đặt readOnly để ngăn người dùng chỉnh sửa trường này khi không ở chế độ chỉnh sửa
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                           />
@@ -199,7 +201,7 @@ const UserInfo = () => {
                           <span className="text-gray-700">Địa chỉ:</span>
                           <input
                             type="text"
-                            value={user.address}
+                            value={user.Address}
                             readOnly // Đặt readOnly để ngăn người dùng chỉnh sửa trường này khi không ở chế độ chỉnh sửa
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                           />
@@ -277,14 +279,14 @@ const UserInfo = () => {
                           <span className="text-gray-700">Họ và tên:</span>
                           <input
                             type="text"
-                            value={user.name}
+                            value={user.Name}
                             onChange={(e) =>
-                              setUser({ ...user, name: e.target.value })
+                              setUser({ ...user, Name: e.target.value })
                             }
                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                           />
-                          {errors.name && (
-                            <span className="text-red-500">{errors.name}</span>
+                          {errors.Name && (
+                            <span className="text-red-500">{errors.Name}</span>
                           )}
                         </label>
                       </div>
@@ -294,14 +296,14 @@ const UserInfo = () => {
                           <span className="text-gray-700">Số điện thoại:</span>
                           <input
                             type="text"
-                            value={user.phone}
+                            value={user.Phone}
                             onChange={(e) =>
-                              setUser({ ...user, phone: e.target.value })
+                              setUser({ ...user, Phone: e.target.value })
                             }
                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                           />
-                          {errors.phone && (
-                            <span className="text-red-500">{errors.phone}</span>
+                          {errors.Phone && (
+                            <span className="text-red-500">{errors.Phone}</span>
                           )}
                         </label>
                       </div>
@@ -312,15 +314,15 @@ const UserInfo = () => {
                         <label className="block">
                           <span className="text-gray-700">Email:</span>
                           <input
-                            type="email"
-                            value={user.email}
+                            type="Email"
+                            value={user.Email}
                             onChange={(e) =>
-                              setUser({ ...user, email: e.target.value })
+                              setUser({ ...user, Email: e.target.value })
                             }
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                           />
-                          {errors.email && (
-                            <span className="text-red-500">{errors.email}</span>
+                          {errors.Email && (
+                            <span className="text-red-500">{errors.Email}</span>
                           )}
                         </label>
                       </div>
@@ -330,15 +332,15 @@ const UserInfo = () => {
                           <span className="text-gray-700">Địa chỉ:</span>
                           <input
                             type="text"
-                            value={user.address}
+                            value={user.Address}
                             onChange={(e) =>
-                              setUser({ ...user, address: e.target.value })
+                              setUser({ ...user, Address: e.target.value })
                             }
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                           />
-                          {errors.address && (
+                          {errors.Address && (
                             <span className="text-red-500">
-                              {errors.address}
+                              {errors.Address}
                             </span>
                           )}
                         </label>

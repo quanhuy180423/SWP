@@ -1,31 +1,36 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { CartContext } from "../cart/CartContext";
-import { Input } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { cart, removeFromCart } = useContext(CartContext);
+  const navigate = useNavigate();
+  const [order, setOrder] = useState([]);
 
-  // Tính tổng giá tiền với hai số sau dấu phẩy
+  // Ensure calculations are always valid numbers
   const totalCost = cart.reduce(
     (total, item) => total + item.ProductCost * item.quantity,
     0
   );
-  const formattedTotalCost = parseFloat(totalCost.toFixed(2)); // Làm tròn và định dạng giá tiền
+  const formattedTotalCost = parseFloat(totalCost.toFixed(2)) || 0;
 
-  // Tính phí vận chuyển và thuế
+  // Calculate shipping and tax, ensuring they are numbers
   const shipping = formattedTotalCost * 0.05;
-  const formattedShipping = parseFloat(shipping.toFixed(2)); // Làm tròn và định dạng phí vận chuyển
+  const formattedShipping = parseFloat(shipping.toFixed(2)) || 0;
 
   const tax = formattedTotalCost * 0.1;
-  const formattedTax = parseFloat(tax.toFixed(2)); // Làm tròn và định dạng thuế
+  const formattedTax = parseFloat(tax.toFixed(2)) || 0;
 
-  // Tính tổng cộng
+  // Calculate total amount
   const totalAmount = formattedTotalCost + formattedShipping + formattedTax;
 
-  const handleDelete = (productId) => {
-    // Implement your delete logic here using context function
-    removeFromCart(productId);
-    console.log("Deleting product with id:", productId);
+  const handleDelete = (ProductID) => {
+    removeFromCart(ProductID);
+    console.log("Deleting product with id:", ProductID);
+  };
+
+  const handleCheckout = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -41,7 +46,8 @@ const Cart = () => {
                 className="flex justify-between items-center mb-8 p-4 rounded-lg shadow-md"
               >
                 <img
-                  src={item.Image}
+                  // src={item.Image}
+                  src="https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain"
                   alt={item.Name}
                   width="250"
                   className="rounded-lg"
@@ -59,14 +65,14 @@ const Cart = () => {
                 </div>
                 <div className="flex items-center">
                   <label htmlFor={`quantity_${index}`}>Số lượng: </label>
-                  <Input
+                  <input
                     id={`quantity_${index}`}
                     type="number"
                     defaultValue={item.quantity}
                     className="w-12 border-2 border-gray-300 rounded-xl ml-2"
                   />
                   <button
-                    onClick={() => handleDelete(item.productId)}
+                    onClick={() => handleDelete(item.ProductID)}
                     className="ml-4 bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md"
                   >
                     Xóa
@@ -78,17 +84,23 @@ const Cart = () => {
         </div>
 
         {/* Total Cost */}
-        <div className="col-span-1 grid place-items-center h-fit p-4  bg-slate-200 rounded-lg">
+        <div className="col-span-1 grid place-items-center h-fit p-4 bg-slate-200 rounded-lg">
           <div className="mb-2 text-4xl font-bold">Hóa đơn</div>
           <div className="text-lg font-sans">
-            Phí vận chuyển : {formattedShipping.toLocaleString()}₫
+            Phí vận chuyển: {formattedShipping.toLocaleString()}₫
           </div>
           <div className="text-lg font-sans">
-            Thuế : {formattedTax.toLocaleString()}₫
+            Thuế: {formattedTax.toLocaleString()}₫
           </div>
           <div className="text-xl font-bold">
             Thành cộng: {totalAmount.toLocaleString()}₫
           </div>
+          <button
+            onClick={handleCheckout}
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mt-4"
+          >
+            Thanh toán
+          </button>
         </div>
       </div>
     </div>

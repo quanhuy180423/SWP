@@ -1,9 +1,9 @@
 export const validateUserInfo = (user) => {
   const errors = {};
 
-  if (!user.fullName.trim()) {
-    errors.fullName = "Họ và tên không được để trống.";
-  }
+  // if (!user.fullName.trim()) {
+  //   errors.fullName = "Họ và tên không được để trống.";
+  // }
 
   if (!user.phone.trim()) {
     errors.phone = "Số điện thoại không được để trống.";

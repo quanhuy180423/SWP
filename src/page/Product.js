@@ -4,26 +4,37 @@ import axios from "axios";
 import { CartContext } from "../cart/CartContext";
 
 const Product = () => {
-  const { productId } = useParams();
-  const [product, setProduct] = useState(null);
+  const { ProductID } = useParams();
+  const [product, setProduct] = useState("");
   const [size, setSize] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
+  const API_URL = "http://localhost:8090/test/getProductByNameOrId";
+
+  const fetchUserData = async () => {
+    if (ProductID) {
+      console.log(`Fetching product with id: ${ProductID}`);
+
+      try {
+        const response = await axios.get(`${API_URL}?ProductID=${ProductID}`);
+        console.log(`prodcut:`, response.data);
+        const data = response.data;
+        data.map((product) => {
+          setProduct(product);
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    } else {
+      console.error("User ID not found in localStorage");
+    }
+  };
 
   useEffect(() => {
-    if (productId) {
-      axios
-        .get(
-          `https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product/${productId}`
-        )
-        .then((response) => setProduct(response.data))
-        .catch((error) => console.error("Error fetching product:", error));
-    } else {
-      console.error("ProductId is undefined");
-    }
-  }, [productId]);
+    fetchUserData();
+  }, []);
 
   if (!product) {
     return <div>Loading...</div>;
@@ -42,18 +53,21 @@ const Product = () => {
       return;
     }
 
+    const img =
+      "https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain";
     const orderDetails = {
-      productId: product.productId,
+      ProductID: product.ProductID,
       Name: product.Name,
       CategoryName: product.CategoryName,
       ProductCost: product.ProductCost,
-      Image: product.Image,
+      Image: img,
+      // Image: product.Image,
       Size: size,
       Quantity: quantity,
     };
     console.log(orderDetails);
     localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
-    navigate("/order-review");
+    navigate("/order");
   };
 
   return (
@@ -63,7 +77,8 @@ const Product = () => {
           <div className="flex-1 flex flex-col items-center justify-center overflow-hidden">
             <img
               className="max-w-full max-h-96 object-cover transition-transform duration-200 ease-in-out"
-              src={product.Image}
+              // src={product.Image}
+              src="https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain"
               alt={product.Name}
             />
             <div className="flex mt-4">
@@ -81,11 +96,7 @@ const Product = () => {
             </div>
             <div className="mb-5">
               <p className="font-bold mb-2">Description:</p>
-              <ul className="list-disc pl-5">
-                {product.Description.split(",").map((desc, index) => (
-                  <li key={index}>{desc}</li>
-                ))}
-              </ul>
+              <ul className="list-disc pl-5">{product.Description}</ul>
             </div>
             {product.CategoryName === "Ring" ? (
               <div className="mb-5">
@@ -94,7 +105,7 @@ const Product = () => {
                 </label>
                 <select
                   id="size"
-                  name="size"
+                  Name="size"
                   value={size}
                   onChange={(e) => setSize(e.target.value)}
                   className="p-2 border border-gray-300 rounded"
@@ -113,7 +124,7 @@ const Product = () => {
                 </label>
                 <select
                   id="size"
-                  name="size"
+                  Name="size"
                   value={size}
                   onChange={(e) => setSize(e.target.value)}
                   className="p-2 border border-gray-300 rounded"
@@ -136,7 +147,7 @@ const Product = () => {
               <input
                 type="number"
                 id="quantity"
-                name="quantity"
+                Name="quantity"
                 min="1"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
@@ -192,11 +203,11 @@ const Product = () => {
               </tr>
               <tr>
                 <td className="px-6 py-4">Chất liệu</td>
-                <td className="px-6 py-4">{product.Material}</td>
+                <td className="px-6 py-4">{product.MaterialName}</td>
               </tr>
               <tr>
-                <td className="px-6 py-4">Đá</td>
-                <td className="px-6 py-4">{product.Gem}</td>
+                <td className="px-6 py-4">Kim cương</td>
+                <td className="px-6 py-4">{product.GemName}</td>
               </tr>
             </tbody>
           </table>
