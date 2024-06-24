@@ -13,6 +13,7 @@ import JewelryPage from "./JewelyPage/JewelyPage";
 import { CartProvider } from "./cart/CartContext"; // Import CartProvider from CartContext
 import Cart from "./page/CartPage";
 import Checkout from "./page/Checkout";
+import DiamondDetail from "./conponent/Diamond/DiamondDetail";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
 
             <Route path="/userinfo/:Id" element={<UserInfo />} />
             <Route path="diamondpage" element={<DiamondPage />} />
+            <Route path="/diamond-detail/:gemId" element={<DiamondDetail />} />
             <Route path="jewelry" element={<JewelryPage />} />
             {/* ======================================== */}
             <Route path="/cart" element={<Cart />} />

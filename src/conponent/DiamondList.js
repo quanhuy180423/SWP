@@ -1,6 +1,11 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
+import ReadMode from "@mui/icons-material/Diamond";
 const DiamondList = ({ diamonds }) => {
+  const nagative = useNavigate();
+  const handleViewDetail = (diamond) => {
+    nagative(`/diamond-detail/${diamond.GemID}`);
+  };
   return (
     <>
       <div className="flex justify-center text-center">
@@ -12,25 +17,25 @@ const DiamondList = ({ diamonds }) => {
               <th className="px-4 py-2 border">Cấp màu (Color)</th>
               <th className="px-4 py-2 border">Độ tinh khiết (Clarity)</th>
               <th className="px-4 py-2 border">Giấy kiểm định</th>
-              <th className="px-4 py-2 border">Giá</th>
+              <th className="px-4 py-2 border">Xem chi tiết</th>
             </tr>
           </thead>
           <tbody>
             {diamonds.map((diamond, index) => (
               <tr key={index} className="hover:bg-gray-100">
                 <td className="border px-4 py-2 text-center">
-                  {diamond.carat}
+                  {diamond.CaraWeight}
                 </td>
-                <td className="border px-4 py-2 text-center">{diamond.cut}</td>
+                <td className="border px-4 py-2 text-center">{diamond.Cut}</td>
                 <td className="border px-4 py-2 text-center">
-                  {diamond.color}
+                  {diamond.Color}
                 </td>
                 <td className="border px-4 py-2 text-center">
-                  {diamond.clarity}
+                  {diamond.Clarity}
                 </td>
                 <td className="border px-4 py-2 text-center">
                   <a
-                    href={diamond.certificationLink}
+                    href={diamond.Identification}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 hover:underline"
@@ -39,7 +44,13 @@ const DiamondList = ({ diamonds }) => {
                   </a>
                 </td>
                 <td className="border px-4 py-2 text-center">
-                  {diamond.price}
+                  <button
+                    onClick={() => handleViewDetail(diamond)}
+                    className="text-blue-500 hover:underline"
+                  >
+                    <ReadMode />
+                    {/* {console.log(diamond)} */}
+                  </button>
                 </td>
               </tr>
             ))}
