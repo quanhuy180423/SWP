@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import AuthPopup from "../page/AuthPopup";
-import "../css/header.css";
+import AuthPopup from "../../page/AuthPopup";
 import { Link } from "react-router-dom";
-import { CartContext } from "../cart/CartContext"; // Corrected import
+import { CartContext } from "../../cart/CartContext"; // Corrected import
+import SearchComponent from "./Search";
 
 const Header = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -38,36 +38,21 @@ const Header = () => {
   };
 
   return (
-    <div className="sticky top-0 bg-white z-1000 shadow-md pb-2 header">
-      <div className="flex justify-between items-center px-6">
-        <Link to="/">
-          <div className="flex items-center">
-            <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />
-            <h3 className="text-xl font-serif text-gray-500 pl-2">Sun Shine</h3>
-          </div>
+    <div className="sticky top-0 bg-white z-50 shadow-md pb-2 header mt-3">
+      <div className="flex flex-col lg:flex-row justify-between items-center px-6">
+        <Link to="/" className="flex items-center my-2 lg:my-0">
+          <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />
+          <h3 className="text-xl font-serif text-gray-500 pl-2">Sun Shine</h3>
         </Link>
 
-        <div className="w-3/6">
+        <div className="w-full lg:w-3/6 my-2 lg:my-0">
           <div className="flex justify-center">
-            <div className="flex-1 m-2 w-3/5">
-              <div className="flex items-center border-2 border-blue-800 rounded-full px-2 bg-white">
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm..."
-                  className="border-none outline-none flex-1 py-1 px-2 text-lg rounded-full"
-                />
-                <button className="bg-none border-none cursor-pointer outline-none p-0 ml-2">
-                  <img
-                    src="./img/glass.png"
-                    alt="search-icon"
-                    className="w-5 h-5"
-                  />
-                </button>
-              </div>
+            <div className="flex-1 w-full lg:w-3/5">
+              <SearchComponent />
             </div>
           </div>
 
-          <div className="flex space-x-4 justify-evenly">
+          <div className="hidden lg:flex space-x-4 justify-evenly mt-2 lg:mt-0">
             <Link
               to="/"
               className="text-xl text-gray-500 font-serif hover:text-black"
@@ -101,7 +86,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center space-x-4">
+        <div className="flex flex-col lg:flex-row items-center space-x-4">
           {user ? (
             <div className="flex items-center space-x-2">
               <Link
@@ -117,13 +102,13 @@ const Header = () => {
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-gray-500 hover:text-black "
+                className="text-gray-500 hover:text-black"
               >
                 Logout
               </button>
             </div>
           ) : (
-            <div className="flex items-center justify-between space-x-2">
+            <div className="flex items-center space-x-2">
               <img
                 src="./img/profile-user.png"
                 alt="profile"
@@ -137,21 +122,52 @@ const Header = () => {
               </button>
             </div>
           )}
-          <div>
-            <Link to="/cart" className="flex items-center justify-center ">
+          <div className="mt-2 lg:mt-0">
+            <Link to="/cart" className="flex items-center justify-center">
               <img
                 src="./img/shopping-bag.png"
                 alt="cart"
                 className="w-5 h-5"
               />
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-500 ml-1">
                 {totalQuantity === 0 ? "0" : `${totalQuantity}`}
-                {/* <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                  {totalQuantity}
-                </span> */}
               </span>
             </Link>
           </div>
+        </div>
+      </div>
+      <div className="block lg:hidden mt-2">
+        <div className="flex flex-col space-y-2">
+          <Link
+            to="/"
+            className="text-lg text-gray-500 font-serif hover:text-black"
+          >
+            Trang chủ
+          </Link>
+          <Link
+            to="/jewelry"
+            className="text-lg text-gray-500 font-serif hover:text-black"
+          >
+            Trang sức
+          </Link>
+          <Link
+            to="/diamondpage"
+            className="text-lg text-gray-500 font-serif hover:text-black"
+          >
+            Kim cương viên
+          </Link>
+          <Link
+            to="/blog"
+            className="text-lg text-gray-500 font-serif hover:text-black"
+          >
+            Blog-tin tức
+          </Link>
+          <Link
+            to="/order-form"
+            className="text-lg text-gray-500 font-serif hover:text-black"
+          >
+            Đặt hàng
+          </Link>
         </div>
       </div>
       {isPopupOpen && (

@@ -1,9 +1,34 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../cart/CartContext";
+import axios from "axios";
 
 const Checkout = () => {
   const { cart } = useContext(CartContext);
+  const [user, setUser] = useState("null");
 
+  const API_URL = "http://localhost:8090/test/getUserById";
+
+  const getUser = async () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser && storedUser.Id) {
+      const userId = storedUser.Id;
+      console.log(userId);
+      try {
+        const response = await axios.get(`${API_URL}?userId=${userId}`);
+        console.log(response.data);
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    } else {
+      console.error("User ID not found in localStorage");
+    }
+  };
+  useEffect(() => {
+    if (user === "null") {
+      getUser();
+    }
+  }, []);
   // Tính tổng giá tiền với hai số sau dấu phẩy
   const totalCost = cart.reduce(
     (total, item) => total + item.ProductCost * item.quantity,
@@ -20,6 +45,10 @@ const Checkout = () => {
 
   // Tính tổng cộng
   const totalAmount = formattedTotalCost + formattedShipping + formattedTax;
+
+  const handleCheckout = () => {
+    // Xu ly thanh toan
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -44,6 +73,7 @@ const Checkout = () => {
               <input
                 type="text"
                 id="name"
+                value={user.Name}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -57,6 +87,7 @@ const Checkout = () => {
               <input
                 type="text"
                 id="phone"
+                value={user.Phone}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -70,6 +101,7 @@ const Checkout = () => {
               <input
                 type="text"
                 id="address"
+                value={user.Address}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -83,6 +115,7 @@ const Checkout = () => {
               <input
                 type="email"
                 id="email"
+                value={user.Email}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -127,6 +160,7 @@ const Checkout = () => {
             <button
               type="submit"
               className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mt-5"
+              onClick={handleCheckout}
             >
               Xác nhận đơn hàng
             </button>

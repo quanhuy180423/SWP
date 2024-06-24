@@ -18,8 +18,8 @@ const Product = () => {
       console.log(`Fetching product with id: ${ProductID}`);
 
       try {
-        const response = await axios.get(`${API_URL}?ProductID=${ProductID}`);
-        console.log(`prodcut:`, response.data);
+        const response = await axios.get(`${API_URL}?name=${ProductID}`);
+        // console.log(`prodcut:`, response.data);
         const data = response.data;
         data.map((product) => {
           setProduct(product);
@@ -28,12 +28,17 @@ const Product = () => {
         console.error("Error fetching user data:", error);
       }
     } else {
-      console.error("User ID not found in localStorage");
+      console.error("Product ID not found in localStorage");
     }
   };
 
   useEffect(() => {
     fetchUserData();
+  }, [ProductID]);
+
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   if (!product) {
@@ -147,7 +152,7 @@ const Product = () => {
               <input
                 type="number"
                 id="quantity"
-                Name="quantity"
+                name="quantity"
                 min="1"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}

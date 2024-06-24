@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import JewelryItem from "./JewelryItem";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,10 +8,12 @@ const JewelryPage = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [error, setError] = useState(null);
 
-  const API_URL = "http://localhost:8090/test/getAllProduct"; // Link API get product, show all
-  // const API_URL =
-  //   "https://6660c0525425580055b51d87.mockapi.io/JewelyAPI/product"; // Link API get product, show all
+  const API_URL = "http://localhost:8090/test/getAllProduct";
+  const API_URL_CATEGORY = "http://localhost:8090/test/getProductByCategory";
+  const API_URL_SEARCH = "http://localhost:8090/test/getProductByNameOrId";
 
   const productsPerPage = 25;
 
@@ -20,48 +22,65 @@ const JewelryPage = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const categoryFromUrl = searchParams.get("CategoryName");
-    if (categoryFromUrl) {
-      setSelectedCategory(categoryFromUrl);
-    }
+    const searchValueFromUrl = searchParams.get("search") || "";
+    const categoryFromUrl = searchParams.get("categoryName") || "";
 
-    axios
-      .get(API_URL)
-      .then((response) => {
+    setSearchValue(searchValueFromUrl);
+    setSelectedCategory(categoryFromUrl);
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null); // Reset error state before fetching
+      try {
+        let response;
+        if (searchValueFromUrl) {
+          response = await axios.get(API_URL_SEARCH, {
+            params: { name: searchValueFromUrl },
+          });
+        } else if (categoryFromUrl) {
+          response = await axios.get(API_URL_CATEGORY, {
+            params: { categoryName: categoryFromUrl },
+          });
+        } else {
+          response = await axios.get(API_URL);
+        }
         setProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setError(error.message);
+      } finally {
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchProducts();
   }, [location.search]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  const filteredProducts = selectedCategory
-    ? products.filter((product) => product.CategoryName === selectedCategory)
-    : products;
+  if (error) {
+    return <div>Error fetching products: {error}</div>;
+  }
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(
+  const currentProducts = products.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
 
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  const handleCategoryChange = (CategoryName) => {
-    setSelectedCategory(CategoryName);
+  const handleCategoryChange = (categoryName) => {
+    setSelectedCategory(categoryName);
     setCurrentPage(1);
-    navigate(`?CategoryName=${CategoryName}`);
+    navigate(`?categoryName=${categoryName}&search=${searchValue}`);
   };
 
   return (
@@ -69,16 +88,16 @@ const JewelryPage = () => {
       <img
         src="./img/page_trang_suc.png"
         alt="img 1"
-        className="article-img mb-5"
+        className="article-img mb-5 w-full"
       />
       <h1 className="text-4xl font-bold flex justify-center mb-4">Trang sức</h1>
-      <div className="flex justify-center">
-        <div className="flex justify-around">
+      <div className="flex justify-center flex-wrap">
+        <div className="flex justify-around flex-wrap">
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange("Ring")}
+              onClick={() => handleCategoryChange("Rings")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "Ring" ? "bg-gray-300" : ""
+                selectedCategory === "Rings" ? "bg-gray-300" : ""
               }`}
             >
               Nhẫn
@@ -86,9 +105,9 @@ const JewelryPage = () => {
           </div>
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange("Necklace")}
+              onClick={() => handleCategoryChange("Necklaces")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "Necklace" ? "bg-gray-300" : ""
+                selectedCategory === "Necklaces" ? "bg-gray-300" : ""
               }`}
             >
               Vòng cổ
@@ -96,9 +115,9 @@ const JewelryPage = () => {
           </div>
           <div className="m-2">
             <button
-              onClick={() => handleCategoryChange("Bracelet")}
+              onClick={() => handleCategoryChange("Bracelets")}
               className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "Bracelet" ? "bg-gray-300" : ""
+                selectedCategory === "Bracelets" ? "bg-gray-300" : ""
               }`}
             >
               Vòng tay
