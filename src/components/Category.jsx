@@ -14,7 +14,7 @@ const Category = () => {
   const [editCategory, setEditCategory] = useState(null);
   const [message, setMessage] = useState('');
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const API_URL = "https://your-api-endpoint-here"; // Replace with your actual API endpoint
+  const API_URL = "https://667a627cbd627f0dcc8ea52b.mockapi.io/requestOrder"; // Replace with your actual API endpoint
 
   useEffect(() => {
     fetchCategories();
@@ -113,29 +113,28 @@ const Category = () => {
         <form onSubmit={handleSubmit} className="flex flex-col justify-center">
           <div className="mb-4">
             <label htmlFor="Name" className="block">Name</label>
-            <select id="Name" name="Name" value={editCategory ? editCategory.Name : newCategory.Name} onChange={handleInputChange} className="w-full p-2 border border-gray-300 rounded">
-              <option value="">Select Category</option>
-              <option value="Dây chuyền">Dây chuyền</option>
-              <option value="Nhẫn">Nhẫn</option>
-              <option value="Vòng tay">Vòng tay</option>
-            </select>
+            <input
+              type="text"
+              name="Name"
+              value={editCategory ? editCategory.Name : newCategory.Name}
+              onChange={handleInputChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
           </div>
           <div className="mb-4">
             <label htmlFor="Description" className="block">Description</label>
             <Editor
               apiKey='0ywy09pu3fif7crqzb9n5eygtvh5hwbbpj4vold92e6q9r11'
-              value={editCategory ? editCategory.Description : newCategory.Description}
               init={{
-                height: 300,
-                menubar: false,
-                plugins: [
-                  'advlist autolink lists link image charmap print preview anchor',
-                  'searchreplace visualblocks code fullscreen',
-                  'insertdatetime media table paste code help wordcount'
+                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                mergetags_list: [
+                  { value: 'First.Name', title: 'First Name' },
+                  { value: 'Email', title: 'Email' },
                 ],
-                toolbar: 'undo redo | formatselect | bold italic backcolor | \
-                          alignleft aligncenter alignright alignjustify | \
-                          bullist numlist outdent indent | removeformat | help'
+                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
               }}
               onEditorChange={handleEditorChange}
             />

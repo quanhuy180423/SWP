@@ -1,4 +1,8 @@
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
@@ -10,6 +14,9 @@ const Blog = () => {
     UserID: ''
   });
   const [editBlog, setEditBlog] = useState(null);
+  const [message, setMessage] = useState('');
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const API_URL = "";
 
   useEffect(() => {
     fetchBlogs();
@@ -17,10 +24,8 @@ const Blog = () => {
 
   const fetchBlogs = async () => {
     try {
-      // Fetch blogs data from API
-      // const response = await fetch('API_ENDPOINT/blogs');
-      // const data = await response.json();
-      // setBlogs(data);
+      const response = await axios.get(API_URL);
+      setBlogs(response.data);
     } catch (error) {
       console.error('Error fetching blogs:', error);
     }
@@ -28,64 +33,43 @@ const Blog = () => {
 
   const addBlog = async () => {
     try {
-      // Perform validation on newBlog data
-
-      // Send POST request to API to add new blog
-      // await fetch('API_ENDPOINT/blogs', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(newBlog)
-      // });
-
-      // Update local state with new blog
-      // setBlogs([...blogs, newBlog]);
-
-      // Clear newBlog state
-      // setNewBlog({ BlogID: '', Title: '', Content: '', DateCreated: '', UserID: '' });
+      await axios.post(API_URL, newBlog);
+      setBlogs([...blogs, newBlog]);
+      setNewBlog({
+        BlogID: '',
+        Title: '',
+        Content: '',
+        DateCreated: '',
+        UserID: ''
+      });
+      setMessage('Blog added successfully');
+      setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error('Error adding blog:', error);
     }
   };
 
   const deleteBlog = async (blogId) => {
-    try {
-      // Send DELETE request to API to delete blog
-      // await fetch(`API_ENDPOINT/blogs/${blogId}`, {
-      //   method: 'DELETE'
-      // });
-
-      // Update local state by removing the deleted blog
-      // setBlogs(blogs.filter(blog => blog.BlogID !== blogId));
-    } catch (error) {
-      console.error('Error deleting blog:', error);
+    const confirmDelete = window.confirm('Are you sure you want to delete this blog?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`${API_URL}/${blogId}`);
+        setBlogs(blogs.filter(blog => blog.BlogID !== blogId));
+        setMessage('Blog deleted successfully');
+        setTimeout(() => setMessage(''), 3000);
+      } catch (error) {
+        console.error('Error deleting blog:', error);
+      }
     }
   };
 
   const updateBlog = async () => {
     try {
-      // Perform validation on editBlog data
-
-      // Send PUT request to API to update blog
-      // await fetch(`API_ENDPOINT/blogs/${editBlog.BlogID}`, {
-      //   method: 'PUT',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(editBlog)
-      // });
-
-      // Update local state with edited blog
-      // setBlogs(blogs.map(blog => {
-      //   if (blog.BlogID === editBlog.BlogID) {
-      //     return editBlog;
-      //   }
-      //   return blog;
-      // }));
-
-      // Clear editBlog state
-      // setEditBlog(null);
+      await axios.put(`${API_URL}/${newBlog.BlogID}`, newBlog);
+      setBlogs(blogs.map(blog => (blog.BlogID === editBlog.BlogID ? editBlog : blog)));
+      setEditBlog(null);
+      setMessage('Blog updateed successfully');
+      setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error('Error updating blog:', error);
     }
@@ -93,81 +77,93 @@ const Blog = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewBlog({ ...newBlog, [name]: value });
+    if (editBlog) {
+      setNewBlog({ ...editBlog, [name]: value });
+    } else {
+      setNewBlog({ ...newBlog, [name]: value });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addBlog();
+    if (editBlog) {
+      updateBlog();
+    } else {
+      addBlog();
+    }
   };
 
   return (
-    <div style={styles.container}>
-      <h2>Add New Blog</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={styles.formGroup}>
-          <label>Title:</label>
+    <div className="container mx-auto p-5">
+      <h2 className="text-4xl font-bold text-center mb-5">Add New Blog</h2>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="flex flex-col">
+          <label className="mb-2">Title:</label>
           <input
             type="text"
             name="Title"
             value={newBlog.Title}
             onChange={handleInputChange}
-            style={styles.input}
+            className="p-2 border border-gray-300 rounded"
           />
         </div>
-        <div style={styles.formGroup}>
-          <label>Content:</label>
+        <div className="flex flex-col">
+          <label className="mb-2">Content:</label>
           <textarea
             name="Content"
             value={newBlog.Content}
             onChange={handleInputChange}
-            style={styles.textarea}
+            className="p-2 border border-gray-300 rounded"
           ></textarea>
         </div>
-        <div style={styles.formGroup}>
-          <label>Date Created:</label>
+        <div className="flex flex-col">
+          <label className="mb-2">Date Created:</label>
           <input
             type="date"
             name="DateCreated"
             value={newBlog.DateCreated}
             onChange={handleInputChange}
-            style={styles.input}
+            className="p-2 border border-gray-300 rounded"
           />
         </div>
-        <div style={styles.formGroup}>
-          <label>User ID:</label>
+        <div className="flex flex-col">
+          <label className="mb-2">User ID:</label>
           <input
             type="text"
             name="UserID"
             value={newBlog.UserID}
             onChange={handleInputChange}
-            style={styles.input}
+            className="p-2 border border-gray-300 rounded"
           />
         </div>
-        <button type="submit" style={styles.button}>Add Blog</button>
+        <button type="submit" className="w-full py-2 bg-blue-500 text-white rounded">Add Blog</button>
       </form>
-      <h2>Blog List</h2>
-      <table style={styles.table}>
+      <h2 className="text-2xl font-bold text-center mt-10 mb-5">Blog List</h2>
+      <table className="min-w-full border-collapse border border-gray-300">
         <thead>
-          <tr style={styles.tableRow}>
-            <th>BlogID</th>
-            <th>Title</th>
-            <th>Content</th>
-            <th>DateCreated</th>
-            <th>UserID</th>
+          <tr className="bg-gray-200">
+            <th className="border p-2">Title</th>
+            <th className="border p-2">Content</th>
+            <th className="border p-2">Date Created</th>
+            <th className="border p-2">User ID</th>
+            <th className="border p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {/* Map through materials and render each material */}
           {blogs.map(blog => (
-            <tr key={blog.BlogID}>
-              <td>{blog.Title}</td>
-              <td>{blog.Content}</td>
-              <td>{blog.DateCreated}</td>
-              <td>{blog.UserID}</td>
-              <td>
-                <button onClick={() => setEditBlog(blog)} style={styles.actionButton}>Edit</button>
-                <button onClick={() => deleteBlog(blog.BlogID)} style={styles.actionButton}>Delete</button>
+            <tr key={blog.BlogID} className="bg-gray-100">
+              <td className="border p-2">{blog.Title}</td>
+              <td className="border p-2">{blog.Content}</td>
+              <td className="border p-2">{blog.DateCreated}</td>
+              <td className="border p-2">{blog.UserID}</td>
+              <td className="border p-2">
+                <button onClick={() => setEditBlog(blog)} className="px-2 py-1 bg-green-500 text-white rounded mr-2">
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button onClick={() => deleteBlog(blog.BlogID)} className="px-2 py-1 bg-red-500 text-white rounded">
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
               </td>
             </tr>
           ))}
