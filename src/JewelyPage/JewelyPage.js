@@ -20,6 +20,31 @@ const JewelryPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const fetchProducts = async (searchValue, categoryFromUrl) => {
+    setLoading(true);
+    setError(null); // Reset error state before fetching
+    try {
+      let response;
+      if (searchValue) {
+        response = await axios.get(API_URL_SEARCH, {
+          params: { name: searchValue },
+        });
+      } else if (categoryFromUrl) {
+        response = await axios.get(API_URL_CATEGORY, {
+          params: { categoryName: categoryFromUrl },
+        });
+      } else {
+        response = await axios.get(API_URL);
+      }
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const searchValueFromUrl = searchParams.get("search") || "";
@@ -28,32 +53,7 @@ const JewelryPage = () => {
     setSearchValue(searchValueFromUrl);
     setSelectedCategory(categoryFromUrl);
 
-    const fetchProducts = async () => {
-      setLoading(true);
-      setError(null); // Reset error state before fetching
-      try {
-        let response;
-        if (searchValueFromUrl) {
-          response = await axios.get(API_URL_SEARCH, {
-            params: { name: searchValueFromUrl },
-          });
-        } else if (categoryFromUrl) {
-          response = await axios.get(API_URL_CATEGORY, {
-            params: { categoryName: categoryFromUrl },
-          });
-        } else {
-          response = await axios.get(API_URL);
-        }
-        setProducts(response.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
+    fetchProducts(searchValueFromUrl, categoryFromUrl);
   }, [location.search]);
 
   if (loading) {
@@ -80,7 +80,10 @@ const JewelryPage = () => {
   const handleCategoryChange = (categoryName) => {
     setSelectedCategory(categoryName);
     setCurrentPage(1);
-    navigate(`?categoryName=${categoryName}&search=${searchValue}`);
+    if (categoryName === null) navigate(`?search=${searchValue}`);
+    else {
+      navigate(`?categoryName=${categoryName}`);
+    }
   };
 
   return (
@@ -121,36 +124,6 @@ const JewelryPage = () => {
               }`}
             >
               Vòng tay
-            </button>
-          </div>
-          <div className="m-2">
-            <button
-              onClick={() => handleCategoryChange("Yellow Gold")}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "Yellow Gold" ? "bg-gray-300" : ""
-              }`}
-            >
-              Trang sức vàng
-            </button>
-          </div>
-          <div className="m-2">
-            <button
-              onClick={() => handleCategoryChange("White Gold")}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "White Gold" ? "bg-gray-300" : ""
-              }`}
-            >
-              Trang sức vàng trắng
-            </button>
-          </div>
-          <div className="m-2">
-            <button
-              onClick={() => handleCategoryChange("Silver")}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "Silver" ? "bg-gray-300" : ""
-              }`}
-            >
-              Trang sức bạc
             </button>
           </div>
         </div>

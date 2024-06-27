@@ -14,6 +14,7 @@ import { CartProvider } from "./cart/CartContext"; // Import CartProvider from C
 import Cart from "./page/CartPage";
 import Checkout from "./page/Checkout";
 import DiamondDetail from "./conponent/Diamond/DiamondDetail";
+import BlogDetail from "./page/Blog/BlogDetail";
 
 const App = () => {
   return (
@@ -27,12 +28,13 @@ const App = () => {
             <Route path="login" element={<LoginForm />} />
             <Route path="order-form" element={<OrderForm />} />
             <Route path="blog" element={<Blogs />} />
+            <Route path="/blog/:blogId" element={<BlogDetail />} />
             <Route path="/product/:ProductID" element={<Product />} />
 
             <Route path="/userinfo/:Id" element={<UserInfo />} />
             <Route path="diamondpage" element={<DiamondPage />} />
             <Route path="/diamond-detail/:gemId" element={<DiamondDetail />} />
-            <Route path="jewelry" element={<JewelryPage />} />
+            <Route path="/jewelry" element={<JewelryPage />} />
             {/* ======================================== */}
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
