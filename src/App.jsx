@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sildebar';// Import RequestOrder
-import Blogs from './blog/Blog';
+// import Blogs from './blog/Blog';
 import Product from './components/Products';
 import Material from './components/Material';
 import Category from './components/Category'
@@ -13,6 +13,7 @@ import Account from './components/Account';
 import RequestOrder from './orders/RequestOrder';
 import Order from './orders/Order';
 import { OrderProvider } from './orders/OrderContext';
+import Blog from './blog/Blog';
 
 const App = () => {
   const [content, setContent] = useState('Dashboard');
@@ -26,7 +27,7 @@ const App = () => {
       case 'Dashboard':
         return <Dashboard />;
       case 'Blog':
-        return <Blogs />;
+        return <Blog />;
       case 'Chat':
         return <Chat />;
       case 'RequestOrder':

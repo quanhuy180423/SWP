@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -14,6 +14,7 @@ const Category = () => {
   const [editCategory, setEditCategory] = useState(null);
   const [message, setMessage] = useState('');
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const editorRef = useRef(null);
   const API_URL = "https://667a627cbd627f0dcc8ea52b.mockapi.io/requestOrder"; // Replace with your actual API endpoint
 
   useEffect(() => {
@@ -38,6 +39,7 @@ const Category = () => {
         Name: '',
         Description: ''
       });
+      editorRef.current.resetContent();
       setMessage('Category added successfully');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
@@ -65,6 +67,7 @@ const Category = () => {
       setCategories(categories.map(category =>
         category.CategoryID === editCategory.CategoryID ? response.data : category
       ));
+      editorRef.current.resetContent();
       setEditCategory(null);
       setMessage('Category updated successfully');
       setTimeout(() => setMessage(''), 3000);
@@ -97,6 +100,12 @@ const Category = () => {
     } else {
       addCategory();
     }
+  };
+
+  const handleEditClick = (category) => {
+    setIsFormVisible(true);
+    editorRef.current.setContent(category.Description);
+    setEditCategory(category);
   };
 
   return (
@@ -136,6 +145,7 @@ const Category = () => {
                 ],
                 ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
               }}
+              onInit={(evt, editor) => editorRef.current = editor}
               onEditorChange={handleEditorChange}
             />
           </div>
@@ -160,7 +170,7 @@ const Category = () => {
               <td className="border p-2 border-black">{category.Name}</td>
               <td className="border p-2 border-black" dangerouslySetInnerHTML={{ __html: category.Description }}></td>
               <td className="border p-2 border-black">
-                <button onClick={() => setEditCategory(category)} className="px-2 py-1 bg-green-500 text-white rounded mr-2">
+                <button onClick={() => handleEditClick(category)} className="px-2 py-1 bg-green-500 text-white rounded mr-2">
                   <FontAwesomeIcon icon={faEdit} />
                 </button>
                 <button onClick={() => deleteCategory(category.CategoryID)} className="px-2 py-1 bg-red-500 text-white rounded">
