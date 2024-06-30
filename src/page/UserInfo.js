@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { validateUserInfo } from "../validation/validationUser";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 Modal.setAppElement("#root");
 
 const UserInfo = () => {
@@ -16,12 +16,13 @@ const UserInfo = () => {
   });
 
   const [orders, setOrders] = useState([]);
-  const [cart, setCart] = useState([]);
   const [errors, setErrors] = useState({});
   const [activeSection, setActiveSection] = useState("userInfo");
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // Thêm biến trạng thái cho chế độ chỉnh sửa
+  const navigate = useNavigate();
+
   const API_URL = "http://localhost:8090/test/getUserById";
   const API_URL_UPDATE = "http://localhost:8090/test/updateUserById";
 
@@ -50,8 +51,8 @@ const UserInfo = () => {
     setOrders(updatedOrders);
   };
 
-  const handleUpdateCart = (updatedCart) => {
-    setCart(updatedCart);
+  const handleUpdateCart = () => {
+    navigate("/cart");
   };
 
   const handleLogout = () => {
@@ -122,20 +123,21 @@ const UserInfo = () => {
                     ? "bg-black text-white"
                     : "bg-gray-400 text-white"
                 }`}
-                onClick={() => setActiveSection("orders")}
+                // onClick={}
               >
                 Đơn hàng
               </li>
               <li
                 className={`cursor-pointer p-2 rounded ${
-                  activeSection === "cart"
+                  activeSection === "orders"
                     ? "bg-black text-white"
                     : "bg-gray-400 text-white"
                 }`}
-                onClick={() => setActiveSection("cart")}
+                onClick={() => handleUpdateCart()} // Sửa lại đoạn này
               >
-                Giỏ hàng
+                Đơn hàng
               </li>
+
               <li
                 className={`cursor-pointer p-2 rounded ${
                   activeSection === "logout"

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import JewelryItem from "./JewelryItem";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Grid, CircularProgress, Pagination } from "@mui/material";
 
 const JewelryPage = () => {
   const [loading, setLoading] = useState(true);
@@ -57,7 +58,11 @@ const JewelryPage = () => {
   }, [location.search]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {
@@ -73,17 +78,16 @@ const JewelryPage = () => {
 
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  const handlePageChange = (pageNumber) => {
+  const handlePageChange = (event, pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
   const handleCategoryChange = (categoryName) => {
     setSelectedCategory(categoryName);
     setCurrentPage(1);
-    if (categoryName === null) navigate(`?search=${searchValue}`);
-    else {
-      navigate(`?categoryName=${categoryName}`);
-    }
+    navigate(
+      categoryName ? `?categoryName=${categoryName}` : `?search=${searchValue}`
+    );
   };
 
   return (
@@ -94,81 +98,59 @@ const JewelryPage = () => {
         className="article-img mb-5 w-full"
       />
       <h1 className="text-4xl font-bold flex justify-center mb-4">Trang sức</h1>
-      <div className="flex justify-center flex-wrap">
-        <div className="flex justify-around flex-wrap">
-          <div className="m-2">
-            <button
-              onClick={() => handleCategoryChange("Rings")}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "Rings" ? "bg-gray-300" : ""
-              }`}
-            >
-              Nhẫn
-            </button>
-          </div>
-          <div className="m-2">
-            <button
-              onClick={() => handleCategoryChange("Necklaces")}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "Necklaces" ? "bg-gray-300" : ""
-              }`}
-            >
-              Vòng cổ
-            </button>
-          </div>
-          <div className="m-2">
-            <button
-              onClick={() => handleCategoryChange("Bracelets")}
-              className={`bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black ${
-                selectedCategory === "Bracelets" ? "bg-gray-300" : ""
-              }`}
-            >
-              Vòng tay
-            </button>
-          </div>
-        </div>
+      <div className="flex justify-center flex-wrap mb-4">
+        <Button
+          onClick={() => handleCategoryChange("Rings")}
+          variant={selectedCategory === "Rings" ? "contained" : "outlined"}
+          className="m-2"
+        >
+          Nhẫn
+        </Button>
+        <Button
+          onClick={() => handleCategoryChange("Necklaces")}
+          variant={selectedCategory === "Necklaces" ? "contained" : "outlined"}
+          className="m-2"
+        >
+          Vòng cổ
+        </Button>
+        <Button
+          onClick={() => handleCategoryChange("Bracelets")}
+          variant={selectedCategory === "Bracelets" ? "contained" : "outlined"}
+          className="m-2"
+        >
+          Vòng tay
+        </Button>
       </div>
 
-      <div className="flex justify-center">
-        <hr className="my-4 border-t-2 border-gray-300 w-10/12" />
-      </div>
-
-      <div className="flex justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-10/12">
-          {currentProducts.map((product) => (
+      <Grid container spacing={4} className="flex justify-center">
+        {currentProducts.map((product) => (
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={4}
+            key={product.ProductID}
+            className="p-5 mx-5 rounded-lg shadow-md"
+          >
             <JewelryItem
-              key={product.ProductID}
               to={`/product/${product.ProductID}`}
               firstImage="https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain"
-              // firstImage={product.Image}
               title={product.Name}
               material={product.MaterialName}
               gem={product.GemName}
               productCost={product.ProductCost}
             />
-          ))}
-        </div>
-      </div>
+          </Grid>
+        ))}
+      </Grid>
 
       <div className="flex justify-center my-4">
-        <nav>
-          <ul className="flex list-none">
-            {[...Array(totalPages)].map((_, index) => (
-              <li key={index} className="mx-1">
-                <button
-                  onClick={() => handlePageChange(index + 1)}
-                  className={`px-4 py-2 border ${
-                    currentPage === index + 1
-                      ? "bg-gray-300"
-                      : "bg-white hover:bg-gray-200"
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
       </div>
     </div>
   );

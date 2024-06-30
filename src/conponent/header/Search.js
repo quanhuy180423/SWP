@@ -18,7 +18,7 @@ const SearchComponent = () => {
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">
-      <div className="flex items-center border-2 border-blue-800 rounded-full px-2 bg-white w-full">
+      <div className="flex items-center border-2 border-blue-800 rounded-full px-2 bg-white w-full ">
         <form onSubmit={searchProduct} className="flex items-center w-full">
           <input
             type="text"

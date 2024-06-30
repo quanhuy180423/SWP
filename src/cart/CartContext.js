@@ -1,8 +1,17 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
+
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  // Khởi tạo giỏ hàng từ localStorage nếu có, nếu không thì trống
+  const initialCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const [cart, setCart] = useState(initialCart);
+
+  // Cập nhật localStorage mỗi khi giỏ hàng thay đổi
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (product, quantity) => {
     setCart((prevCart) => {

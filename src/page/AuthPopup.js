@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import "tailwindcss/tailwind.css";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  IconButton,
+  Divider,
+  Container,
+  Paper,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { jwtDecode } from "jwt-decode";
+import "tailwindcss/tailwind.css";
 
 const AuthPopup = ({ onClose, onLoginSuccess }) => {
   const [error, setError] = useState("");
@@ -173,67 +184,67 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96 h-630px relative">
-        <button className="absolute top-3 right-3 text-2xl" onClick={onClose}>
-          &times;
-        </button>
+      <Container component={Paper} className="relative p-6 w-96">
+        <IconButton className="absolute top-3 right-3" onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
         <div className="flex justify-center items-center mb-6">
           <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />
-          <h3 className="text-xl font-serif text-gray-500 pl-2">Sun Shine</h3>
+          <Typography variant="h6" className="font-serif text-gray-500 pl-2">
+            Sun Shine
+          </Typography>
         </div>
         <div className="flex justify-around mb-6">
-          <button
-            className={`py-2 px-4 rounded ${
-              isLogin ? "bg-black text-white" : "bg-transparent text-black"
-            }`}
+          <Button
+            variant={isLogin ? "contained" : "outlined"}
             onClick={() => setIsLogin(true)}
           >
             Login
-          </button>
-          <button
-            className={`py-2 px-4 rounded ${
-              !isLogin ? "bg-black text-white" : "bg-transparent text-black"
-            }`}
+          </Button>
+          <Button
+            variant={!isLogin ? "contained" : "outlined"}
             onClick={() => setIsLogin(false)}
           >
             Register
-          </button>
+          </Button>
         </div>
-        <h2 className="text-center mb-4">{isLogin ? "Login" : "Register"}</h2>
+        <Typography variant="h6" className="text-center mb-4">
+          {isLogin ? "Login" : "Register"}
+        </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
           {isLogin && (
             <>
-              <input
-                type="text"
+              <TextField
+                label="Username"
                 name="userName"
-                placeholder="userName"
+                fullWidth
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.userName}
-                className="w-full p-2 border border-gray-300 rounded"
+                error={!!formErrors.userName}
+                helperText={formErrors.userName}
               />
-              {formErrors.userName && (
-                <p className="text-red-500">{formErrors.userName}</p>
-              )}
-              <input
-                type="passWord"
+              <TextField
+                label="Password"
                 name="passWord"
-                placeholder="passWord"
+                type="password"
+                fullWidth
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.passWord}
-                className="w-full p-2 border border-gray-300 rounded"
+                error={!!formErrors.passWord}
+                helperText={formErrors.passWord}
               />
-              {formErrors.passWord && (
-                <p className="text-red-500">{formErrors.passWord}</p>
-              )}
-              <button
+              <Button
                 type="submit"
-                className="w-full py-2 bg-gray-700 text-white rounded hover:bg-black"
+                variant="contained"
+                color="primary"
+                fullWidth
               >
                 Login
-              </button>
-              <p className="text-center my-4">---Or login with---</p>
+              </Button>
+              <Divider className="my-4" />
+              <Typography align="center">--- Or login with ---</Typography>
               <div className="flex justify-center">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
@@ -244,89 +255,84 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
           )}
           {!isLogin && (
             <>
-              <input
-                type="text"
+              <TextField
+                label="Username"
                 name="userName"
-                placeholder="userName"
+                fullWidth
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.userName}
-                className="w-full p-2 border border-gray-300 rounded"
+                error={!!formErrors.userName}
+                helperText={formErrors.userName}
               />
-              {formErrors.userName && (
-                <p className="text-red-500">{formErrors.userName}</p>
-              )}
-              <input
-                type="text"
+              <TextField
+                label="Full Name"
                 name="name"
-                placeholder="Full name"
+                fullWidth
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.name}
-                className="w-full p-2 border border-gray-300 rounded"
+                error={!!formErrors.name}
+                helperText={formErrors.name}
               />
-              {formErrors.name && (
-                <p className="text-red-500">{formErrors.name}</p>
-              )}
-              <input
-                type="text"
+              <TextField
+                label="Phone"
                 name="phone"
-                placeholder="phone"
+                fullWidth
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.phone}
-                className="w-full p-2 border border-gray-300 rounded"
+                error={!!formErrors.phone}
+                helperText={formErrors.phone}
               />
-              {formErrors.phone && (
-                <p className="text-red-500">{formErrors.phone}</p>
-              )}
-              <input
-                type="email"
+              <TextField
+                label="Email"
                 name="email"
-                placeholder="email"
+                fullWidth
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.email}
-                className="w-full p-2 border border-gray-300 rounded"
+                error={!!formErrors.email}
+                helperText={formErrors.email}
               />
-              {formErrors.email && (
-                <p className="text-red-500">{formErrors.email}</p>
-              )}
-              <input
-                type="text"
+              <TextField
+                label="Address"
                 name="address"
-                placeholder="address"
+                fullWidth
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.address}
-                className="w-full p-2 border border-gray-300 rounded"
+                error={!!formErrors.address}
+                helperText={formErrors.address}
               />
-              {formErrors.address && (
-                <p className="text-red-500">{formErrors.address}</p>
-              )}
-              <input
-                type="passWord"
+              <TextField
+                label="Password"
                 name="passWord"
-                placeholder="passWord"
+                type="password"
+                fullWidth
                 onChange={handleChange}
                 onFocus={handleFocus}
                 value={formData.passWord}
-                className="w-full p-2 border border-gray-300 rounded"
+                error={!!formErrors.passWord}
+                helperText={formErrors.passWord}
               />
-              {formErrors.passWord && (
-                <p className="text-red-500">{formErrors.passWord}</p>
-              )}
-              <button
+              <Button
                 type="submit"
-                className="w-full py-2 bg-gray-700 text-white rounded hover:bg-gray-500"
+                variant="contained"
+                color="primary"
+                fullWidth
               >
                 Register
-              </button>
+              </Button>
             </>
           )}
-          {error && <p className="text-red-500 text-center">{error}</p>}
+          {error && (
+            <Typography color="error" align="center">
+              {error}
+            </Typography>
+          )}
         </form>
-      </div>
+      </Container>
     </div>
   );
 };

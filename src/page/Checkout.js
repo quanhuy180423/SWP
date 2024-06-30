@@ -194,8 +194,10 @@ const Checkout = () => {
                 </div>
               </div>
               <div className="flex items-center">
-                <label htmlFor={`quantity_${index}`}>Số lượng: </label>
-                <div>{item.quantity}</div>
+                <label htmlFor={`quantity_${index}`}>
+                  Số lượng
+                  <div className="flex justify-center"> {item.quantity}</div>
+                </label>
               </div>
             </li>
           ))}
