@@ -112,14 +112,14 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
             className="w-full p-2 mt-2 mb-2 border border-gray-300 rounded-lg"
           />
         </label>
-        <div className="text-center mb-5">
+        {/* <div className="text-center mb-5">
           <button
             type="submit"
             className="bg-gray-800 text-white py-2 px-4 rounded-lg hover:opacity-80"
           >
             Tìm kiếm
           </button>
-        </div>
+        </div> */}
         <div className="flex justify-between">
           <button
             type="button"

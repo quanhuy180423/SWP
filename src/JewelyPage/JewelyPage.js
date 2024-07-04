@@ -135,6 +135,7 @@ const JewelryPage = () => {
             <JewelryItem
               to={`/product/${product.ProductID}`}
               firstImage="https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain"
+              // firstImage={product.Image}
               title={product.Name}
               material={product.MaterialName}
               gem={product.GemName}

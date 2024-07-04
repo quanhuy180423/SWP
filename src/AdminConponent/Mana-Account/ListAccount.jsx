@@ -7,18 +7,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faBriefcase } from '@fortawesome/free-solid-svg-icons';
 import ActionButtons from "./ActionButtons";
 import { Link } from "react-router-dom";
+import Search from "../Header/Search";
 
 const ListAccount = () => {
     const [accounts, setAccount] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [staffToDelete, setStaffToDelete] = useState(null);
     const theme = useTheme();
+
     useEffect(() => {
         const getListAccount = async () => {
             try {
                 const response = await getAllUsers();
-                setAccount(response.data);
-                console.log(response.data);
+                const accountsWithIndex = response.data.map((account, index) => ({
+                    ...account,
+                    index: index + 1
+                }));
+                setAccount(accountsWithIndex);
+                console.log(accountsWithIndex);
             } catch (error) {
                 console.error(error);
             }
@@ -26,31 +32,34 @@ const ListAccount = () => {
         getListAccount();
     }, []);
 
-    const handleEdit = (id) => {
-        console.log("Edit user with ID:", id);
+    const handleEdit = (userId) => {
+        console.log("Edit user with ID:", userId);
     };
 
-    const handleDelete = (id) => {
-        setStaffToDelete(id);
-
+    const handleDelete = (userId) => {
+        setStaffToDelete(userId);
         setDeleteDialogOpen(true);
     };
 
-    const confirmDelete = () => {
-
-        deleteUser(setStaffToDelete)
-            .then(() => {
-                setAccount(accounts.filter(account => account.UserID !== staffToDelete));
-                setDeleteDialogOpen(false);
-                alert('User deleted successfully');
-                getAllUsers();
-            })
-            .catch(error => console.error('Error deleting user:', error));
-        getAllUsers();
+    const confirmDelete = async () => {
+        try {
+            await deleteUser(staffToDelete);
+            setAccount(accounts.filter(account => account.UserID !== staffToDelete));
+            setDeleteDialogOpen(false);
+            alert('User deleted successfully');
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
     };
 
     const columns = [
-        { field: 'UserID', headerName: 'ID', width: 70 },
+        {
+            field: 'index',
+            headerName: 'No',
+            width: 70,
+
+        },
+        // { field: 'UserID', headerName: 'ID', width: 70 },
         { field: 'Name', headerName: 'Name', width: 150 },
         {
             field: 'PassWord',
@@ -58,9 +67,9 @@ const ListAccount = () => {
             width: 150,
             renderCell: () => '••••••••',
         },
-        { field: 'Address', headerName: 'Address', width: 150 },
+        { field: 'Address', headerName: 'Address', width: 200 },
         { field: 'Phone', headerName: 'Phone', width: 150 },
-        { field: 'Email', headerName: 'Email', width: 150 },
+        { field: 'Email', headerName: 'Email', width: 200 },
         {
             field: 'Role',
             headerName: 'Role',
@@ -119,6 +128,7 @@ const ListAccount = () => {
             ),
         }
     ];
+
     const rows = accounts;
 
     return (
@@ -126,26 +136,35 @@ const ListAccount = () => {
             <Box>
                 <Header title='MANAGE ACCOUNT' subtitle='Managing the account members' />
                 <Box display='flex' justifyContent='flex-end' m={2}>
-                    <Button component={Link} to={'/admin/manage-account/addUser'}>
+                    <Search />
+                    <Button component={Link} to={'/admin/manage-account/addUser'}
+                        sx={{
+                            backgroundColor: colors.blueGrey[300],
+                            color: 'white',
+                            '&:hover': {
+                                backgroundColor: 'green',
+                                color: 'white',
+                            },
+                        }}
+                        variant="contained" >
                         Add User
                     </Button>
                 </Box>
+
                 <Box m='40px 0 0 0'
                     height='75vh'
+                    width='100%'
                     sx={{
                         "& .MuiDataGrid-root": {
-                            border: 'none',
+                            border: '1px solid gray', // Add border here
+                            borderRadius: '10px', // Add border radius here
+                            overflow: 'hidden', // Ensure rounded corners by clipping the overflow
                         },
                         "& .MuiDataGrid-cell": {
                             borderBottom: 'none',
                         },
-                        // . MuiDataGrid-coIumnHeaders :
-                        "& .MuiDataGrid-columnHeader": {
-                            backgroundColor: theme.palette.grey[300],
-                            borderBottom: "none",
-                        },
                         "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: theme.palette.success.light,
+                            backgroundColor: colors.blue[50],
                         },
                         "& .MuiDataGrid-footerContainer": {
                             borderTop: 'none',
@@ -177,8 +196,6 @@ const ListAccount = () => {
                 </DialogActions>
             </Dialog>
         </>
-
-
     );
 };
 

@@ -1,16 +1,47 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+const API_URL = "http://localhost:8090/test/getUserById";
 
 const Step1 = ({ nextStep, updateFormData, formData }) => {
   const [localData, setLocalData] = useState({
-    fullName: formData.fullName || "",
-    phone: formData.phone || "",
-    address: formData.address || "",
-    email: formData.email || "",
+    Name: formData.Name || "",
+    Phone: formData.Phone || "",
+    Address: formData.Address || "",
+    Email: formData.Email || "",
   });
 
+  // Fetch user data on component mount
   useEffect(() => {
-    setLocalData(formData);
-  }, [formData]);
+    const fetchUserData = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (storedUser && storedUser.Id) {
+        const userId = storedUser.Id;
+
+        try {
+          const response = await axios.get(`${API_URL}?userId=${userId}`);
+          setLocalData({
+            Name: response.data.Name || "",
+            Phone: response.data.Phone || "",
+            Address: response.data.Address || "",
+            Email: response.data.Email || "",
+          });
+          updateFormData({
+            Name: response.data.Name || "",
+            Phone: response.data.Phone || "",
+            Address: response.data.Address || "",
+            Email: response.data.Email || "",
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        console.error("User ID not found in localStorage");
+      }
+    };
+
+    fetchUserData();
+  }, [updateFormData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,9 +52,8 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateFormData(localData); // Pass entire localData
+    updateFormData(localData);
     nextStep();
-    // console.log(localData);
   };
 
   return (
@@ -39,8 +69,8 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
           Full Name:
           <input
             type="text"
-            name="fullName"
-            value={localData.fullName}
+            name="Name"
+            value={localData.Name}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
@@ -50,8 +80,8 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
           Phone:
           <input
             type="text"
-            name="phone"
-            value={localData.phone}
+            name="Phone"
+            value={localData.Phone}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
@@ -61,8 +91,8 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
           Address:
           <input
             type="text"
-            name="address"
-            value={localData.address}
+            name="Address"
+            value={localData.Address}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
@@ -72,8 +102,8 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
           Email:
           <input
             type="email"
-            name="email"
-            value={localData.email}
+            name="Email"
+            value={localData.Email}
             onChange={handleChange}
             required
             className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"

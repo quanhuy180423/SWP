@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import imgProfile from "../../assets/image/img/profile-user.png";
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl, faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
     return (
@@ -113,12 +113,13 @@ const Slidebar = () => {
                             setSelected={setSelected}
                         />
                         <Item
-                            title='Contacts Information'
-                            to='/contacts'
-                            icon={faComments}
+                            title='Manage product'
+                            to='/admin/manage-product'
+                            icon={faBoxesStacked}
                             selected={selected}
                             setSelected={setSelected}
                         />
+
                         <Item
                             title='Manage Blogs'
                             to='/admin/manage-blogs'
@@ -135,29 +136,36 @@ const Slidebar = () => {
                         />
                         <Item
                             title='Manage Diamond'
-                            to='/diamod'
+                            to='/admin/manage-diamond'
                             icon={faGem}
                             selected={selected}
                             setSelected={setSelected}
                         />
                         <Item
                             title='Manage Order'
-                            to='/order'
+                            to='/admin/manage-order'
                             icon={faClipboardList}
                             selected={selected}
                             setSelected={setSelected}
                         />
                         <Item
                             title='Manage Request Order'
-                            to='/request-order'
+                            to='/admin/manage-request-order'
                             icon={faBox}
                             selected={selected}
                             setSelected={setSelected}
                         />
                         <Item
                             title='Manage Step Process'
-                            to='/step-process'
+                            to='/admin/manage-step-process'
                             icon={faListOl}
+                            selected={selected}
+                            setSelected={setSelected}
+                        />
+                        <Item
+                            title='Contacts Information'
+                            to='/contacts'
+                            icon={faComments}
                             selected={selected}
                             setSelected={setSelected}
                         />

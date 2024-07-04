@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { validateUserInfo } from "../validation/validationUser";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 Modal.setAppElement("#root");
 
 const UserInfo = () => {
@@ -57,7 +58,9 @@ const UserInfo = () => {
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
+    Cookies.remove("loginTime");
     setIsLogoutModalOpen(false);
     window.location.href = "/";
   };

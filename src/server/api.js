@@ -7,6 +7,8 @@ const API_URL = "http://localhost:8090/test";
 export const getAllProducts = () => axios.get(`${API_URL}/getAllProduct`);
 export const getProductById = (id) =>
   axios.get(`${API_URL}/getProductById?id=${id}`);
+export const getAllProductsV2 = () =>
+  axios.get(`${API_URL}/getProductByNameOrId?name=${" "}`);
 export const insertProduct = (product) =>
   axios.post(`${API_URL}/insertProduct`, product);
 export const updateProduct = (id, product) =>
@@ -20,7 +22,9 @@ export const registerUser = (user) => axios.post(`${API_URL}/register`, user);
 export const updateUser = (id, user) =>
   axios.put(`${API_URL}/updateUserById`, { id, ...user });
 export const deleteUser = (userId) =>
-  axios.delete(`${API_URL}/deleteUserById`, { userId: { userId } });
+  axios.delete(`${API_URL}/deleteUserById`, {
+    data: { userId },
+  });
 
 // Hàm lấy danh sách đơn hàng
 export const getAllOrders = () => axios.get(`${API_URL}/getAllOrder`);
@@ -39,3 +43,40 @@ export const updateCategory = (id, category) =>
   axios.put(`${API_URL}/updateCategoryById`, { id, ...category });
 export const deleteCategory = (id) =>
   axios.delete(`${API_URL}/deleteCategoryById`, { data: { id } });
+
+// Hàm lấy Material
+export const getAllMaterial = () => axios.get(`${API_URL}/getAllMaterial`);
+export const getAllCostMaterial = () =>
+  axios.get(`${API_URL}/getAllCostMaterial`);
+export const getMaterialById = (MaterialID) =>
+  axios.get(`${API_URL}/getMaterialById?materialId=${MaterialID}`);
+export const insertMaterial = (material) =>
+  axios.post(`${API_URL}/insertMaterial`, material);
+export const insertCostMaterial = (materialCost) =>
+  axios.post(`${API_URL}/insertCostMaterial`, materialCost);
+export const updateMaterial = (MaterialID, category) =>
+  axios.put(`${API_URL}/updateMaterialById`, { MaterialID, ...category });
+export const deleteMaterial = (materialId) =>
+  axios.delete(`${API_URL}/deleteMaterialById`, { data: { materialId } });
+
+// Hàm lấy Blogs
+export const getAllBlogs = () => axios.get(`${API_URL}/getAllBlogs`);
+export const getBlogsById = (MaterialID) =>
+  axios.get(`${API_URL}/getBlogById?materialId=${MaterialID}`);
+export const insertBlogs = (blogs) =>
+  axios.post(`${API_URL}/insertBlog`, blogs);
+export const updateBlogs = (MaterialID, category) =>
+  axios.put(`${API_URL}/updateBlogById`, { MaterialID, ...category });
+export const deleteBlogs = (blogId) =>
+  axios.delete(`${API_URL}/deleteBlogById`, { data: { blogId } });
+
+// Hàm lấy Diamond
+export const getAllGem = () => axios.get(`${API_URL}/getAllGem`);
+export const getGemById = (gemId) =>
+  axios.get(`${API_URL}/getGemById?materialId=${gemId}`);
+export const insertGem = (diamond) =>
+  axios.post(`${API_URL}/insertGem`, diamond);
+export const updateGemById = (MaterialID, category) =>
+  axios.put(`${API_URL}/updateGemById`, { MaterialID, ...category });
+export const deleteGemById = (gemId) =>
+  axios.delete(`${API_URL}/deleteGemById`, { data: { gemId } });

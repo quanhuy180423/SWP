@@ -3,8 +3,7 @@ import CKEditorConfig, { editorConfiguration } from "./CKEditorConfig"; // Impor
 
 const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const [richText, setRichText] = useState(formData.richText || "");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState("");
+
   const [error, setError] = useState("");
   const handleNext = (e) => {
     e.preventDefault();

@@ -5,30 +5,32 @@ import { CartContext } from "../cart/CartContext";
 
 const Product = () => {
   const { ProductID } = useParams();
-  const [product, setProduct] = useState("");
+  const [product, setProduct] = useState([]);
   const [size, setSize] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
-  const API_URL = "http://localhost:8090/test/getProductByNameOrId";
+  const API_URL = "http://localhost:8090/test/getProductById";
 
   const fetchUserData = async () => {
     if (ProductID) {
       console.log(`Fetching product with id: ${ProductID}`);
 
       try {
-        const response = await axios.get(`${API_URL}?name=${ProductID}`);
-        // console.log(`prodcut:`, response.data);
+        const response = await axios.get(`${API_URL}?productId=${ProductID}`);
         const data = response.data;
-        data.map((product) => {
-          setProduct(product);
-        });
+        if (data) {
+          setProduct(data);
+          console.log(data);
+        } else {
+          console.error(`No product found with ID ${ProductID}`);
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     } else {
-      console.error("Product ID not found in localStorage");
+      console.error("Product ID not found in URL params");
     }
   };
 

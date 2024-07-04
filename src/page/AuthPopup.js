@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 import "tailwindcss/tailwind.css";
 
 const AuthPopup = ({ onClose, onLoginSuccess }) => {
@@ -138,14 +139,25 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
       if (response.status !== 200) {
         throw new Error("Login failed!");
       }
+
       const data = response.data;
       const { accessToken } = data;
+
+      // Lưu token vào localStorage
       localStorage.setItem("accessToken", accessToken);
 
+      // Giải mã token để lấy thông tin người dùng
       const decodedToken = jwtDecode(accessToken);
       const user = decodedToken.payload;
 
+      // Lưu thông tin người dùng vào localStorage
       localStorage.setItem("user", JSON.stringify(user));
+
+      // Lưu thời gian đăng nhập vào cookie
+      const loginTime = new Date().getTime(); // Lấy thời gian hiện tại
+      Cookies.set("loginTime", loginTime, { expires: 30 }); // Lưu cookie trong 30 ngày
+
+      // Gọi hàm xử lý khi đăng nhập thành công
       onLoginSuccess(user);
     } catch (error) {
       setError(error.message);

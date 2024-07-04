@@ -1,80 +1,79 @@
 import { useState, useEffect } from "react";
-
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, colors } from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import ActionButtons from "../Mana-Account/ActionButtons";
 import { Link } from "react-router-dom";
-import { deleteBlogs, getAllBlogs } from "../../server/api";
+import { deleteGemById, getAllGem } from "../../server/api"; // Giả sử bạn có các hàm API tương ứng
 import Search from "../Header/Search";
 
-
-const ListBlogs = () => {
-    const [blogs, setBlogs] = useState([]);
+const ListDiamond = () => {
+    const [diamonds, setDiamonds] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [BlogsToDelete, setBlogsToDelete] = useState(null);
+    const [diamondToDelete, setDiamondToDelete] = useState(null);
     const theme = useTheme();
 
     useEffect(() => {
-        const getListBlogs = async () => {
+        const getListDiamonds = async () => {
             try {
-
-                const response = await getAllBlogs();
-                setBlogs(response.data);
-
+                const response = await getAllGem();
+                setDiamonds(response.data);
             } catch (error) {
                 console.error(error);
             }
-        }
-        getListBlogs();
+        };
+        getListDiamonds();
     }, []);
 
-    const handleEdit = (id) => {
-        console.log("Edit user with ID:", id);
+    const handleView = (id) => {
+        console.log("View diamond with ID:", id);
+        // Bạn có thể thêm logic để điều hướng tới trang chi tiết viên kim cương
     };
 
-    const handleDelete = (blogId) => {
-        setBlogsToDelete(blogId);
+    const handleDelete = (gemId) => {
+        setDiamondToDelete(gemId);
         setDeleteDialogOpen(true);
     };
 
     const confirmDelete = () => {
-        deleteBlogs(BlogsToDelete)
+        deleteGemById(diamondToDelete)
             .then(() => {
-                setBlogs(blogs.filter(blog => blog.BlogID !== BlogsToDelete));
+                setDiamonds(diamonds.filter(diamond => diamond.GemID !== diamondToDelete));
                 setDeleteDialogOpen(false);
-                alert('User deleted successfully');
+                alert('Diamond deleted successfully');
             })
-            .catch(error => console.error('Error deleting user:', error));
+            .catch(error => console.error('Error deleting diamond:', error));
     };
 
     const columns = [
-        { field: 'BlogID', headerName: 'ID' },
-        { field: 'UserID', headerName: 'UserID', width: 150 },
-        { field: 'Title', headerName: 'Title', width: 150 },
-        { field: 'DateCreated', headerName: 'Date Created', width: 150 },
-        { field: 'Content', headerName: 'Content', width: 450 },
+        { field: 'GemID', headerName: 'ID' },
+        { field: 'Name', headerName: 'Name', width: 150 },
+        { field: 'Color', headerName: 'Color', width: 150 },
+        { field: 'CaraWeight', headerName: 'Cara Weight', width: 150 },
+        { field: 'Clarity', headerName: 'Clarity', width: 150 },
+        { field: 'Cut', headerName: 'Cut', width: 150 },
+        { field: 'Size', headerName: 'Size', width: 150 },
         {
             field: 'Actions',
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
                 <ActionButtons
-                    onEdit={() => handleEdit(params.row.UserID)}
-                    onDelete={() => handleDelete(params.row.UserID)}
+                    onEdit={() => handleView(params.row.GemID)}
+                    onDelete={() => handleDelete(params.row.GemID)}
                 />
             ),
         }
     ];
 
-    const rows = blogs;
+    const rows = diamonds;
 
     return (
         <Box>
-            <Header title='MANAGE BLOGS' subtitle='Managing the blogs list' />
+            <Header title='MANAGE DIAMONDS' subtitle='Managing the diamonds list' />
             <Box display='flex' justifyContent='flex-end' m={2}>
                 <Search />
-                <Button component={Link} to={'/admin/manage-blogs/addBlog'}
+                <Button component={Link} to={'/admin/manage-diamonds/addDiamond'}
                     sx={{
                         backgroundColor: colors.blueGrey[300],
                         color: 'white',
@@ -85,7 +84,7 @@ const ListBlogs = () => {
                     }}
                     variant="contained"
                 >
-                    Add Blogs
+                    Add Diamond
                 </Button>
             </Box>
             <Box
@@ -115,7 +114,7 @@ const ListBlogs = () => {
                 <DataGrid
                     columns={columns}
                     rows={rows}
-                    getRowId={(row) => row.BlogID}
+                    getRowId={(row) => row.GemID}
                     components={{ Toolbar: GridToolbar }}
                 />
             </Box>
@@ -123,7 +122,7 @@ const ListBlogs = () => {
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete this user?
+                        Are you sure you want to delete this diamond?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -135,4 +134,4 @@ const ListBlogs = () => {
     );
 };
 
-export default ListBlogs;
+export default ListDiamond;

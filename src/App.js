@@ -17,9 +17,17 @@ import BlogDetail from "./page/Blog/BlogDetail";
 import LayoutAdmin from "./AdminConponent/LayoutAdmin";
 import Dashboard from "./AdminConponent/Dashboard/Dashboard";
 import ListAccount from "./AdminConponent/Mana-Account/ListAccount";
-import AddUserButton from "./AdminConponent/Mana-Account/AddUserButton";
+import AddUserButton from "./AdminConponent/Mana-Account/AddAccount";
 import ListBlogs from "./AdminConponent/Mana-Blogs/ListBlogs";
 import ListMaterial from "./AdminConponent/Mana-Material/ListMaterial";
+import AddMaterial from "./AdminConponent/Mana-Material/AddMaterial";
+import AddBlogs from "./AdminConponent/Mana-Blogs/AddBlogs";
+import ListDiamond from "./AdminConponent/Mana-Diamond/ListDiamond";
+import AddDiamond from "./AdminConponent/Mana-Diamond/AddDiamond";
+import ListOrder from "./AdminConponent/Mana-Order/ListOrder";
+import ListProduct from "./AdminConponent/Mana-Product/ListProduct";
+import EditMaterial from "./AdminConponent/Mana-Material/EditMaterial";
+import AddCostMaterial from "./AdminConponent/Mana-Material/AddCostMaterial";
 
 const App = () => {
   return (
@@ -48,7 +56,30 @@ const App = () => {
               element={<AddUserButton />}
             />
             <Route path="/admin/manage-blogs" element={<ListBlogs />} />
+
+            {/* Material */}
             <Route path="/admin/manage-material" element={<ListMaterial />} />
+            <Route
+              path="/admin/manage-account/addMaterial"
+              element={<AddMaterial />}
+            />
+            <Route
+              path="/admin/manage-account/addCostMaterial/:materialId"
+              element={<AddCostMaterial />}
+            />
+            <Route
+              path="/admin/manage-account/editMaterial"
+              element={<EditMaterial />}
+            />
+
+            <Route path="/admin/manage-blogs/addBlog" element={<AddBlogs />} />
+            <Route path="/admin/manage-diamond" element={<ListDiamond />} />
+            <Route
+              path="/admin/manage-diamonds/addDiamond"
+              element={<AddDiamond />}
+            />
+            <Route path="/admin/manage-order" element={<ListOrder />} />
+            <Route path="/admin/manage-product" element={<ListProduct />} />
           </Route>
         </Routes>
       </Router>

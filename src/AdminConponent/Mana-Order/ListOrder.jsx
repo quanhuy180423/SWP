@@ -1,80 +1,78 @@
 import { useState, useEffect } from "react";
-
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, colors } from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import ActionButtons from "../Mana-Account/ActionButtons";
 import { Link } from "react-router-dom";
-import { deleteBlogs, getAllBlogs } from "../../server/api";
+import { deleteOrder, getAllOrders } from "../../server/api";
 import Search from "../Header/Search";
 
-
-const ListBlogs = () => {
-    const [blogs, setBlogs] = useState([]);
+const ListOrder = () => {
+    const [orders, setOrders] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [BlogsToDelete, setBlogsToDelete] = useState(null);
+    const [orderToDelete, setOrderToDelete] = useState(null);
     const theme = useTheme();
 
     useEffect(() => {
-        const getListBlogs = async () => {
+        const getListOrders = async () => {
             try {
-
-                const response = await getAllBlogs();
-                setBlogs(response.data);
-
+                const response = await getAllOrders();
+                setOrders(response.data);
             } catch (error) {
                 console.error(error);
             }
         }
-        getListBlogs();
+        getListOrders();
     }, []);
 
     const handleEdit = (id) => {
-        console.log("Edit user with ID:", id);
+        console.log("Edit order with ID:", id);
     };
 
-    const handleDelete = (blogId) => {
-        setBlogsToDelete(blogId);
+    const handleDelete = (orderId) => {
+        setOrderToDelete(orderId);
         setDeleteDialogOpen(true);
     };
 
     const confirmDelete = () => {
-        deleteBlogs(BlogsToDelete)
+        deleteOrder(orderToDelete)
             .then(() => {
-                setBlogs(blogs.filter(blog => blog.BlogID !== BlogsToDelete));
+                setOrders(orders.filter(order => order.OrderID !== orderToDelete));
                 setDeleteDialogOpen(false);
-                alert('User deleted successfully');
+                alert('Order deleted successfully');
             })
-            .catch(error => console.error('Error deleting user:', error));
+            .catch(error => console.error('Error deleting order:', error));
     };
 
     const columns = [
-        { field: 'BlogID', headerName: 'ID' },
-        { field: 'UserID', headerName: 'UserID', width: 150 },
-        { field: 'Title', headerName: 'Title', width: 150 },
-        { field: 'DateCreated', headerName: 'Date Created', width: 150 },
-        { field: 'Content', headerName: 'Content', width: 450 },
+        { field: 'OrderID', headerName: 'ID', width: 100 },
+        { field: 'UserID', headerName: 'UserID', width: 100 },
+        { field: 'UserName', headerName: 'User Name', width: 150 },
+        { field: 'Phone', headerName: 'Phone', width: 100 },
+        { field: 'Address', headerName: 'Address', width: 200 },
+        { field: 'Description', headerName: 'Description', width: 250 },
+        { field: 'Status', headerName: 'Status', width: 150 },
         {
             field: 'Actions',
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
                 <ActionButtons
-                    onEdit={() => handleEdit(params.row.UserID)}
-                    onDelete={() => handleDelete(params.row.UserID)}
+                    onEdit={() => handleEdit(params.row.OrderID)}
+                    onDelete={() => handleDelete(params.row.OrderID)}
                 />
             ),
         }
     ];
 
-    const rows = blogs;
+    const rows = orders;
 
     return (
         <Box>
-            <Header title='MANAGE BLOGS' subtitle='Managing the blogs list' />
+            <Header title='MANAGE ORDERS' subtitle='Managing the orders list' />
             <Box display='flex' justifyContent='flex-end' m={2}>
                 <Search />
-                <Button component={Link} to={'/admin/manage-blogs/addBlog'}
+                <Button component={Link} to={'/admin/manage-orders/addOrder'}
                     sx={{
                         backgroundColor: colors.blueGrey[300],
                         color: 'white',
@@ -85,7 +83,7 @@ const ListBlogs = () => {
                     }}
                     variant="contained"
                 >
-                    Add Blogs
+                    Add Order
                 </Button>
             </Box>
             <Box
@@ -115,7 +113,7 @@ const ListBlogs = () => {
                 <DataGrid
                     columns={columns}
                     rows={rows}
-                    getRowId={(row) => row.BlogID}
+                    getRowId={(row) => row.OrderID}
                     components={{ Toolbar: GridToolbar }}
                 />
             </Box>
@@ -123,7 +121,7 @@ const ListBlogs = () => {
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete this user?
+                        Are you sure you want to delete this order?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -135,4 +133,4 @@ const ListBlogs = () => {
     );
 };
 
-export default ListBlogs;
+export default ListOrder;
