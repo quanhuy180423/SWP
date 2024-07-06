@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/SWP/static/css/main.1a7e1962.css",
-    "main.js": "/SWP/static/js/main.1adce853.js",
-    "static/js/453.669f8d28.chunk.js": "/SWP/static/js/453.669f8d28.chunk.js",
-    "static/media/kim_cuong.png": "/SWP/static/media/kim_cuong.3550ce0733765c53cb44.png",
-    "index.html": "/SWP/index.html",
-    "main.1a7e1962.css.map": "/SWP/static/css/main.1a7e1962.css.map",
-    "main.1adce853.js.map": "/SWP/static/js/main.1adce853.js.map",
-    "453.669f8d28.chunk.js.map": "/SWP/static/js/453.669f8d28.chunk.js.map"
+    "main.css": "/static/css/main.e44f68ed.css",
+    "main.js": "/static/js/main.7f8188fd.js",
+    "static/js/453.669f8d28.chunk.js": "/static/js/453.669f8d28.chunk.js",
+    "static/media/kim_cuong.png": "/static/media/kim_cuong.3550ce0733765c53cb44.png",
+    "index.html": "/index.html",
+    "main.e44f68ed.css.map": "/static/css/main.e44f68ed.css.map",
+    "main.7f8188fd.js.map": "/static/js/main.7f8188fd.js.map",
+    "453.669f8d28.chunk.js.map": "/static/js/453.669f8d28.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1a7e1962.css",
-    "static/js/main.1adce853.js"
+    "static/css/main.e44f68ed.css",
+    "static/js/main.7f8188fd.js"
   ]
 }

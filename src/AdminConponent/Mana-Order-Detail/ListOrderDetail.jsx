@@ -1,80 +1,86 @@
 import { useState, useEffect } from "react";
-
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, colors } from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import ActionButtons from "../Mana-Account/ActionButtons";
 import { Link } from "react-router-dom";
-import { deleteBlogs, getAllBlogs } from "../../server/api";
+import { deleteOrderDetail, getAllOrderDetails } from "../../server/api";
 import Search from "../Header/Search";
 
-
-const ListBlogs = () => {
-    const [blogs, setBlogs] = useState([]);
+const ListOrderDetail = () => {
+    const [orderDetails, setOrderDetails] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [BlogsToDelete, setBlogsToDelete] = useState(null);
+    const [orderDetailToDelete, setOrderDetailToDelete] = useState(null);
     const theme = useTheme();
 
     useEffect(() => {
-        const getListBlogs = async () => {
+        const getListOrderDetails = async () => {
             try {
-
-                const response = await getAllBlogs();
-                setBlogs(response.data);
-
+                const response = await getAllOrderDetails();
+                setOrderDetails(response.data);
             } catch (error) {
                 console.error(error);
             }
         }
-        getListBlogs();
+        getListOrderDetails();
     }, []);
 
     const handleEdit = (id) => {
-        console.log("Edit user with ID:", id);
+        console.log("Edit order detail with ID:", id);
     };
 
-    const handleDelete = (blogId) => {
-        setBlogsToDelete(blogId);
+    const handleDelete = (orderDetailId) => {
+        setOrderDetailToDelete(orderDetailId);
         setDeleteDialogOpen(true);
     };
 
     const confirmDelete = () => {
-        deleteBlogs(BlogsToDelete)
+        deleteOrderDetail(orderDetailToDelete)
             .then(() => {
-                setBlogs(blogs.filter(blog => blog.BlogID !== BlogsToDelete));
+                setOrderDetails(orderDetails.filter(orderDetail => orderDetail.OrderDetailID !== orderDetailToDelete));
                 setDeleteDialogOpen(false);
-                alert('User deleted successfully');
+                alert('Order detail deleted successfully');
             })
-            .catch(error => console.error('Error deleting user:', error));
+            .catch(error => console.error('Error deleting order detail:', error));
     };
 
     const columns = [
-        { field: 'BlogId', headerName: 'ID' },
-        { field: 'UserId', headerName: 'UserID', width: 150 },
-        { field: 'Title', headerName: 'Title', width: 150 },
-        { field: 'DateCreated', headerName: 'Date Created', width: 150 },
-        { field: 'Content', headerName: 'Content', width: 450 },
+        { field: 'OrderDetailID', headerName: 'Order Detail ID', width: 150 },
+        { field: 'Description', headerName: 'Description', width: 250 },
+        { field: 'ProductID', headerName: 'Product ID', width: 150 },
+        { field: 'Status', headerName: 'Status', width: 150 },
+        { field: 'ProductName', headerName: 'Product Name', width: 200 },
+        { field: 'CategoryID', headerName: 'Category ID', width: 150 },
+        { field: 'CategoryName', headerName: 'Category Name', width: 200 },
+        { field: 'MaterialID', headerName: 'Material ID', width: 150 },
+        { field: 'MaterialName', headerName: 'Material Name', width: 200 },
+        { field: 'GemID', headerName: 'Gem ID', width: 150 },
+        { field: 'GemName', headerName: 'Gem Name', width: 200 },
+        { field: 'QuantityGem', headerName: 'Quantity Gem', width: 150 },
+        { field: 'QuantityMaterial', headerName: 'Quantity Material', width: 150 },
+        { field: 'OrderDate', headerName: 'Order Date', width: 200 },
+        { field: 'OrderID', headerName: 'Order ID', width: 150 },
         {
             field: 'Actions',
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
                 <ActionButtons
-                    onEdit={() => handleEdit(params.row.UserID)}
-                    onDelete={() => handleDelete(params.row.UserID)}
+                    onEdit={() => handleEdit(params.row.OrderDetailID)}
+                    onDelete={() => handleDelete(params.row.OrderDetailID)}
                 />
             ),
         }
     ];
 
-    const rows = blogs;
+    const rows = orderDetails;
 
     return (
         <Box>
-            <Header title='MANAGE BLOGS' subtitle='Managing the blogs list' />
+            <Header title='MANAGE ORDER DETAILS' subtitle='Managing the order details list' />
             <Box display='flex' justifyContent='flex-end' m={2}>
                 <Search />
-                <Button component={Link} to={'/admin/manage-blogs/addBlog'}
+                <Button component={Link} to={'/admin/manage-order-details/addOrderDetail'}
                     sx={{
                         backgroundColor: colors.blueGrey[300],
                         color: 'white',
@@ -85,7 +91,7 @@ const ListBlogs = () => {
                     }}
                     variant="contained"
                 >
-                    Add Blogs
+                    Add Order Detail
                 </Button>
             </Box>
             <Box
@@ -115,7 +121,7 @@ const ListBlogs = () => {
                 <DataGrid
                     columns={columns}
                     rows={rows}
-                    getRowId={(row) => row.BlogId}
+                    getRowId={(row) => row.OrderDetailID}
                     components={{ Toolbar: GridToolbar }}
                 />
             </Box>
@@ -123,7 +129,7 @@ const ListBlogs = () => {
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete this user?
+                        Are you sure you want to delete this order detail?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -135,4 +141,4 @@ const ListBlogs = () => {
     );
 };
 
-export default ListBlogs;
+export default ListOrderDetail;

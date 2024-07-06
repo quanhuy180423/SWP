@@ -28,6 +28,8 @@ import ListOrder from "./AdminConponent/Mana-Order/ListOrder";
 import ListProduct from "./AdminConponent/Mana-Product/ListProduct";
 import EditMaterial from "./AdminConponent/Mana-Material/EditMaterial";
 import AddCostMaterial from "./AdminConponent/Mana-Material/AddCostMaterial";
+import ListOrderDetail from "./AdminConponent/Mana-Order-Detail/ListOrderDetail";
+import AddProduct from "./AdminConponent/Mana-Product/AddProduct";
 
 const App = () => {
   return (
@@ -79,7 +81,17 @@ const App = () => {
               element={<AddDiamond />}
             />
             <Route path="/admin/manage-order" element={<ListOrder />} />
+            {/* Product */}
             <Route path="/admin/manage-product" element={<ListProduct />} />
+            <Route
+              path="/admin/manage-product/addProduct"
+              element={<AddProduct />}
+            />
+
+            <Route
+              path="/admin/manage-order-detail"
+              element={<ListOrderDetail />}
+            />
           </Route>
         </Routes>
       </Router>

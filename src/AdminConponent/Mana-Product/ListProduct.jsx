@@ -55,7 +55,7 @@ const ListProduct = () => {
             headerName: 'No',
             width: 70,
         },
-        { field: 'name', headerName: 'Name', width: 150 },
+        { field: 'Name', headerName: 'Name', width: 150 },
         { field: 'materialName', headerName: 'Material Name', width: 150 },
         { field: 'categoryName', headerName: 'Category Name', width: 150 },
         { field: 'gemName', headerName: 'Gem Name', width: 150 },

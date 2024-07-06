@@ -132,8 +132,8 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
     try {
       const url = API_URL_Login;
       const response = await axios.post(url, {
-        userName: formData.userName,
-        passWord: formData.passWord,
+        UserName: formData.userName,
+        PassWord: formData.passWord,
       });
 
       if (response.status !== 200) {
@@ -168,29 +168,45 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
     try {
       const registerUrl = API_URL_Register;
       const registrationResponse = await axios.post(registerUrl, {
-        userName: formData.userName,
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        address: formData.address,
-        passWord: formData.passWord,
+        UserName: formData.userName,
+        Name: formData.name,
+        Phone: formData.phone,
+        Email: formData.email,
+        Address: formData.address,
+        PassWord: formData.passWord,
       });
 
-      if (registrationResponse.status !== 201) {
+      if (registrationResponse.status === 201) {
+        const data = registrationResponse.data;
+        const { accessToken } = data;
+
+        // Save token to localStorage
+        localStorage.setItem("accessToken", accessToken);
+
+        // Decode token to get user information
+        const decodedToken = jwtDecode(accessToken);
+        const user = decodedToken.payload;
+
+        // Save user information to localStorage
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Save login time to cookie
+        const loginTime = new Date().getTime(); // Get current time
+        Cookies.set("loginTime", loginTime, { expires: 30 }); // Save cookie for 30 days
+
+        // Call handler for successful login
+        onLoginSuccess(user);
+      } else if (registrationResponse.status === 400) {
+        setError(registrationResponse.data);
+        alert("Account already exists! Redirecting to login page...");
+        setIsLogin(true);
+      } else {
         throw new Error("Registration failed!");
       }
-
-      const data = registrationResponse.data;
-      const { accessToken } = data;
-      localStorage.setItem("accessToken", accessToken);
-
-      const decodedToken = jwtDecode(accessToken);
-      const user = decodedToken.user || decodedToken;
-
-      localStorage.setItem("user", JSON.stringify(user));
-      onLoginSuccess(user);
     } catch (error) {
-      setError(error.response?.data?.message || "An error occurred");
+      console.error(error);
+      alert("Account already exists! Redirecting to login page...");
+      setIsLogin(true);
     }
   };
 

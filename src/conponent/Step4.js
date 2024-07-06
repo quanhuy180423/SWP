@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import CKEditorConfig, { editorConfiguration } from "./CKEditorConfig"; // Import cấu hình CKEditor
-
+import React, { useRef, useState } from "react";
+import { Editor } from "@tinymce/tinymce-react";
 const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const [richText, setRichText] = useState(formData.richText || "");
+  const editorRef = useRef(null);
 
   const [error, setError] = useState("");
   const handleNext = (e) => {
@@ -18,13 +18,37 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
       </div>
     );
   }
-
+  const handleEditorChange = (content, editor) => {
+    if (richText) {
+      setRichText({ ...richText, Description: content });
+    }
+  };
   return (
     <div className="w-full">
       <div className="w-1/2 mx-auto">
         <h3>Step 4: Additional Details</h3>
         <div>
-          <CKEditorConfig initData={richText} setData={setRichText} />
+          <Editor
+            apiKey="0ywy09pu3fif7crqzb9n5eygtvh5hwbbpj4vold92e6q9r11"
+            init={{
+              plugins:
+                "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofDescriptions footnotes mergetags autocorrect typography inlinecss markdown",
+              toolbar:
+                "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+              tinycomments_mode: "embedded",
+              tinycomments_author: "Author name",
+              mergetags_list: [
+                { value: "First.Name", title: "First Name" },
+                { value: "Email", title: "Email" },
+              ],
+              ai_request: (request, respondWith) =>
+                respondWith.string(() =>
+                  Promise.reject("See docs to implement AI Assistant")
+                ),
+            }}
+            onInit={(evt, editor) => (editorRef.current = editor)}
+            onEditorChange={handleEditorChange}
+          />
 
           <div className="flex justify-between mt-4">
             <button

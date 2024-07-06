@@ -149,8 +149,8 @@ const Slidebar = () => {
                             setSelected={setSelected}
                         />
                         <Item
-                            title='Manage Request Order'
-                            to='/admin/manage-request-order'
+                            title='Manage Order Detail'
+                            to='/admin/manage-order-detail'
                             icon={faBox}
                             selected={selected}
                             setSelected={setSelected}

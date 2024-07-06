@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Grid, Alert } from '@mui/material';
 import { insertBlogs } from "../../server/api"; // Assuming you have an API function for adding blogs
+import { Editor } from '@tinymce/tinymce-react';
 
 function AddBlogs() {
     // Parse the user object from localStorage
@@ -15,6 +16,7 @@ function AddBlogs() {
     const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const editorRef = useRef(null);
 
     const validateForm = () => {
         let tempErrors = {};
@@ -22,6 +24,12 @@ function AddBlogs() {
         if (!formData.content) tempErrors.content = "Content is required";
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
+    };
+
+    const handleEditorChange = (content, editor) => {
+        if (formData) {
+            setFormData({ ...formData, content: content });
+        }
     };
 
     const handleSubmit = (e) => {
@@ -63,16 +71,21 @@ function AddBlogs() {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
-                        label="Content"
-                        name="content"
-                        multiline
-                        rows={4}
-                        value={formData.content}
-                        onChange={handleChange}
-                        error={!!errors.content}
-                        helperText={errors.content}
-                        fullWidth
+                    <Editor
+                        apiKey='0ywy09pu3fif7crqzb9n5eygtvh5hwbbpj4vold92e6q9r11'
+                        init={{
+                            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofDescriptions footnotes mergetags autocorrect typography inlinecss markdown',
+                            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                            tinycomments_mode: 'embedded',
+                            tinycomments_author: 'Author name',
+                            mergetags_list: [
+                                { value: 'First.Name', title: 'First Name' },
+                                { value: 'Email', title: 'Email' },
+                            ],
+                            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+                        }}
+                        onInit={(evt, editor) => editorRef.current = editor}
+                        onEditorChange={handleEditorChange}
                     />
                 </Grid>
             </Grid>

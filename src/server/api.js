@@ -35,6 +35,15 @@ export const updateOrder = (id, order) =>
 export const deleteOrder = (id) =>
   axios.delete(`${API_URL}/deleteOrderById`, { data: { id } });
 
+// Hàm lấy danh sách đơn hàng chi tiết
+export const getAllOrderDetails = () => axios.get(`${API_URL}/getAllOrder`);
+// export const insertOrder = (order) =>
+//   axios.post(`${API_URL}/insertOrder`, order);
+// export const updateOrder = (id, order) =>
+//   axios.put(`${API_URL}/updateOrderById`, { id, ...order });
+export const deleteOrderDetail = (id) =>
+  axios.delete(`${API_URL}/deleteOrderById`, { data: { id } });
+
 // Hàm lấy danh mục
 export const getAllCategories = () => axios.get(`${API_URL}/getAllCategory`);
 export const insertCategory = (category) =>
