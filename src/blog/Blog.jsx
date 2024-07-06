@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { Editor } from '@tinymce/tinymce-react';
+import { Editor } from '@tinymce/tinymce-react';//show less, show more
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
@@ -16,6 +16,7 @@ const Blog = () => {
   const [editBlog, setEditBlog] = useState(null);
   const [message, setMessage] = useState('');
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [expandedBlogs, setExpandedBlogs] = useState({});//show less, show more
   const editorRef = useRef(null);
   const API_URL = "https://667a627cbd627f0dcc8ea52b.mockapi.io/Blog";  // Replace with your actual API URL
 
@@ -110,6 +111,14 @@ const Blog = () => {
     }
   };
 
+  //show less, show more
+  const toggleDescription = (BlogID) => {
+    setExpandedBlogs({
+      ...expandedBlogs,
+      [BlogID]: !expandedBlogs[BlogID]
+    });
+  };
+
   const handleEditClick = (blog) => {
     editorRef.current.setContent(blog.Description);
     setEditBlog(blog);
@@ -157,6 +166,7 @@ const Blog = () => {
               }}
               onInit={(evt, editor) => editorRef.current = editor}
               onEditorChange={handleEditorChange}
+              ref={editorRef} //show less, show more
             />
           </div>
 
@@ -204,11 +214,32 @@ const Blog = () => {
             blogs.map((blog) => (
               <tr key={blog.BlogID} className="bg-gray-100">
                 <td className="border p-2">{blog.Title}</td>
-                <td className="border p-2" dangerouslySetInnerHTML={{ __html: blog.Description }}></td>
+                <td className="border p-2">                        //show less, show more
+                  {expandedBlogs[blog.BlogID] ? (
+                    <span dangerouslySetInnerHTML={{ __html: blog.Description }}></span>
+                  ) : (
+                    <span>
+                      {blog.Description.length > 100 ? (
+                        <span dangerouslySetInnerHTML={{ __html: `${blog.Description.substring(0, 100)}...` }}></span>
+                      ) : (
+                        <span dangerouslySetInnerHTML={{ __html: blog.Description }}></span>
+                      )}
+                    </span>
+                  )}
+                  <button
+                    onClick={() => toggleDescription(blog.BlogID)}
+                    className="text-blue-500 ml-2"
+                  >
+                    {expandedBlogs[blog.BlogID] ? 'Show Less' : 'Show More'}
+                  </button>
+                </td>
                 <td className="border p-2">{blog.DateCreated}</td>
                 <td className="border p-2">{blog.UserID}</td>
                 <td className="border p-2 border-black">
-                  <button onClick={() => handleEditClick(blog)} className="px-2 py-1 bg-green-500 text-white rounded mr-2">
+                  <button onClick={() => {
+                    setEditBlog(blog);
+                    editorRef.current.setContent(blog.Description);
+                  }} className="px-2 py-1 bg-green-500 text-white rounded mr-2">
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
                   <button onClick={() => deleteBlog(blog.BlogID)} className="px-2 py-1 bg-red-500 text-white rounded">

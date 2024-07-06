@@ -30,7 +30,7 @@ const Dashboard = () => {
   const [salesData, setSalesData] = useState({ weekly: [], monthly: [], quarterly: [], yearly: [] });
 
   useEffect(() => {
-    fetchOrderData();
+    fetchOrderData();//số đơn hàng đã bán trong các tháng
     fetchNewCustomers();
     fetchSalesData();
   }, []);
@@ -86,7 +86,7 @@ const Dashboard = () => {
       },
     ],
   };
-
+  //biểu đồ đường mô tả doanh thu trong tuần, tháng, quý, năm
   const lineChartData = {
     labels: salesData.weekly.length ? salesData.weekly.map((_, index) => `Week ${index + 1}`) : [],
     datasets: [
