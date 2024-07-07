@@ -133,9 +133,8 @@ const JewelryPage = () => {
             className="p-5 mx-5 rounded-lg shadow-md"
           >
             <JewelryItem
-              to={`/product/${product.ProductID}`}
-              firstImage="https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain"
-              // firstImage={product.Image}
+              to={`/product/${product.ProductId}`}
+              firstImage={product.Image[0]}
               title={product.Name}
               material={product.MaterialName}
               gem={product.GemName}

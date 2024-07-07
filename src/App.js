@@ -30,8 +30,10 @@ import EditMaterial from "./AdminConponent/Mana-Material/EditMaterial";
 import AddCostMaterial from "./AdminConponent/Mana-Material/AddCostMaterial";
 import ListOrderDetail from "./AdminConponent/Mana-Order-Detail/ListOrderDetail";
 import AddProduct from "./AdminConponent/Mana-Product/AddProduct";
+import EditAccount from "./AdminConponent/Mana-Account/EditAccount";
 
 const App = () => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   return (
     <CartProvider>
       <Router>
@@ -42,7 +44,7 @@ const App = () => {
             <Route path="order-form" element={<OrderForm />} />
             <Route path="blog" element={<Blogs />} />
             <Route path="/blog/:blogId" element={<BlogDetail />} />
-            <Route path="/product/:ProductID" element={<Product />} />
+            <Route path="/product/:ProductId" element={<Product />} />
             <Route path="/userinfo/:Id" element={<UserInfo />} />
             <Route path="diamondpage" element={<DiamondPage />} />
             <Route path="/diamond-detail/:gemId" element={<DiamondDetail />} />
@@ -50,49 +52,66 @@ const App = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
           </Route>
-          <Route path="/admin" element={<LayoutAdmin />}>
-            <Route index element={<Dashboard />} />
-            <Route path="/admin/manage-account" element={<ListAccount />} />
-            <Route
-              path="/admin/manage-account/addUser"
-              element={<AddUserButton />}
-            />
-            <Route path="/admin/manage-blogs" element={<ListBlogs />} />
 
-            {/* Material */}
-            <Route path="/admin/manage-material" element={<ListMaterial />} />
-            <Route
-              path="/admin/manage-account/addMaterial"
-              element={<AddMaterial />}
-            />
-            <Route
-              path="/admin/manage-account/addCostMaterial/:materialId"
-              element={<AddCostMaterial />}
-            />
-            <Route
-              path="/admin/manage-account/editMaterial"
-              element={<EditMaterial />}
-            />
+          {(user.Role === 1 || user.Role === 2) && (
+            <Route path="/admin" element={<LayoutAdmin />}>
+              {user.Role === 1 && <Route index element={<Dashboard />} />}
 
-            <Route path="/admin/manage-blogs/addBlog" element={<AddBlogs />} />
-            <Route path="/admin/manage-diamond" element={<ListDiamond />} />
-            <Route
-              path="/admin/manage-diamonds/addDiamond"
-              element={<AddDiamond />}
-            />
-            <Route path="/admin/manage-order" element={<ListOrder />} />
-            {/* Product */}
-            <Route path="/admin/manage-product" element={<ListProduct />} />
-            <Route
-              path="/admin/manage-product/addProduct"
-              element={<AddProduct />}
-            />
+              {user.Role === 1 && (
+                <Route path="/admin/manage-account" element={<ListAccount />} />
+              )}
+              {user.Role === 1 && (
+                <Route
+                  path="/admin/manage-account/addUser"
+                  element={<AddUserButton />}
+                />
+              )}
+              {user.Role === 1 && (
+                <Route
+                  path="/admin/manage-account/edit/:UserId"
+                  element={<EditAccount />}
+                />
+              )}
 
-            <Route
-              path="/admin/manage-order-detail"
-              element={<ListOrderDetail />}
-            />
-          </Route>
+              <Route path="/admin/manage-blogs" element={<ListBlogs />} />
+
+              {/* Material */}
+              <Route path="/admin/manage-material" element={<ListMaterial />} />
+              <Route
+                path="/admin/manage-material/addMaterial"
+                element={<AddMaterial />}
+              />
+              <Route
+                path="/admin/manage-material/addCostMaterial"
+                element={<AddCostMaterial />}
+              />
+              <Route
+                path="/admin/manage-material/editMaterial"
+                element={<EditMaterial />}
+              />
+
+              <Route
+                path="/admin/manage-blogs/addBlog"
+                element={<AddBlogs />}
+              />
+              <Route path="/admin/manage-diamond" element={<ListDiamond />} />
+              <Route
+                path="/admin/manage-diamond/addDiamond"
+                element={<AddDiamond />}
+              />
+              <Route path="/admin/manage-order" element={<ListOrder />} />
+              {/* Product */}
+              <Route path="/admin/manage-product" element={<ListProduct />} />
+              <Route
+                path="/admin/manage-product/addProduct"
+                element={<AddProduct />}
+              />
+              <Route
+                path="/admin/manage-order-detail"
+                element={<ListOrderDetail />}
+              />
+            </Route>
+          )}
         </Routes>
       </Router>
     </CartProvider>

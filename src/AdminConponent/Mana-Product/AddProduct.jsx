@@ -1,75 +1,90 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Grid, Alert } from '@mui/material';
-import { insertProduct } from "../../server/api"; // Assuming you have an API function for adding products
+import { TextField, Button, Box, Grid, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { insertProduct, getAllMaterial, getAllCategories } from "../../server/api"; // Assuming you have API functions for fetching materials and categories
 import { Editor } from '@tinymce/tinymce-react';
-
+import handleUploadImages from "../../firebase/HandleUploadToFirebase"
 function AddProduct() {
-
-
     const [formData, setFormData] = useState({
-        name: '',
-        materialId: '',
-        gemId: '',
-        categoryId: '',
-        materialCost: '',
-        gemCost: '',
-        productCost: '',
-        image: '',
-        quantityGem: '',
-        size: '',
-        warrantyCard: '',
-        description: '',
-        quantityMaterial: ''
+        Name: '',
+        MaterialId: '',
+        GemId: '',
+        CategoryId: '',
+        ProductCost: '',
+        Image: [], // Change to handle multiple images
+        QuantityGem: '',
+        Size: '',
+        WarrantyCard: '',
+        Description: '',
+        QuantityMaterial: ''
     });
+    const [materials, setMaterials] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     const editorRef = useRef(null);
 
+    useEffect(() => {
+        // Fetch materials and categories
+        getAllMaterial()
+            .then(response => setMaterials(response.data))
+            .catch(error => console.error('Error fetching materials:', error));
+
+        getAllCategories()
+            .then(response => setCategories(response.data))
+            .catch(error => console.error('Error fetching categories:', error));
+    }, []);
+
     const validateForm = () => {
         let tempErrors = {};
-        if (!formData.name) tempErrors.name = "Name is required";
-        if (!formData.materialId) tempErrors.materialId = "Material ID is required";
-        // if (!formData.gemId) tempErrors.gemId = "Gem ID is required";
-        if (!formData.categoryId) tempErrors.categoryId = "Category ID is required";
-        if (!formData.materialCost) tempErrors.materialCost = "Material cost is required";
-        // if (!formData.gemCost) tempErrors.gemCost = "Gem cost is required";
-        if (!formData.productCost) tempErrors.productCost = "Product cost is required";
-        if (!formData.image) tempErrors.image = "Image is required";
-        // if (!formData.quantityGem) tempErrors.quantityGem = "Quantity of gem is required";
-        if (!formData.size) tempErrors.size = "Size is required";
-        if (!formData.warrantyCard) tempErrors.warrantyCard = "Warranty card is required";
-        if (!formData.description) tempErrors.description = "Description is required";
-        if (!formData.quantityMaterial) tempErrors.quantityMaterial = "Quantity of material is required";
+        if (!formData.Name) tempErrors.name = "Name is required";
+        if (!formData.MaterialId) tempErrors.materialId = "Material is required";
+        if (!formData.CategoryId) tempErrors.categoryId = "Category is required";
+        if (!formData.ProductCost) tempErrors.productCost = "Product cost is required";
+        if (!formData.Image.length) tempErrors.images = "At least one image is required";
+        if (!formData.Size) tempErrors.size = "Size is required";
+        if (!formData.WarrantyCard) tempErrors.warrantyCard = "Warranty card is required";
+        if (!formData.Description) tempErrors.description = "Description is required";
+        if (!formData.QuantityGem) tempErrors.quantityMaterial = "Quantity of material is required";
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
 
     const handleEditorChange = (content, editor) => {
         if (formData) {
-            setFormData({ ...formData, description: content });
+            setFormData({ ...formData, Description: content });
         }
     };
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
+
         if (validateForm()) {
-            insertProduct(formData)
-                .then(() => {
-                    alert('Product added successfully');
-                    navigate('/admin/dashboard');
-                })
-                .catch(error => {
-                    console.error('Error adding product:', error);
-                    setErrorMessage('Failed to add product');
-                });
+            try {
+                if (formData.Image.length > 0) {
+                    const imageUrls = await handleUploadImages(formData.Image);
+                    formData.Image = imageUrls;
+                }
+                console.log(formData)
+                await insertProduct(formData);
+                alert('Product added successfully');
+                navigate('/admin');
+            } catch (error) {
+                console.error('Error adding product:', error);
+                setErrorMessage('Failed to add product');
+            }
         }
     };
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value, files } = e.target;
+        if (name === 'Images' && files) {
+            setFormData({ ...formData, Image: files });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     return (
@@ -79,140 +94,132 @@ function AddProduct() {
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Name"
-                        name="name"
-                        value={formData.name}
+                        name="Name"
+                        value={formData.Name}
                         onChange={handleChange}
-                        error={!!errors.name}
-                        helperText={errors.name}
+                        error={!!errors.Name}
+                        helperText={errors.Name}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Category ID"
-                        name="categoryId"
-                        value={formData.categoryId}
-                        onChange={handleChange}
-                        error={!!errors.categoryId}
-                        helperText={errors.categoryId}
-                        fullWidth
-                    />
+                    <FormControl fullWidth error={!!errors.CategoryId}>
+                        <InputLabel>Category</InputLabel>
+                        <Select
+                            label="Category"
+                            name="CategoryId"
+                            value={formData.CategoryId}
+                            onChange={handleChange}
+                        >
+                            {categories.map((category) => (
+                                <MenuItem key={category.CategoryId} value={category.CategoryId} style={{ color: 'black', height: '20px' }}>
+                                    {category.Name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {errors.CategoryId && <Alert severity="error">{errors.CategoryId}</Alert>}
+                    </FormControl>
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        label="Material ID"
-                        name="materialId"
-                        value={formData.materialId}
-                        onChange={handleChange}
-                        error={!!errors.materialId}
-                        helperText={errors.materialId}
-                        fullWidth
-                    />
+                <Grid item xs={12} sm={6} md={6}>
+                    <FormControl fullWidth error={!!errors.MaterialId}>
+                        <InputLabel>Material</InputLabel>
+                        <Select
+                            label="Material"
+                            name="MaterialId"
+                            value={formData.MaterialId}
+                            onChange={handleChange}
+                        >
+                            {materials.map((material) => (
+                                <MenuItem key={material.MaterialId} value={material.MaterialId} style={{ color: 'black', height: '20px' }}>
+                                    {material.Name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {errors.MaterialId && <Alert severity="error">{errors.MaterialId}</Alert>}
+                    </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        label="Material Cost"
-                        name="materialCost"
-                        type="number"
-                        value={formData.materialCost}
-                        onChange={handleChange}
-                        error={!!errors.materialCost}
-                        helperText={errors.materialCost}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Quantity Material"
-                        name="quantityMaterial"
-                        type="number"
-                        value={formData.quantityMaterial}
+                        name="QuantityMaterial"
+                        type='number'
+                        value={formData.QuantityMaterial}
                         onChange={handleChange}
-                        error={!!errors.quantityMaterial}
-                        helperText={errors.quantityMaterial}
+                        error={!!errors.QuantityMaterial}
+                        helperText={errors.QuantityMaterial}
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        label="Gem ID"
-                        name="gemId"
-                        value={formData.gemId}
-                        onChange={handleChange}
-                        error={!!errors.gemId}
-                        helperText={errors.gemId}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        label="Quantity Gem"
-                        name="quantityGem"
-                        type="number"
-                        value={formData.quantityGem}
-                        onChange={handleChange}
-                        error={!!errors.quantityGem}
-                        helperText={errors.quantityGem}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        label="Gem Cost"
-                        name="gemCost"
-                        type="number"
-                        value={formData.gemCost}
-                        onChange={handleChange}
-                        error={!!errors.gemCost}
-                        helperText={errors.gemCost}
-                        fullWidth
-                    />
-                </Grid>
-
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
-                        label="Image"
-                        name="image"
-                        value={formData.image}
+                        label="Gem ID"
+                        name="GemId"
+                        value={formData.GemId}
                         onChange={handleChange}
-                        error={!!errors.image}
-                        helperText={errors.image}
+                        error={!!errors.GemId}
+                        helperText={errors.GemId}
                         fullWidth
                     />
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                    <TextField
+                        label="Quantity Gem"
+                        name="QuantityGem"
+                        type='number'
+                        value={formData.QuantityGem}
+                        onChange={handleChange}
+                        error={!!errors.QuantityGem}
+                        helperText={errors.QuantityGem}
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                    <Box>
+                        <InputLabel>Images</InputLabel>
+                        <input
+                            type="file"
+                            name="Images"
+                            onChange={handleChange}
+                            multiple
+                            style={{ display: 'block', marginTop: '8px' }}
+                        />
+                        {errors.Image && <Alert severity="error">{errors.Image}</Alert>}
+                    </Box>
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Size"
-                        name="size"
-                        value={formData.size}
+                        name="Size"
+                        type='number'
+                        value={formData.Size}
                         onChange={handleChange}
-                        error={!!errors.size}
-                        helperText={errors.size}
+                        error={!!errors.Size}
+                        helperText={errors.Size}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Warranty Card"
-                        name="warrantyCard"
-                        value={formData.warrantyCard}
+                        name="WarrantyCard"
+                        value={formData.WarrantyCard}
                         onChange={handleChange}
-                        error={!!errors.warrantyCard}
-                        helperText={errors.warrantyCard}
+                        error={!!errors.WarrantyCard}
+                        helperText={errors.WarrantyCard}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Product Cost"
-                        name="productCost"
+                        name="ProductCost"
                         type="number"
-                        value={formData.productCost}
+                        value={formData.ProductCost}
                         onChange={handleChange}
-                        error={!!errors.productCost}
-                        helperText={errors.productCost}
+                        error={!!errors.ProductCost}
+                        helperText={errors.ProductCost}
                         fullWidth
                     />
                 </Grid>
@@ -224,6 +231,11 @@ function AddProduct() {
                             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
                             tinycomments_mode: 'embedded',
                             tinycomments_author: 'Author name',
+                            mergetags_list: [
+                                { value: 'First.Name', title: 'First Name' },
+                                { value: 'Email', title: 'Email' },
+                            ],
+                            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
                         }}
                         onInit={(evt, editor) => editorRef.current = editor}
                         onEditorChange={handleEditorChange}

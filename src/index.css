@@ -5,7 +5,9 @@
 .Modal {
   @apply fixed inset-0 flex items-center justify-center z-50;
 }
-
+:root{
+  /* background-color: white */
+}
 .Overlay {
   @apply fixed inset-0 bg-black bg-opacity-50 z-40;
 }

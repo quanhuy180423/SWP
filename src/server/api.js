@@ -7,8 +7,8 @@ const API_URL = "http://localhost:8090/test";
 export const getAllProducts = () => axios.get(`${API_URL}/getAllProduct`);
 export const getProductById = (id) =>
   axios.get(`${API_URL}/getProductById?id=${id}`);
-export const getAllProductsV2 = () =>
-  axios.get(`${API_URL}/getProductByNameOrId?name=${" "}`);
+export const getProductsV2 = (id) =>
+  axios.get(`${API_URL}/getProductByNameOrId?Name=${id}`);
 export const insertProduct = (product) =>
   axios.post(`${API_URL}/insertProduct`, product);
 export const updateProduct = (id, product) =>
@@ -19,11 +19,13 @@ export const deleteProduct = (id) =>
 // Hàm lấy danh sách người dùng
 export const getAllUsers = () => axios.get(`${API_URL}/getAllUser`);
 export const registerUser = (user) => axios.post(`${API_URL}/register`, user);
+export const getUserById = (UserId) =>
+  axios.get(`${API_URL}/getUserById?UserId=${UserId}`);
 export const updateUser = (id, user) =>
   axios.put(`${API_URL}/updateUserById`, { id, ...user });
-export const deleteUser = (userId) =>
+export const deleteUser = (UserId) =>
   axios.delete(`${API_URL}/deleteUserById`, {
-    data: { userId },
+    data: { UserId },
   });
 
 // Hàm lấy danh sách đơn hàng

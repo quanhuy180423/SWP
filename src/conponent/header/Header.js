@@ -61,8 +61,11 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="absolute" className="bg-white shadow-md z-50">
-      <Toolbar className="flex flex-col lg:flex-row justify-between items-center px-6 bg-white">
+    <AppBar position="sticky" style={{ backgroundColor: "white" }}>
+      <Toolbar
+        className="flex flex-col lg:flex-row justify-between items-center px-6 bg-white"
+        style={{ marginBottom: "", backgroundColor: "white" }}
+      >
         <Link to="/" className="flex items-center my-2 lg:my-0">
           <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />
           <Typography variant="h6" className="text-xl text-gray-500 pl-2">

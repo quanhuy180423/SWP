@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { deleteUser, getAllUsers } from "../../server/api";
-import { Box, Button, Typography, colors, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme } from "@mui/material";
+import { Box, Button, Typography, colors, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, IconButton } from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock, faBriefcase } from '@fortawesome/free-solid-svg-icons';
-import ActionButtons from "./ActionButtons";
-import { Link } from "react-router-dom";
+import { faUser, faLock, faBriefcase, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Link, useNavigate } from "react-router-dom";
 import Search from "../Header/Search";
 
 const ListAccount = () => {
@@ -14,6 +13,7 @@ const ListAccount = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [staffToDelete, setStaffToDelete] = useState(null);
     const theme = useTheme();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getListAccount = async () => {
@@ -32,19 +32,15 @@ const ListAccount = () => {
         getListAccount();
     }, []);
 
-    const handleEdit = (userId) => {
-        console.log("Edit user with ID:", userId);
-    };
-
-    const handleDelete = (userId) => {
-        setStaffToDelete(userId);
+    const handleDelete = (UserId) => {
+        setStaffToDelete(UserId);
         setDeleteDialogOpen(true);
     };
 
     const confirmDelete = async () => {
         try {
             await deleteUser(staffToDelete);
-            setAccount(accounts.filter(account => account.UserID !== staffToDelete));
+            setAccount(accounts.filter(account => account.UserId !== staffToDelete));
             setDeleteDialogOpen(false);
             alert('User deleted successfully');
         } catch (error) {
@@ -52,14 +48,16 @@ const ListAccount = () => {
         }
     };
 
+    const handleEdit = (userId) => {
+        navigate(`/admin/manage-account/edit/${userId}`);
+    };
+
     const columns = [
         {
             field: 'index',
             headerName: 'No',
             width: 70,
-
         },
-        // { field: 'UserID', headerName: 'ID', width: 70 },
         { field: 'Name', headerName: 'Name', width: 150 },
         {
             field: 'PassWord',
@@ -121,10 +119,14 @@ const ListAccount = () => {
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
-                <ActionButtons
-                    onEdit={() => handleEdit(params.row.UserID)}
-                    onDelete={() => handleDelete(params.row.UserID)}
-                />
+                <Box display='flex' justifyContent='space-around' color='red'>
+                    <IconButton onClick={() => handleEdit(params.row.UserId)}>
+                        <FontAwesomeIcon icon={faEdit} />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(params.row.UserId)}>
+                        <FontAwesomeIcon icon={faTrash} />
+                    </IconButton>
+                </Box>
             ),
         }
     ];
@@ -156,9 +158,9 @@ const ListAccount = () => {
                     width='100%'
                     sx={{
                         "& .MuiDataGrid-root": {
-                            border: '1px solid gray', // Add border here
-                            borderRadius: '10px', // Add border radius here
-                            overflow: 'hidden', // Ensure rounded corners by clipping the overflow
+                            border: '1px solid gray',
+                            borderRadius: '10px',
+                            overflow: 'hidden',
                         },
                         "& .MuiDataGrid-cell": {
                             borderBottom: 'none',
@@ -178,7 +180,7 @@ const ListAccount = () => {
                     <DataGrid
                         columns={columns}
                         rows={rows}
-                        getRowId={(row) => row.UserID}
+                        getRowId={(row) => row.UserId}
                     />
                 </Box>
 

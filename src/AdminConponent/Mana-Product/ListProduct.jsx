@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { deleteProduct, getAllProductsV2 } from "../../server/api";
+import { deleteProduct, getAllProducts } from "../../server/api";
 import { Box, Button, colors, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme } from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -15,7 +15,7 @@ const ListProduct = () => {
     useEffect(() => {
         const getListProduct = async () => {
             try {
-                const response = await getAllProductsV2();
+                const response = await getAllProducts();
                 const productsWithIndex = response.data.map((product, index) => ({
                     ...product,
                     index: index + 1
@@ -55,10 +55,10 @@ const ListProduct = () => {
             headerName: 'No',
             width: 70,
         },
-        { field: 'Name', headerName: 'Name', width: 150 },
-        { field: 'materialName', headerName: 'Material Name', width: 150 },
-        { field: 'categoryName', headerName: 'Category Name', width: 150 },
-        { field: 'gemName', headerName: 'Gem Name', width: 150 },
+        { field: 'Name', headerName: 'Name', width: 250 },
+        { field: 'MaterialName', headerName: 'Material Name', width: 250 },
+        { field: 'CategoryName', headerName: 'Category Name', width: 250 },
+        { field: 'GemName', headerName: 'Gem Name', width: 250 },
         { field: 'ProductCost', headerName: 'Price', width: 100 },
         {
             field: 'Actions',
@@ -112,7 +112,7 @@ const ListProduct = () => {
                     <DataGrid
                         columns={columns}
                         rows={rows}
-                        getRowId={(row) => row.ProductID}
+                        getRowId={(row) => row.ProductId}
                     />
                 </Box>
             </Box>

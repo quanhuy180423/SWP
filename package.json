@@ -21,6 +21,7 @@
     "@tinymce/tinymce-react": "^5.1.1",
     "axios": "^1.7.2",
     "ckeditor5-custom-build": "file:ckeditor5",
+    "firebase": "^10.12.3",
     "gh-pages": "^6.1.1",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
@@ -31,6 +32,7 @@
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
+    "swiper": "^11.1.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

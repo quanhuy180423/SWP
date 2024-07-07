@@ -7,7 +7,7 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 const ActionButtons = ({ onEdit, onDelete }) => {
     return (
         <Box display='flex' justifyContent='space-around' color='red'>
-            <IconButton onClick={onEdit}>
+            <IconButton LinkComponent={onEdit}>
                 <FontAwesomeIcon icon={faEdit} />
             </IconButton>
             <IconButton onClick={onDelete}>
