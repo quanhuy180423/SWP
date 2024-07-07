@@ -28,7 +28,7 @@ const ListMaterial = () => {
             const costMaterialsData = costMaterialsResponse.data;
 
             const combinedData = materialsData.map(material => {
-                const costMaterial = costMaterialsData.find(cost => cost.MaterialId === material.MaterialID);
+                const costMaterial = costMaterialsData.find(cost => cost.MaterialId === material.MaterialId);
                 return {
                     ...material,
                     PurchasePrice: costMaterial ? costMaterial.PurchasePrice : null,
@@ -43,12 +43,12 @@ const ListMaterial = () => {
         }
     };
 
-    const handleEdit = (materialId) => {
-        console.log("Edit material with ID:", materialId);
+    const handleEdit = (MaterialId) => {
+        console.log("Edit material with ID:", MaterialId);
     };
 
-    const handleDelete = (materialId) => {
-        setMaterialToDelete(materialId);
+    const handleDelete = (MaterialId) => {
+        setMaterialToDelete(MaterialId);
         setDeleteDialogOpen(true);
     };
 
@@ -63,12 +63,12 @@ const ListMaterial = () => {
         }
     };
 
-    const handleAddCostMaterial = (materialId) => {
-        navigate(`/admin/manage-account/addCostMaterial/${materialId}`);
+    const handleAddCostMaterial = (MaterialId) => {
+        navigate(`/admin/manage-account/addCostMaterial/${MaterialId}`);
     };
 
     const columns = [
-        { field: 'MaterialID', headerName: 'ID', width: 70 },
+        { field: 'MaterialId', headerName: 'ID', width: 70 },
         { field: 'Name', headerName: 'Name', width: 350 },
         { field: 'Unit', headerName: 'Unit', width: 100 },
         { field: 'PurchasePrice', headerName: 'PurchasePrice', width: 100 },
@@ -82,10 +82,10 @@ const ListMaterial = () => {
                     <IconButton component={Link} to='/admin/manage-material/editMaterial' >
                         <FontAwesomeIcon icon={faEdit} />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(params.row.MaterialID)}>
+                    <IconButton onClick={() => handleDelete(params.row.MaterialId)}>
                         <FontAwesomeIcon icon={faTrash} />
                     </IconButton>
-                    <IconButton onClick={() => handleAddCostMaterial(params.row.MaterialID)}>
+                    <IconButton onClick={() => handleAddCostMaterial(params.row.MaterialId)}>
                         <FontAwesomeIcon icon={faPlus} /> {/* Add appropriate icon for adding cost material */}
                     </IconButton>
                 </Box>
@@ -117,7 +117,7 @@ const ListMaterial = () => {
                     >
                         Add Material
                     </Button>
-                    <Button component={Link} to={'/admin/manage-account/addCostMaterial/'}
+                    <Button component={Link} to={'/admin/manage-account/addCostMaterial'}
                         sx={{
                             backgroundColor: colors.blue[300],
                             color: 'white',
@@ -159,7 +159,7 @@ const ListMaterial = () => {
                     <DataGrid
                         columns={columns}
                         rows={materials}
-                        getRowId={(row) => row.MaterialID}
+                        getRowId={(row) => row.MaterialId}
                     />
                 </Box>
             </Box>
@@ -178,6 +178,7 @@ const ListMaterial = () => {
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
+
                 onClose={handleSnackbarClose}
                 message="Material deleted successfully"
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

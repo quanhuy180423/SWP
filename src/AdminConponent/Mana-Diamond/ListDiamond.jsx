@@ -30,15 +30,15 @@ const ListDiamond = () => {
         // Bạn có thể thêm logic để điều hướng tới trang chi tiết viên kim cương
     };
 
-    const handleDelete = (gemId) => {
-        setDiamondToDelete(gemId);
+    const handleDelete = (GemId) => {
+        setDiamondToDelete(GemId);
         setDeleteDialogOpen(true);
     };
 
     const confirmDelete = () => {
         deleteGemById(diamondToDelete)
             .then(() => {
-                setDiamonds(diamonds.filter(diamond => diamond.GemID !== diamondToDelete));
+                setDiamonds(diamonds.filter(diamond => diamond.GemId !== diamondToDelete));
                 setDeleteDialogOpen(false);
                 alert('Diamond deleted successfully');
             })
@@ -46,7 +46,7 @@ const ListDiamond = () => {
     };
 
     const columns = [
-        { field: 'GemID', headerName: 'ID' },
+        { field: 'GemId', headerName: 'ID' },
         { field: 'Name', headerName: 'Name', width: 150 },
         { field: 'Color', headerName: 'Color', width: 150 },
         { field: 'CaraWeight', headerName: 'Cara Weight', width: 150 },
@@ -59,8 +59,8 @@ const ListDiamond = () => {
             width: 150,
             renderCell: (params) => (
                 <ActionButtons
-                    onEdit={() => handleView(params.row.GemID)}
-                    onDelete={() => handleDelete(params.row.GemID)}
+                    onEdit={() => handleView(params.row.GemId)}
+                    onDelete={() => handleDelete(params.row.GemId)}
                 />
             ),
         }
@@ -114,7 +114,7 @@ const ListDiamond = () => {
                 <DataGrid
                     columns={columns}
                     rows={rows}
-                    getRowId={(row) => row.GemID}
+                    getRowId={(row) => row.GemId}
                     components={{ Toolbar: GridToolbar }}
                 />
             </Box>

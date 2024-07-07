@@ -63,35 +63,35 @@ export const deleteCategory = (id) =>
 export const getAllMaterial = () => axios.get(`${API_URL}/getAllMaterial`);
 export const getAllCostMaterial = () =>
   axios.get(`${API_URL}/getAllCostMaterial`);
-export const getMaterialById = (MaterialID) =>
-  axios.get(`${API_URL}/getMaterialById?materialId=${MaterialID}`);
+export const getMaterialById = (MaterialId) =>
+  axios.get(`${API_URL}/getMaterialById?MaterialId=${MaterialId}`);
 export const insertMaterial = (material) =>
   axios.post(`${API_URL}/insertMaterial`, material);
 export const insertCostMaterial = (materialCost) =>
   axios.post(`${API_URL}/insertCostMaterial`, materialCost);
-export const updateMaterial = (MaterialID, category) =>
-  axios.put(`${API_URL}/updateMaterialById`, { MaterialID, ...category });
-export const deleteMaterial = (materialId) =>
-  axios.delete(`${API_URL}/deleteMaterialById`, { data: { materialId } });
+export const updateMaterial = (MaterialId, category) =>
+  axios.put(`${API_URL}/updateMaterialById`, { MaterialId, ...category });
+export const deleteMaterial = (MaterialId) =>
+  axios.delete(`${API_URL}/deleteMaterialById`, { data: { MaterialId } });
 
 // Hàm lấy Blogs
 export const getAllBlogs = () => axios.get(`${API_URL}/getAllBlogs`);
-export const getBlogsById = (MaterialID) =>
-  axios.get(`${API_URL}/getBlogById?materialId=${MaterialID}`);
+export const getBlogsById = (MaterialId) =>
+  axios.get(`${API_URL}/getBlogById?MaterialId=${MaterialId}`);
 export const insertBlogs = (blogs) =>
   axios.post(`${API_URL}/insertBlog`, blogs);
-export const updateBlogs = (MaterialID, category) =>
-  axios.put(`${API_URL}/updateBlogById`, { MaterialID, ...category });
+export const updateBlogs = (MaterialId, category) =>
+  axios.put(`${API_URL}/updateBlogById`, { MaterialId, ...category });
 export const deleteBlogs = (blogId) =>
   axios.delete(`${API_URL}/deleteBlogById`, { data: { blogId } });
 
 // Hàm lấy Diamond
 export const getAllGem = () => axios.get(`${API_URL}/getAllGem`);
 export const getGemById = (gemId) =>
-  axios.get(`${API_URL}/getGemById?materialId=${gemId}`);
+  axios.get(`${API_URL}/getGemById?MaterialId=${gemId}`);
 export const insertGem = (diamond) =>
   axios.post(`${API_URL}/insertGem`, diamond);
-export const updateGemById = (MaterialID, category) =>
-  axios.put(`${API_URL}/updateGemById`, { MaterialID, ...category });
+export const updateGemById = (MaterialId, category) =>
+  axios.put(`${API_URL}/updateGemById`, { MaterialId, ...category });
 export const deleteGemById = (gemId) =>
   axios.delete(`${API_URL}/deleteGemById`, { data: { gemId } });

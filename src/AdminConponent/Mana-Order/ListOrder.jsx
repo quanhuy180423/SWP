@@ -29,15 +29,15 @@ const ListOrder = () => {
         console.log("Edit order with ID:", id);
     };
 
-    const handleDelete = (orderId) => {
-        setOrderToDelete(orderId);
+    const handleDelete = (OrderId) => {
+        setOrderToDelete(OrderId);
         setDeleteDialogOpen(true);
     };
 
     const confirmDelete = () => {
         deleteOrder(orderToDelete)
             .then(() => {
-                setOrders(orders.filter(order => order.OrderID !== orderToDelete));
+                setOrders(orders.filter(order => order.OrderId !== orderToDelete));
                 setDeleteDialogOpen(false);
                 alert('Order deleted successfully');
             })
@@ -45,9 +45,9 @@ const ListOrder = () => {
     };
 
     const columns = [
-        { field: 'OrderID', headerName: 'ID', width: 100 },
-        { field: 'UserID', headerName: 'UserID', width: 100 },
-        { field: 'UserName', headerName: 'User Name', width: 150 },
+        { field: 'OrderId', headerName: 'ID', width: 100 },
+        { field: 'UserId', headerName: 'UserID', width: 100 },
+        { field: 'Name', headerName: 'Full Name', width: 150 },
         { field: 'Phone', headerName: 'Phone', width: 100 },
         { field: 'Address', headerName: 'Address', width: 200 },
         { field: 'Description', headerName: 'Description', width: 250 },
@@ -58,8 +58,8 @@ const ListOrder = () => {
             width: 150,
             renderCell: (params) => (
                 <ActionButtons
-                    onEdit={() => handleEdit(params.row.OrderID)}
-                    onDelete={() => handleDelete(params.row.OrderID)}
+                    onEdit={() => handleEdit(params.row.OrderId)}
+                    onDelete={() => handleDelete(params.row.OrderId)}
                 />
             ),
         }
@@ -113,7 +113,7 @@ const ListOrder = () => {
                 <DataGrid
                     columns={columns}
                     rows={rows}
-                    getRowId={(row) => row.OrderID}
+                    getRowId={(row) => row.OrderId}
                     components={{ Toolbar: GridToolbar }}
                 />
             </Box>
