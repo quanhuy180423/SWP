@@ -1,14 +1,27 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
+
 const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const [richText, setRichText] = useState(formData.richText || "");
   const editorRef = useRef(null);
 
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.setContent(formData.richText || "");
+    }
+  }, [formData.richText]);
+
   const handleNext = (e) => {
     e.preventDefault();
     updateFormData({ richText });
     nextStep();
+  };
+
+  const handleEditorChange = (content) => {
+    setRichText(content);
+    updateFormData({ richText: content });
   };
 
   if (error.length > 0) {
@@ -18,11 +31,7 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
       </div>
     );
   }
-  const handleEditorChange = (content, editor) => {
-    if (richText) {
-      setRichText({ ...richText, Description: content });
-    }
-  };
+
   return (
     <div className="w-full">
       <div className="w-1/2 mx-auto">
@@ -47,12 +56,16 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
                 ),
             }}
             onInit={(evt, editor) => (editorRef.current = editor)}
+            value={richText}
             onEditorChange={handleEditorChange}
           />
 
           <div className="flex justify-between mt-4">
             <button
-              onClick={prevStep}
+              onClick={() => {
+                updateFormData({ richText });
+                prevStep();
+              }}
               className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
             >
               Back

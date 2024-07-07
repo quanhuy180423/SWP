@@ -1,144 +1,111 @@
 import React, { useState, useEffect } from "react";
-import ResultsTable from "./Resultstable"; // Ensure correct path
+import { getAllGem } from "../server/api";
+import DiamondList from "./DiamondList";
+import { TextField, Button, Grid } from "@mui/material";
 
 const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const [localData, setLocalData] = useState({
-    color: "",
-    clarity: "",
-    cut: "",
-    carat: "",
+    diamondId: formData.diamondId || "",
+    quantityGem: formData.quantityGem || 0,
   });
-
-  const [results, setResults] = useState([]);
-  const [error, setError] = useState("");
+  const [diamonds, setDiamonds] = useState([]);
+  const [gemIdError, setGemIdError] = useState("");
 
   useEffect(() => {
-    setLocalData(formData);
-  }, [formData]);
+    const getDiamonds = async () => {
+      try {
+        const response = await getAllGem();
+        setDiamonds(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getDiamonds();
+  }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const updatedData = { ...localData, [name]: value };
+  const handleGemIdChange = (e) => {
+    const gemId = e.target.value;
+    const updatedData = { ...localData, diamondId: gemId };
+
+    // Check if gemId exists in diamonds array
+    const gemExists = diamonds.some(
+      (diamond) => String(diamond.GemId) === gemId
+    );
+
+    if (gemExists) {
+      setGemIdError("");
+      updatedData.quantityGem = 1;
+    } else {
+      setGemIdError("Nhập sai mã Gem ID");
+      updatedData.quantityGem = 0;
+    }
+
     setLocalData(updatedData);
     updateFormData(updatedData);
-  };
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    try {
-      const queryParams = new URLSearchParams(localData).toString();
-      const url = `https://6658c2355c3617052649bea2.mockapi.io/JewelyAPI/Diamond?${queryParams}`;
-
-      console.log("URL:", url);
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Có lỗi xảy ra khi tìm kiếm!");
-      }
-
-      const data = await response.json();
-      console.log("Data:", data);
-      setResults(data);
-      setError("");
-    } catch (error) {
-      setError(error.message);
-      setResults([]);
-    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     updateFormData(localData);
     nextStep();
-    // console.log(localData);
   };
 
   return (
     <div>
       <form
-        className="bg-gray-100 p-6 rounded-lg shadow-md max-w-md mx-auto mb-2"
-        onSubmit={handleSearch}
+        className="bg-gray-100 p-6 rounded-lg shadow-md max-w-7xl mx-auto mb-2"
+        onSubmit={handleSubmit}
       >
         <h2 className="text-center mb-5 text-2xl text-gray-800">
           Step 3: Chi tiết kim cương
         </h2>
-        <label className="block mb-2 text-gray-600">
-          Màu sắc:
-          <input
-            type="text"
-            name="color"
-            value={localData.color}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-2 border border-gray-300 rounded-lg"
-          />
-        </label>
-        <label className="block mb-2 text-gray-600">
-          Độ trong:
-          <input
-            type="text"
-            name="clarity"
-            value={localData.clarity}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-2 border border-gray-300 rounded-lg"
-          />
-        </label>
-        <label className="block mb-2 text-gray-600">
-          Giác cắt:
-          <input
-            type="text"
-            name="cut"
-            value={localData.cut}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-2 border border-gray-300 rounded-lg"
-          />
-        </label>
-        <label className="block mb-2 text-gray-600">
-          Carat:
-          <input
-            type="text"
-            name="carat"
-            value={localData.carat}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-2 border border-gray-300 rounded-lg"
-          />
-        </label>
-        {/* <div className="text-center mb-5">
-          <button
-            type="submit"
-            className="bg-gray-800 text-white py-2 px-4 rounded-lg hover:opacity-80"
-          >
-            Tìm kiếm
-          </button>
-        </div> */}
+        <DiamondList diamonds={diamonds} />
+        <Grid container spacing={2} mt={2} mb={2} justifyContent="center">
+          <Grid item xs={6}>
+            <TextField
+              label="Gem ID"
+              name="diamondId"
+              value={localData.diamondId}
+              onChange={handleGemIdChange}
+              error={!!gemIdError}
+              helperText={gemIdError}
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Số lượng"
+              value={localData.quantityGem}
+              InputProps={{
+                readOnly: true,
+              }}
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+        </Grid>
+
         <div className="flex justify-between">
-          <button
+          <Button
             type="button"
-            onClick={prevStep}
+            onClick={() => {
+              updateFormData(localData);
+              prevStep();
+            }}
             className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
           >
             Trở lại
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
+          </Button>
+          <Button
+            type="submit"
             className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
           >
             Tiếp tục
-          </button>
+          </Button>
         </div>
       </form>
-      {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-      {results.length > 0 && <ResultsTable results={results} />}
     </div>
   );
 };

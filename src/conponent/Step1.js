@@ -19,18 +19,21 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
         const userId = storedUser.Id;
 
         try {
-          const response = await axios.get(`${API_URL}?userId=${userId}`);
+          const response = await axios.get(`${API_URL}?UserId=${userId}`);
+          const userData = response.data;
           setLocalData({
-            Name: response.data.Name || "",
-            Phone: response.data.Phone || "",
-            Address: response.data.Address || "",
-            Email: response.data.Email || "",
+            Name: userData.Name || "",
+            Phone: userData.Phone || "",
+            Address: userData.Address || "",
+            Email: userData.Email || "",
           });
           updateFormData({
-            Name: response.data.Name || "",
-            Phone: response.data.Phone || "",
-            Address: response.data.Address || "",
-            Email: response.data.Email || "",
+            UserId: userData.UserId || "",
+            UserName: userData.UserName || "",
+            Name: userData.Name || "",
+            Phone: userData.Phone || "",
+            Address: userData.Address || "",
+            Email: userData.Email || "",
           });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -52,7 +55,6 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateFormData(localData);
     nextStep();
   };
 

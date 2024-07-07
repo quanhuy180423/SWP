@@ -124,6 +124,11 @@ const Header = () => {
                 <AccountCircleIcon className="text-gray-500 " />
                 <span className="text-gray-500">{user.UserName}</span>
               </Link>
+              {user.Role === 1 && (
+                <Link to="/admin" className="text-gray-500 hover:text-black">
+                  <span className="text-red-500 font-bold">Dashboard</span>
+                </Link>
+              )}
               <Button
                 onClick={handleLogout}
                 className="text-gray-500 hover:text-black"

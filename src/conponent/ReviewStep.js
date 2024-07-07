@@ -1,22 +1,29 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
-// import CheckIcon from "@mui/icons-material/Check";
+import { orderRequest } from "../server/api";
 
 const ReviewStep = ({ prevStep, formData }) => {
   const [orderForm, setOrderForm] = useState({
-    fullName: formData.step1.fullName,
-    phone: formData.step1.phone,
-    address: formData.step1.address,
-    email: formData.step1.email,
-    material: formData.step2.material,
-    weight: formData.step2.weight,
-    size: formData.step2.size,
-    color: formData.step3.color,
-    clarity: formData.step3.clarity,
-    cut: formData.step3.cut,
-    carat: formData.step3.carat,
-    comment: formData.step4.richText,
+    UserId: formData.step1.UserId,
+    UserName: formData.step1.UserName,
+    ProductName: formData.step1.Name,
+    Phone: formData.step1.Phone,
+    Address: formData.step1.Address,
+    Email: formData.step1.Email,
+    MaterialId: formData.step2.materialId,
+    QuantityMaterial: formData.step2.quantityMaterial,
+    Size: formData.step2.size,
+    CategoryId: formData.step2.categoryId,
+    GemId: formData.step3.diamondId,
+    QuantityGem: formData.step3.quantityGem,
+    Productdescription: formData.step4.richText,
+    Description: "description",
+    Image: [],
+    ProductCost: "0",
+    Status: "0",
+    PaymentMethods: "1",
+    WarrantyCard: "Yes", // Assuming you have this information
   });
 
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -27,12 +34,8 @@ const ReviewStep = ({ prevStep, formData }) => {
     setShowConfirmation(true);
   };
 
-  const API_URL =
-    "https://6669f7722e964a6dfed73d9c.mockapi.io/JewelryAPI/orderForm";
-
   const handleSubmitOrder = () => {
-    axios
-      .post(API_URL, orderForm)
+    orderRequest(orderForm)
       .then((response) => {
         console.log("Order submitted successfully:", response.data);
         if (response.status === 201) {
@@ -60,7 +63,7 @@ const ReviewStep = ({ prevStep, formData }) => {
       </h2>
       {alert.visible && (
         <Alert
-          severity="success"
+          severity={alert.type}
           variant="filled"
           className="flex justify-center"
         >
@@ -73,49 +76,45 @@ const ReviewStep = ({ prevStep, formData }) => {
           <strong>Full Name:</strong> {orderForm.fullName}
         </p>
         <p>
-          <strong>Phone:</strong> {orderForm.phone}
+          <strong>Phone:</strong> {orderForm.Phone}
         </p>
         <p>
-          <strong>Address:</strong> {orderForm.address}
+          <strong>Address:</strong> {orderForm.Address}
         </p>
         <p>
-          <strong>Email:</strong> {orderForm.email}
+          <strong>Email:</strong> {orderForm.Email}
         </p>
       </div>
       <div className="mb-4">
         <h3 className="text-xl mb-2">Step 2: Material and Category</h3>
         <p>
-          <strong>Material:</strong> {orderForm.material}
+          <strong>Material:</strong> {orderForm.MaterialId}
         </p>
         <p>
-          <strong>Weight:</strong> {orderForm.weight}
+          <strong>Weight:</strong> {orderForm.QuantityMaterial}
         </p>
         <p>
-          <strong>Size:</strong> {orderForm.size}
+          <strong>Size:</strong> {orderForm.Size}
         </p>
         <p>
-          <strong>Category:</strong> {orderForm.category}
+          <strong>Category:</strong> {orderForm.CategoryId}
         </p>
       </div>
       <div className="mb-4">
         <h3 className="text-xl mb-2">Step 3: Diamond Details</h3>
         <p>
-          <strong>Color:</strong> {orderForm.color}
+          <strong>Diamond ID:</strong> {orderForm.GemId}
         </p>
         <p>
-          <strong>Clarity:</strong> {orderForm.clarity}
-        </p>
-        <p>
-          <strong>Cut:</strong> {orderForm.cut}
-        </p>
-        <p>
-          <strong>Carat:</strong> {orderForm.carat}
+          <strong>Quantity Gem:</strong> {orderForm.QuantityGem}
         </p>
       </div>
       <div className="mb-4">
         <h3 className="text-xl mb-2">Step 4: Additional Details</h3>
-        {orderForm.comment ? (
-          <div dangerouslySetInnerHTML={{ __html: orderForm.comment }} />
+        {orderForm.Productdescription ? (
+          <div
+            dangerouslySetInnerHTML={{ __html: orderForm.Productdescription }}
+          />
         ) : (
           <p>No additional details provided.</p>
         )}

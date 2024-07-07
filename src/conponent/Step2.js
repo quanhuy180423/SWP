@@ -1,110 +1,150 @@
 import React, { useState, useEffect } from "react";
+import { getAllGem, getAllMaterial, getAllCategories } from "../server/api";
+import {
+  TextField,
+  Button,
+  Grid,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
-const Step2 = ({ nextStep, prevStep, updateFormData, formData }) => {
+const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const [localData, setLocalData] = useState({
-    material: "",
-    weight: "",
-    size: "",
-    category: "",
+    materialId: formData.materialId || "",
+    quantityMaterial: formData.quantityMaterial || 0,
+    categoryId: formData.categoryId || "",
+    size: formData.size || 0,
   });
 
+  const [materials, setMaterials] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [gemIdError, setGemIdError] = useState("");
+
   useEffect(() => {
-    setLocalData(formData);
-  }, [formData]);
+    const fetchData = async () => {
+      try {
+        const materialResponse = await getAllMaterial();
+        setMaterials(materialResponse.data);
+        console.log(materials);
+
+        const categoryResponse = await getAllCategories();
+        setCategories(categoryResponse.data);
+        console.log(categories);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedData = { ...localData, [name]: value };
-    setLocalData(updatedData);
-    updateFormData(updatedData);
+    setLocalData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     updateFormData(localData);
     nextStep();
-    // console.log(localData);
   };
 
   return (
     <div>
       <form
+        className="bg-gray-100 p-6 rounded-lg shadow-md max-w-7xl mx-auto mb-2"
         onSubmit={handleSubmit}
-        className="bg-gray-100 p-6 rounded-lg shadow-md max-w-md mx-auto mb-2"
       >
         <h2 className="text-center mb-5 text-2xl text-gray-800">
-          Step 2: Material and Category
+          Step 3: Chi tiết trang sức
         </h2>
-        <label className="block mb-4 text-gray-600">
-          Material:
-          <select
-            name="material"
-            value={localData.material}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
-          >
-            <option value="">Select</option>
-            <option value="gold">Gold</option>
-            <option value="silver">Silver</option>
-            <option value="platinum">Platinum</option>
-          </select>
-        </label>
-        <label className="block mb-4 text-gray-600">
-          Weight (chi):
-          <input
-            type="text"
-            name="weight"
-            value={localData.weight}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
-          />
-        </label>
-        <label className="block mb-4 text-gray-600">
-          Product Size (Ni):
-          <input
-            type="text"
-            name="size"
-            value={localData.size}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
-          />
-        </label>
-        <label className="block mb-4 text-gray-600">
-          Category:
-          <select
-            name="category"
-            value={localData.category}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg"
-          >
-            <option value="">Select</option>
-            <option value="necklace">Necklace</option>
-            <option value="ring">Ring</option>
-            <option value="bracelet">Bracelet</option>
-          </select>
-        </label>
+
+        <Grid container spacing={2} mt={2} mb={2} justifyContent="center">
+          <Grid item xs={6}>
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Material</InputLabel>
+              <Select
+                name="materialId"
+                value={localData.materialId}
+                onChange={handleChange}
+              >
+                {materials.map((material) => (
+                  <MenuItem
+                    key={material.MaterialId}
+                    value={material.MaterialId}
+                  >
+                    {material.Name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Trọng lượng (Chỉ)"
+              name="quantityMaterial"
+              value={localData.quantityMaterial}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              type="number"
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Category</InputLabel>
+              <Select
+                name="categoryId"
+                value={localData.categoryId}
+                onChange={handleChange}
+              >
+                {categories.map((category) => (
+                  <MenuItem
+                    key={category.CategoryId}
+                    value={category.CategoryId}
+                  >
+                    {category.Name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Size (Ni)"
+              name="size"
+              value={localData.size}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              type="number"
+            />
+          </Grid>
+        </Grid>
+
         <div className="flex justify-between">
-          <button
+          <Button
             type="button"
             onClick={prevStep}
-            className="bg-red-500 text-white py-2 px-4 rounded-lg text-lg hover:bg-red-600"
+            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
           >
-            Previous
-          </button>
-          <button
+            Trở lại
+          </Button>
+          <Button
             type="submit"
-            className="bg-green-500 text-white py-2 px-4 rounded-lg text-lg hover:bg-green-600"
+            className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
           >
-            Next
-          </button>
+            Tiếp tục
+          </Button>
         </div>
       </form>
     </div>
   );
 };
 
-export default Step2;
+export default Step3;

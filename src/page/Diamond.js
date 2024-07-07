@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DiamondFilter from "../page/DiamodFilter";
-import DiamondList from "../conponent/DiamondList";
-// import bannerDiamond from "../../public/img/kimcuong_banner.png";
+import DiamondList from "../conponent/DiamondList"; // Update the import path if necessary
+
 const DiamondPage = () => {
   const [diamonds, setDiamonds] = useState([]);
 
   const fetchDiamonds = async () => {
     try {
-      // Gọi API để lấy danh sách các viên kim cương có sẵn
       const response = await axios.get("http://localhost:8090/test/getAllGem");
       setDiamonds(response.data);
     } catch (error) {
@@ -18,11 +17,10 @@ const DiamondPage = () => {
 
   useEffect(() => {
     fetchDiamonds();
-  }, []); // Fetch danh sách kim cương khi component được mount lần đầu
+  }, []);
 
   const handleSearch = async (filters) => {
     try {
-      // Gọi API để tìm kiếm kim cương với các thông tin lọc đã nhận
       const response = await axios.post("/api/diamonds/search", filters, {
         headers: {
           "Content-Type": "application/json",

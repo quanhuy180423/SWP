@@ -1,63 +1,84 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import ReadMode from "@mui/icons-material/Diamond";
-const DiamondList = ({ diamonds }) => {
-  const nagative = useNavigate();
-  const handleViewDetail = (diamond) => {
-    nagative(`/diamond-detail/${diamond.GemID}`);
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+const DiamondList = ({ diamonds = [] }) => {
+  const handleViewDetails = (gemId) => {
+    console.log(`Viewing details for GemID: ${gemId}`);
   };
+
   return (
-    <>
-      <div className="flex justify-center text-center">
-        <table className="table-auto min-w-96 w-4/5 ">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 border">Trọng lượng (Carat)</th>
-              <th className="px-4 py-2 border">Chế tác (Cut)</th>
-              <th className="px-4 py-2 border">Cấp màu (Color)</th>
-              <th className="px-4 py-2 border">Độ tinh khiết (Clarity)</th>
-              <th className="px-4 py-2 border">Giấy kiểm định</th>
-              <th className="px-4 py-2 border">Xem chi tiết</th>
-            </tr>
-          </thead>
-          <tbody>
-            {diamonds.map((diamond, index) => (
-              <tr key={index} className="hover:bg-gray-100">
-                <td className="border px-4 py-2 text-center">
-                  {diamond.CaraWeight}
-                </td>
-                <td className="border px-4 py-2 text-center">{diamond.Cut}</td>
-                <td className="border px-4 py-2 text-center">
-                  {diamond.Color}
-                </td>
-                <td className="border px-4 py-2 text-center">
-                  {diamond.Clarity}
-                </td>
-                <td className="border px-4 py-2 text-center">
-                  <a
-                    href={diamond.Identification}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
+    <div className="w-full flex justify-center">
+      <TableContainer
+        component={Paper}
+        style={{ width: "80%", container: "center" }}
+      >
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>GemID</StyledTableCell>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Color</StyledTableCell>
+              <StyledTableCell>Cara Weight (ct)</StyledTableCell>
+              <StyledTableCell>Clarity</StyledTableCell>
+              <StyledTableCell>Cut</StyledTableCell>
+              <StyledTableCell>Size</StyledTableCell>
+              <StyledTableCell>Actions</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {diamonds.map((diamond) => (
+              <StyledTableRow key={diamond.GemId}>
+                <StyledTableCell component="th" scope="row">
+                  {diamond.GemId}
+                </StyledTableCell>
+                <StyledTableCell>{diamond.Name}</StyledTableCell>
+                <StyledTableCell>{diamond.Color}</StyledTableCell>
+                <StyledTableCell>{diamond.CaraWeight}</StyledTableCell>
+                <StyledTableCell>{diamond.Clarity}</StyledTableCell>
+                <StyledTableCell>{diamond.Cut}</StyledTableCell>
+                <StyledTableCell>{diamond.Size}</StyledTableCell>
+                <StyledTableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleViewDetails(diamond.GemId)}
                   >
-                    Xem
-                  </a>
-                </td>
-                <td className="border px-4 py-2 text-center">
-                  <button
-                    onClick={() => handleViewDetail(diamond)}
-                    className="text-blue-500 hover:underline"
-                  >
-                    <ReadMode />
-                    {/* {console.log(diamond)} */}
-                  </button>
-                </td>
-              </tr>
+                    View Details
+                  </Button>
+                </StyledTableCell>
+              </StyledTableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };
 

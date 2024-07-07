@@ -90,7 +90,7 @@ const DiamondFilter = ({ onSearch }) => {
           </div>
 
           {showCarat && (
-            <div className="pl-4 flex justify-around flex justify-around">
+            <div className="pl-4 ">
               {Object.entries(caratOptions).map(([option, checked]) => (
                 <label
                   key={option}

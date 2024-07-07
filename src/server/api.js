@@ -3,6 +3,10 @@ import axios from "axios";
 // Cấu hình URL của API
 const API_URL = "http://localhost:8090/test";
 
+//Hàm sửa lý order
+export const orderRequest = (orderRequest) =>
+  axios.post(`${API_URL}/orderRequest`, orderRequest);
+
 // Hàm lấy danh sách sản phẩm
 export const getAllProducts = () => axios.get(`${API_URL}/getAllProduct`);
 export const getProductById = (id) =>
