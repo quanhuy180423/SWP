@@ -7,8 +7,8 @@ const Body = () => {
   const [selectedCategoryName, setSelectedCategoryName] = useState("");
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
-  const API_URL_CATEGORY = "http://localhost:8090/test/getProductByCategory/1/";
-  const categories = ["Ring", "Necklace", "Bracelet"];
+  const API_URL_CATEGORY = "http://localhost:8090/test/getProductByCategory";
+  const categories = ["Rings", "Necklaces", "Bracelets"];
   const location = useLocation();
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -22,7 +22,7 @@ const Body = () => {
     const fetchProductsByCategory = async (categoryName) => {
       try {
         const response = await axios.get(API_URL_CATEGORY, {
-          params: { categoryName },
+          params: { CategoryName: categoryName },
         });
         setProducts((prevProducts) => ({
           ...prevProducts,
@@ -56,7 +56,7 @@ const Body = () => {
       <div key={categoryName} className="mb-8">
         <div className="flex justify-between">
           <Link
-            to={`/jewelry?categoryName=${categoryName}`}
+            to={`/jewelry?CategoryName=${categoryName}`}
             className="text-gray-800"
           >
             <h2 className="text-3xl font-bold mb-4 border-b-red-500 border-b-2">
@@ -68,9 +68,9 @@ const Body = () => {
         <div className="grid grid-cols-4 gap-4">
           {filteredProducts.slice(0, 4).map((product) => (
             <JewelryItem
-              key={product.ProductID}
-              to={`/product/${product.ProductID}`}
-              firstImage={product.Image}
+              key={product.ProductId}
+              to={`/product/${product.ProductId}`}
+              firstImage={product.Image[0]}
               title={product.Name}
               material={product.MaterialName}
               gem={product.GemName}
@@ -80,7 +80,7 @@ const Body = () => {
         </div>
         <div className="flex justify-center m-2">
           <Link
-            to={`/jewelry?categoryName=${categoryName}`}
+            to={`/jewelry?CategoryName=${categoryName}`}
             className="text-gray-800 bg-gray-200 hover:bg-gray-300 border-2 border-gray-500 h-9 w-24"
           >
             <span className="flex justify-center items-center h-7">
@@ -127,11 +127,11 @@ const Body = () => {
         <hr className="my-4 border-t-2 border-gray-300 w-10/12" />
       </div>
 
-      {/* <div className="container mx-auto my-2">
+      <div className="container mx-auto my-2">
         {categories.map((categoryName) =>
           renderProductsByCategoryName(categoryName)
         )}
-      </div> */}
+      </div>
     </div>
   );
 };
