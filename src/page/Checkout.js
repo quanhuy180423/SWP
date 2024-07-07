@@ -14,7 +14,7 @@ const Checkout = () => {
       const userId = storedUser.Id;
       console.log(userId);
       try {
-        const response = await axios.get(`${API_URL}?userId=${userId}`);
+        const response = await axios.get(`${API_URL}?UserId=${userId}`);
         console.log(response.data);
         setUser(response.data);
       } catch (error) {
@@ -177,23 +177,23 @@ const Checkout = () => {
             >
               <img
                 // src={item.Image}
-                src="https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain"
+                src={item.Image[0]}
                 alt={item.Name}
-                width="250"
+                width="550"
                 className="rounded-lg"
               />
               <div className="flex-1 ml-4">
-                <div className="text-xl font-bold mb-2">
+                <div className="text-3xl font-bold mb-2">
                   Tên sản phẩm: {item.Name}
                 </div>
                 {/* <div className="mb-2">Loại sản phẩm: {item.CategoryName}</div>
                 <div className="mb-2">Kim cương: {item.GemName}</div>
                 <div className="mb-2">Kích thước: {item.Size}</div> */}
-                <div className="mb-2">
+                <div className="mb-2 text-2xl">
                   Giá thành phẩm: {item.ProductCost.toLocaleString()}₫
                 </div>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center font-bold text-2xl">
                 <label htmlFor={`quantity_${index}`}>
                   Số lượng
                   <div className="flex justify-center"> {item.quantity}</div>

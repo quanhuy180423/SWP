@@ -33,15 +33,17 @@ const ListProduct = () => {
         console.log("Edit product with ID:", productId);
     };
 
-    const handleDelete = (productId) => {
-        setProductToDelete(productId);
+    const handleDelete = (ProductId) => {
+        setProductToDelete(ProductId);
         setDeleteDialogOpen(true);
     };
 
     const confirmDelete = async () => {
+        console.log(productToDelete)
         try {
+
             await deleteProduct(productToDelete);
-            setProducts(products.filter(product => product.ProductID !== productToDelete));
+            setProducts(products.filter(product => product.ProductId !== productToDelete));
             setDeleteDialogOpen(false);
             alert('Product deleted successfully');
         } catch (error) {
@@ -66,9 +68,9 @@ const ListProduct = () => {
             width: 200,
             renderCell: (params) => (
                 <ActionButtons
-                    onView={() => console.log("View product with ID:", params.row.ProductID)}
-                    onEdit={() => handleEdit(params.row.ProductID)}
-                    onDelete={() => handleDelete(params.row.ProductID)}
+                    onView={() => console.log("View product with ID:", params.row.ProductId)}
+                    onEdit={() => handleEdit(params.row.ProductId)}
+                    onDelete={() => handleDelete(params.row.ProductId)}
                 />
             ),
         }

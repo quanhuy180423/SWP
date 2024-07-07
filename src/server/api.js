@@ -13,8 +13,8 @@ export const insertProduct = (product) =>
   axios.post(`${API_URL}/insertProduct`, product);
 export const updateProduct = (id, product) =>
   axios.put(`${API_URL}/updateProductById`, { id, ...product });
-export const deleteProduct = (id) =>
-  axios.delete(`${API_URL}/deleteProductById`, { data: { id } });
+export const deleteProduct = (ProductId) =>
+  axios.delete(`${API_URL}/deleteProductById`, { data: { ProductId } });
 
 // Hàm lấy danh sách người dùng
 export const getAllUsers = () => axios.get(`${API_URL}/getAllUser`);

@@ -27,18 +27,18 @@ const Cart = () => {
   const formattedTax = parseFloat(tax.toFixed(2)) || 0;
   const totalAmount = formattedTotalCost + formattedShipping + formattedTax;
 
-  const handleDelete = (ProductID) => {
-    removeFromCart(ProductID);
-    console.log("Deleting product with id:", ProductID);
+  const handleDelete = (ProductId) => {
+    removeFromCart(ProductId);
+    console.log("Deleting product with id:", ProductId);
   };
 
   const handleCheckout = () => {
     navigate("/checkout");
   };
 
-  const handleQuantityChange = (ProductID, newQuantity) => {
+  const handleQuantityChange = (ProductId, newQuantity) => {
     if (newQuantity < 1) return;
-    updateQuantity(ProductID, newQuantity);
+    updateQuantity(ProductId, newQuantity);
   };
 
   return (
@@ -48,28 +48,30 @@ const Cart = () => {
         <div className="col-span-2">
           {cart.map((item, index) => (
             <Card
-              key={item.ProductID}
+              key={item.ProductId}
               className="flex justify-between items-center mb-8 p-4 rounded-lg shadow-md bg-white"
             >
               {console.log(item)}
               <CardMedia
-                className="w-40"
+                className="w-44 h-48 object-cover rounded-lg"
                 component="img"
-                image="https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain"
+                image={item.Image}
                 title={item.Name}
               />
               <CardContent className="flex-1 ml-4">
-                <Typography variant="h6">Tên sản phẩm: {item.Name}</Typography>
+                <Typography variant="h5" fontWeight={"bold"}>
+                  Tên sản phẩm: {item.Name}
+                </Typography>
                 <Typography>Loại sản phẩm: {item.CategoryName}</Typography>
                 <Typography>Kim cương: {item.GemName}</Typography>
                 <Typography>Kích thước: {item.Size}</Typography>
-                <Typography>
-                  Giá thành phẩm: {item.ProductCost.toLocaleString()}₫
+                <Typography fontWeight={"bold"}>
+                  Giá thành phẩm: {item.ProductCost} đ
                 </Typography>
                 <div className="flex items-center mt-2">
                   <IconButton
                     onClick={() =>
-                      handleQuantityChange(item.ProductID, item.quantity - 1)
+                      handleQuantityChange(item.ProductId, item.quantity - 1)
                     }
                   >
                     <Remove />
@@ -83,12 +85,12 @@ const Cart = () => {
                   />
                   <IconButton
                     onClick={() =>
-                      handleQuantityChange(item.ProductID, item.quantity + 1)
+                      handleQuantityChange(item.ProductId, item.quantity + 1)
                     }
                   >
                     <Add />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(item.ProductID)}>
+                  <IconButton onClick={() => handleDelete(item.ProductId)}>
                     <Delete color="error" />
                   </IconButton>
                 </div>
@@ -97,7 +99,7 @@ const Cart = () => {
           ))}
         </div>
 
-        <div className="col-span-1 bg-slate-200 p-4 rounded-lg grid place-items-center">
+        <div className="col-span-1 bg-slate-200 p-4 rounded-lg grid place-items-center h-60">
           <Typography variant="h5" className="mb-2">
             Hóa đơn
           </Typography>

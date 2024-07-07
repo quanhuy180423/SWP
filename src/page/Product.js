@@ -48,6 +48,7 @@ const Product = () => {
   }
 
   const handleAddToCart = () => {
+    console.log(product);
     addToCart(product, parseInt(quantity));
   };
 

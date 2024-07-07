@@ -32,7 +32,7 @@ const JewelryPage = () => {
         });
       } else if (categoryFromUrl) {
         response = await axios.get(API_URL_CATEGORY, {
-          params: { categoryName: categoryFromUrl },
+          params: { CategoryName: categoryFromUrl },
         });
       } else {
         response = await axios.get(API_URL);
@@ -49,7 +49,7 @@ const JewelryPage = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const searchValueFromUrl = searchParams.get("search") || "";
-    const categoryFromUrl = searchParams.get("categoryName") || "";
+    const categoryFromUrl = searchParams.get("CategoryName") || "";
 
     setSearchValue(searchValueFromUrl);
     setSelectedCategory(categoryFromUrl);
@@ -82,11 +82,11 @@ const JewelryPage = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleCategoryChange = (categoryName) => {
-    setSelectedCategory(categoryName);
+  const handleCategoryChange = (CategoryName) => {
+    setSelectedCategory(CategoryName);
     setCurrentPage(1);
     navigate(
-      categoryName ? `?categoryName=${categoryName}` : `?search=${searchValue}`
+      CategoryName ? `?CategoryName=${CategoryName}` : `?search=${searchValue}`
     );
   };
 
@@ -103,6 +103,7 @@ const JewelryPage = () => {
           onClick={() => handleCategoryChange("Rings")}
           variant={selectedCategory === "Rings" ? "contained" : "outlined"}
           className="m-2"
+          style={{ marginRight: "20px" }}
         >
           Nhẫn
         </Button>
@@ -110,6 +111,7 @@ const JewelryPage = () => {
           onClick={() => handleCategoryChange("Necklaces")}
           variant={selectedCategory === "Necklaces" ? "contained" : "outlined"}
           className="m-2"
+          style={{ marginRight: "20px" }}
         >
           Vòng cổ
         </Button>
@@ -122,7 +124,12 @@ const JewelryPage = () => {
         </Button>
       </div>
 
-      <Grid container spacing={4} className="flex justify-center">
+      <Grid
+        container
+        spacing={4}
+        className="flex justify-center "
+        marginTop={"20px"}
+      >
         {currentProducts.map((product) => (
           <Grid
             item
