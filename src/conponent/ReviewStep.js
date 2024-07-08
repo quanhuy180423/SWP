@@ -21,7 +21,7 @@ const ReviewStep = ({ prevStep, formData }) => {
     Description: "description",
     Image: [],
     ProductCost: "0",
-    Status: "0",
+    Status: "Request",
     PaymentMethods: "1",
     WarrantyCard: "Yes", // Assuming you have this information
   });

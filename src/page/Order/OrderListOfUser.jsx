@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { getAllOrders } from '../../server/api';
+import { getOrderByUserId } from '../../server/api';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,10 +8,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { Button, colors, IconButton } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -33,7 +32,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const OrderListRequest = () => {
+const getRowBackgroundColor = (status) => {
+    switch (status) {
+        case 'Request':
+            return colors.red[100];
+        case 'Payment':
+            return colors.blue[100];
+        case 'Processing':
+            return colors.purple[100];
+        case 'Complete':
+            return colors.green[100];
+        default:
+            return 'inherit';
+    }
+};
+
+const OrderListOfUser = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -44,7 +58,7 @@ const OrderListRequest = () => {
             const userId = storedUser.Id;
             console.log(userId);
             try {
-                const response = await getAllOrders(userId);
+                const response = await getOrderByUserId(userId);
                 setOrders(response.data);
             } catch (error) {
                 console.error('Error fetching orders:', error);
@@ -71,12 +85,10 @@ const OrderListRequest = () => {
         return <div>{error}</div>;
     }
 
-    const requestOrders = orders.filter((order) => order.Status === 'Request');
-
     return (
         <Box p={3}>
             <Typography variant="h4" gutterBottom>
-                Order Requests
+                My Orders
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -86,47 +98,43 @@ const OrderListRequest = () => {
                             <StyledTableCell>Name Customer</StyledTableCell>
                             <StyledTableCell>Description Order</StyledTableCell>
                             <StyledTableCell>Address</StyledTableCell>
-                            <StyledTableCell>Actions</StyledTableCell>
+                            <StyledTableCell>Status</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {requestOrders.length > 0 ? (
-                            requestOrders.map((order) => (
-                                <StyledTableRow key={order.OrderId}>
+                        {orders.length > 0 ? (
+                            orders.map((order) => (
+                                <StyledTableRow
+                                    key={order.OrderId}
+
+                                >
                                     <StyledTableCell component="th" scope="row">
                                         {order.OrderId}
                                     </StyledTableCell>
                                     <StyledTableCell>{order.Name}</StyledTableCell>
                                     <StyledTableCell>{order.Description}</StyledTableCell>
                                     <StyledTableCell>{order.Address}</StyledTableCell>
-                                    <StyledTableCell
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            width: '300px',
-                                        }}
-                                    >
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            component={Link}
-                                            to={`/admin/manage-order/List-Request/OrderDetail/${order.OrderId}`}
-                                        >
-                                            View
-                                        </Button>
-                                        <Button variant="contained" color="secondary">
-                                            Accept
-                                        </Button>
-                                        <Button variant="contained" color="error">
-                                            Decline
-                                        </Button>
+                                    <StyledTableCell>
+                                        <IconButton>
+                                            <StyledTableCell
+                                                style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px' }}
+                                            >{order.Status}</StyledTableCell>
+                                        </IconButton>
+                                        <IconButton>
+                                            <Button
+                                                style={{ borderRadius: '15px', backgroundColor: colors.green[200] }}
+                                                component={Link}
+                                                to={`/order-of-user/order-detail-user/${order.OrderId}`}
+                                            >View your order</Button>
+                                        </IconButton>
                                     </StyledTableCell>
+
                                 </StyledTableRow>
                             ))
                         ) : (
                             <StyledTableRow>
                                 <StyledTableCell colSpan={5} align="center">
-                                    No order requests found.
+                                    No orders found.
                                 </StyledTableCell>
                             </StyledTableRow>
                         )}
@@ -137,4 +145,4 @@ const OrderListRequest = () => {
     );
 };
 
-export default OrderListRequest;
+export default OrderListOfUser;

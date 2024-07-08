@@ -31,8 +31,11 @@ import AddCostMaterial from "./AdminConponent/Mana-Material/AddCostMaterial";
 import ListOrderDetail from "./AdminConponent/Mana-Order-Detail/ListOrderDetail";
 import AddProduct from "./AdminConponent/Mana-Product/AddProduct";
 import EditAccount from "./AdminConponent/Mana-Account/EditAccount";
-import OrderListRequest from "./page/Order/OrderList";
-import OrderDetailPage from "./page/Order/OrderDetail";
+
+import OrderDetailPage from "./AdminConponent/Mana-Order/OrderDetail";
+import OrderListRequest from "./AdminConponent/Mana-Order/ListOrder";
+import OrderListOfUser from "./page/Order/OrderListOfUser";
+import OrderDetailUser from "./page/Order/OrderdetailUser";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -53,6 +56,11 @@ const App = () => {
             <Route path="/jewelry" element={<JewelryPage />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-of-user" element={<OrderListOfUser />} />
+            <Route
+              path="/order-of-user/order-detail-user/:OrderId"
+              element={<OrderDetailUser />}
+            />
           </Route>
 
           {(user.Role === 1 || user.Role === 2) && (

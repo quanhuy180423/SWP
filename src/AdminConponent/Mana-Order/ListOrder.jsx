@@ -1,136 +1,140 @@
-import { useState, useEffect } from "react";
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, colors } from "@mui/material";
-import Header from "../Header/Header";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import ActionButtons from "../Mana-Account/ActionButtons";
-import { Link } from "react-router-dom";
-import { deleteOrder, getAllOrders } from "../../server/api";
-import Search from "../Header/Search";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { getAllOrders } from '../../server/api';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
-const ListOrder = () => {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
+
+const OrderListRequest = () => {
     const [orders, setOrders] = useState([]);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [orderToDelete, setOrderToDelete] = useState(null);
-    const theme = useTheme();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const getListOrders = async () => {
+    const fetchOrders = async () => {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser && storedUser.Id) {
+            const userId = storedUser.Id;
+            console.log(userId);
             try {
-                const response = await getAllOrders();
+                const response = await getAllOrders(userId);
                 setOrders(response.data);
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching orders:', error);
+                setError('Error fetching orders');
+            } finally {
+                setLoading(false);
             }
+        } else {
+            console.error('User ID not found in localStorage');
+            setError('User ID not found in localStorage');
+            setLoading(false);
         }
-        getListOrders();
+    };
+
+    useEffect(() => {
+        fetchOrders();
     }, []);
 
-    const handleEdit = (id) => {
-        console.log("Edit order with ID:", id);
-    };
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-    const handleDelete = (OrderId) => {
-        setOrderToDelete(OrderId);
-        setDeleteDialogOpen(true);
-    };
+    if (error) {
+        return <div>{error}</div>;
+    }
 
-    const confirmDelete = () => {
-        deleteOrder(orderToDelete)
-            .then(() => {
-                setOrders(orders.filter(order => order.OrderId !== orderToDelete));
-                setDeleteDialogOpen(false);
-                alert('Order deleted successfully');
-            })
-            .catch(error => console.error('Error deleting order:', error));
-    };
-
-    const columns = [
-        { field: 'OrderId', headerName: 'ID', width: 100 },
-        { field: 'UserId', headerName: 'UserID', width: 100 },
-        { field: 'Name', headerName: 'Full Name', width: 150 },
-        { field: 'Phone', headerName: 'Phone', width: 100 },
-        { field: 'Address', headerName: 'Address', width: 200 },
-        { field: 'Description', headerName: 'Description', width: 250 },
-        { field: 'Status', headerName: 'Status', width: 150 },
-        {
-            field: 'Actions',
-            headerName: 'Actions',
-            width: 150,
-            renderCell: (params) => (
-                <ActionButtons
-                    onEdit={() => handleEdit(params.row.OrderId)}
-                    onDelete={() => handleDelete(params.row.OrderId)}
-                />
-            ),
-        }
-    ];
-
-    const rows = orders;
+    const requestOrders = orders.filter((order) => order.Status === 'Request');
 
     return (
-        <Box>
-            <Header title='MANAGE ORDERS' subtitle='Managing the orders list' />
-            <Box display='flex' justifyContent='flex-end' m={2}>
-                <Search />
-                <Button component={Link} to={'/admin/manage-orders/addOrder'}
-                    sx={{
-                        backgroundColor: colors.blueGrey[300],
-                        color: 'white',
-                        '&:hover': {
-                            backgroundColor: 'green',
-                            color: 'white',
-                        },
-                    }}
-                    variant="contained"
-                >
-                    Add Order
-                </Button>
-            </Box>
-            <Box
-                m='40px 0 0 0'
-                height='75vh'
-                sx={{
-                    "& .MuiDataGrid-root": {
-                        border: '1px solid gray', // Add border here
-                        borderRadius: '10px', // Add border radius here
-                        overflow: 'hidden', // Ensure rounded corners by clipping the overflow
-                    },
-                    "& .MuiDataGrid-cell": {
-                        borderBottom: 'none',
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.blue[50],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                        borderTop: 'none',
-                        backgroundColor: theme.palette.grey[300],
-                    },
-                    "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                        color: theme.palette.grey[200],
-                    },
-                }}
-            >
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                    getRowId={(row) => row.OrderId}
-                    components={{ Toolbar: GridToolbar }}
-                />
-            </Box>
-            <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-                <DialogTitle>Confirm Delete</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Are you sure you want to delete this order?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={confirmDelete} color="secondary">Delete</Button>
-                </DialogActions>
-            </Dialog>
+        <Box p={3}>
+            <Typography variant="h4" gutterBottom>
+                Order Requests
+            </Typography>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>Order ID</StyledTableCell>
+                            <StyledTableCell>Name Customer</StyledTableCell>
+                            <StyledTableCell>Description Order</StyledTableCell>
+                            <StyledTableCell>Address</StyledTableCell>
+                            <StyledTableCell>Actions</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {requestOrders.length > 0 ? (
+                            requestOrders.map((order) => (
+                                <StyledTableRow key={order.OrderId}>
+                                    <StyledTableCell component="th" scope="row">
+                                        {order.OrderId}
+                                    </StyledTableCell>
+                                    <StyledTableCell>{order.Name}</StyledTableCell>
+                                    <StyledTableCell>{order.Description}</StyledTableCell>
+                                    <StyledTableCell>{order.Address}</StyledTableCell>
+                                    <StyledTableCell
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            width: '300px',
+                                        }}
+                                    >
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            component={Link}
+                                            to={`/admin/manage-order/List-Request/OrderDetail/${order.OrderId}`}
+                                        >
+                                            View
+                                        </Button>
+                                        <Button variant="contained" color="secondary">
+                                            Accept
+                                        </Button>
+                                        <Button variant="contained" color="error">
+                                            Decline
+                                        </Button>
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ))
+                        ) : (
+                            <StyledTableRow>
+                                <StyledTableCell colSpan={5} align="center">
+                                    No order requests found.
+                                </StyledTableCell>
+                            </StyledTableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </Box>
     );
 };
 
-export default ListOrder;
+export default OrderListRequest;

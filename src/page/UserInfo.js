@@ -49,7 +49,7 @@ const UserInfo = () => {
   }, []);
 
   const handleUpdateOrders = (updatedOrders) => {
-    setOrders(updatedOrders);
+    navigate("/order-of-user");
   };
 
   const handleUpdateCart = () => {
@@ -126,7 +126,7 @@ const UserInfo = () => {
                     ? "bg-black text-white"
                     : "bg-gray-400 text-white"
                 }`}
-                // onClick={}
+                onClick={() => handleUpdateOrders()}
               >
                 Đơn hàng
               </li>
