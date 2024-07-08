@@ -6,11 +6,12 @@ const API_URL = "http://localhost:8090/test";
 //Hàm sửa lý order
 export const orderRequest = (orderRequest) =>
   axios.post(`${API_URL}/orderRequest`, orderRequest);
-
+export const getOrderDetailByOrderId = (OrderId) =>
+  axios.get(`${API_URL}/getOrderDetailByOrderId?OrderId=${OrderId}`);
 // Hàm lấy danh sách sản phẩm
 export const getAllProducts = () => axios.get(`${API_URL}/getAllProduct`);
-export const getProductById = (id) =>
-  axios.get(`${API_URL}/getProductById?id=${id}`);
+export const getProductById = (ProductId) =>
+  axios.get(`${API_URL}/getProductById?ProductId=${ProductId}`);
 export const getProductsV2 = (id) =>
   axios.get(`${API_URL}/getProductByNameOrId?Name=${id}`);
 export const insertProduct = (product) =>
@@ -33,6 +34,8 @@ export const deleteUser = (UserId) =>
   });
 
 // Hàm lấy danh sách đơn hàng
+export const getOrderByUserId = (UserId) =>
+  axios.get(`${API_URL}/getOrderByUserId?UserId=${UserId}`);
 export const getAllOrders = () => axios.get(`${API_URL}/getAllOrder`);
 export const insertOrder = (order) =>
   axios.post(`${API_URL}/insertOrder`, order);

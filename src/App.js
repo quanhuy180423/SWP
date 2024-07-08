@@ -31,6 +31,8 @@ import AddCostMaterial from "./AdminConponent/Mana-Material/AddCostMaterial";
 import ListOrderDetail from "./AdminConponent/Mana-Order-Detail/ListOrderDetail";
 import AddProduct from "./AdminConponent/Mana-Product/AddProduct";
 import EditAccount from "./AdminConponent/Mana-Account/EditAccount";
+import OrderListRequest from "./page/Order/OrderList";
+import OrderDetailPage from "./page/Order/OrderDetail";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -109,6 +111,14 @@ const App = () => {
               <Route
                 path="/admin/manage-order-detail"
                 element={<ListOrderDetail />}
+              />
+              <Route
+                path="/admin/manage-order/List-Request"
+                element={<OrderListRequest />}
+              />
+              <Route
+                path="/admin/manage-order/List-Request/OrderDetail/:OrderId"
+                element={<OrderDetailPage />}
               />
             </Route>
           )}

@@ -33,7 +33,7 @@ const UserInfo = () => {
       const userId = storedUser.Id;
       console.log(userId);
       try {
-        const response = await axios.get(`${API_URL}?userId=${userId}`);
+        const response = await axios.get(`${API_URL}?UserId=${userId}`);
         console.log(response.data);
         setUser(response.data);
       } catch (error) {

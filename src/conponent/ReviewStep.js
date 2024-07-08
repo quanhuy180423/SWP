@@ -38,7 +38,8 @@ const ReviewStep = ({ prevStep, formData }) => {
     orderRequest(orderForm)
       .then((response) => {
         console.log("Order submitted successfully:", response.data);
-        if (response.status === 201) {
+        if (response.status === 200) {
+          window.scrollTo(0, 0); // Scroll to the top of the page
           setAlert({
             message: "Order submitted successfully",
             type: "success",

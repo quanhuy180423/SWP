@@ -1,33 +1,31 @@
 import React, { useState } from 'react';
-import { Box, Typography } from "@mui/material";
-import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { Box, colors, Typography } from "@mui/material";
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import MenuIcon from '@mui/icons-material/Menu';
 import imgProfile from "../../assets/image/img/profile-user.png";
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl, faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl, faBoxesStacked, faImage, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
 
-const Item = ({ title, to, icon, selected, setSelected }) => {
-    return (
-        <MenuItem
-            active={selected === title}
-            onClick={() => setSelected(title)}
-            style={{ color: 'black', height: '60px' }}
-            component={<Link to={to} />}
-        >
-            <div className='flex'>
-                <FontAwesomeIcon icon={icon} style={{ marginRight: '30px' }} />
-                <Typography>
-                    {title}
-                </Typography>
-            </div>
-        </MenuItem>
-    )
-}
+const Item = ({ title, to, icon, selected, setSelected }) => (
+    <MenuItem
+        active={selected === title}
+        onClick={() => setSelected(title)}
+        style={{ color: 'black', height: '60px' }}
+        component={<Link to={to} />}
+    >
+        <div className='flex'>
+            <FontAwesomeIcon icon={icon} style={{ marginRight: '30px' }} />
+            <Typography>
+                {title}
+            </Typography>
+        </div>
+    </MenuItem>
+);
 
 const Slidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [selected, setSelected] = useState([]);
+    const [selected, setSelected] = useState('');
 
     return (
         <Box
@@ -52,6 +50,7 @@ const Slidebar = () => {
                                     color: disabled ? '#d9d9d9' : '#a5e1ff',
                                     backgroundColor: active ? '#f7f7f7' : undefined,
                                     height: '100%'
+
                                 };
                         },
                     }}
@@ -105,13 +104,26 @@ const Slidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
-                        <Item
-                            title='Manage Account'
-                            to="/admin/manage-account"
-                            icon={faUser}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
+                        <SubMenu
+                            label="Manage Account"
+                            icon={<FontAwesomeIcon icon={faUser} style={{ marginRight: '30px', }} />}
+                            style={{ color: 'black', height: '60px' }}
+                        >
+                            <Item
+                                title='Account Customer'
+                                to='/admin/manage-account/customer'
+                                icon={faUser}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                            <Item
+                                title='Account Staff'
+                                to='/admin/manage-account/staff'
+                                icon={faUser}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                        </SubMenu>
                         <Item
                             title='Manage product'
                             to='/admin/manage-product'
@@ -141,20 +153,40 @@ const Slidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
-                        <Item
-                            title='Manage Order'
-                            to='/admin/manage-order'
-                            icon={faClipboardList}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
-                        <Item
-                            title='Manage Order Detail'
-                            to='/admin/manage-order-detail'
-                            icon={faBox}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
+                        <SubMenu
+                            label="Manage Order"
+                            icon={<FontAwesomeIcon icon={faClipboardList} style={{ marginRight: '30px' }} />}
+                            style={{ color: 'black', height: '60px' }}
+                        >
+                            <Item
+                                title='Order Request'
+                                to='/admin/manage-order/List-Request'
+                                icon={faClipboardList}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                            <Item
+                                title='Order Detail'
+                                to='/admin/manage-order/detail'
+                                icon={faBox}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                            <Item
+                                title='Order Detail Image'
+                                to='/admin/manage-order/detail'
+                                icon={faImage}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                            <Item
+                                title='Order Complete'
+                                to='/admin/manage-order/detail'
+                                icon={faCheckDouble}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                        </SubMenu>
                         <Item
                             title='Manage Step Process'
                             to='/admin/manage-step-process'
