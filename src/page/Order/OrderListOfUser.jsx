@@ -47,6 +47,21 @@ const getRowBackgroundColor = (status) => {
     }
 };
 
+const generRateStatus = (status) => {
+    switch (status) {
+        case 'AptQuote':
+            return 'Accept';
+        case 'Payment':
+            return 'Payment';
+        case 'Processing':
+            return 'Processing';
+        case 'Complete':
+            return 'Complete';
+        default:
+            return 'none';
+    }
+}
+
 const OrderListOfUser = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -106,7 +121,6 @@ const OrderListOfUser = () => {
                             orders.map((order) => (
                                 <StyledTableRow
                                     key={order.OrderId}
-
                                 >
                                     <StyledTableCell component="th" scope="row">
                                         {order.OrderId}
@@ -118,17 +132,27 @@ const OrderListOfUser = () => {
                                         <IconButton>
                                             <StyledTableCell
                                                 style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px' }}
-                                            >{order.Status}</StyledTableCell>
+                                            >
+                                                {generRateStatus(order.Status)}
+                                            </StyledTableCell>
                                         </IconButton>
                                         <IconButton>
                                             <Button
                                                 style={{ borderRadius: '15px', backgroundColor: colors.green[200] }}
                                                 component={Link}
                                                 to={`/order-of-user/order-detail-user/${order.OrderId}`}
-                                            >View your order</Button>
+                                            >
+                                                View your order
+                                            </Button>
+                                        </IconButton>
+                                        <IconButton>
+                                            <Button
+                                                style={{ borderRadius: '15px', backgroundColor: colors.orange[100] }}
+                                            >
+                                                Accept and Payment order
+                                            </Button>
                                         </IconButton>
                                     </StyledTableCell>
-
                                 </StyledTableRow>
                             ))
                         ) : (

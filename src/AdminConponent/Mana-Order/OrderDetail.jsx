@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getOrderDetailByOrderId, getProductById, updateProduct } from '../../server/api';
+import { getOrderDetailByOrderId, getProductById, updateProductById } from '../../server/api';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField } from '@mui/material';
 import Header from '../Header/Header';
 
@@ -50,8 +50,9 @@ const OrderDetailPage = () => {
     const handleSavePrice = async () => {
         if (newPrice && productDetail) {
             try {
-                const updatedProduct = { ...productDetail, MaterialCost: newPrice }; // Assuming MaterialCost is the field to update
-                await updateProduct(productDetail.ProductId, updatedProduct);
+                const updatedProduct = { ...productDetail, ProductCost: newPrice }; // Assuming MaterialCost is the field to update
+                console.log(updatedProduct)
+                await updateProductById(updatedProduct);
                 setProductDetail(updatedProduct); // Update local state with the new price
                 setIsUpdatePriceOpen(false);
             } catch (error) {
@@ -76,7 +77,7 @@ const OrderDetailPage = () => {
                             <TableBody>
                                 {Object.entries(orderDetail).map(([key, value]) => (
                                     <TableRow key={key}>
-                                        <TableCell variant="head">{key}</TableCell>
+                                        <TableCell variant="head"> <strong>{key}</strong></TableCell>
                                         <TableCell>{value}</TableCell>
                                     </TableRow>
                                 ))}
@@ -95,12 +96,14 @@ const OrderDetailPage = () => {
                                 <TableBody>
                                     {Object.entries(productDetail).map(([key, value]) => (
                                         <TableRow key={key}>
-                                            <TableCell variant="head">{key}</TableCell>
+                                            <TableCell variant="head"> <strong>{key}</strong></TableCell>
                                             <TableCell>
                                                 {key === 'Image' ? (
                                                     <img src={value} alt={productDetail.Name} width="100" />
                                                 ) : key === 'Description' ? (
                                                     <div dangerouslySetInnerHTML={{ __html: value }} />
+                                                ) : key === 'ProductCost' ? (
+                                                    <strong>{value}</strong>
                                                 ) : (
                                                     value
                                                 )}

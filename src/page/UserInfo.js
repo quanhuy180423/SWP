@@ -12,8 +12,8 @@ const UserInfo = () => {
     Phone: "",
     Email: "",
     Address: "",
-    password: "",
-    confirmPassword: "",
+    PassWord: "",
+    confirmPassWord: "",
   });
 
   const [orders, setOrders] = useState([]);
@@ -216,25 +216,25 @@ const UserInfo = () => {
 
                     <hr className="my-4" />
                     <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
-                      Đổi password
+                      Đổi Password
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="">
                         <label className="block">
                           <span className="text-gray-700">Mật khẩu mới:</span>
                           <input
-                            type="password"
-                            value={user.password}
+                            type="PassWord"
+                            value={user.PassWord}
                             readOnly={!isEditing} // Đặt readOnly dựa vào biến isEditing để chỉ cho phép chỉnh sửa khi đang ở chế độ chỉnh sửa
                             onChange={(e) =>
-                              setUser({ ...user, password: e.target.value })
+                              setUser({ ...user, PassWord: e.target.value })
                             }
                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                           />
                         </label>
-                        {errors.password && (
+                        {errors.PassWord && (
                           <span className="text-red-500">
-                            {errors.password}
+                            {errors.PassWord}
                           </span>
                         )}
                       </div>
@@ -245,21 +245,21 @@ const UserInfo = () => {
                             Nhập lại mật khẩu mới:
                           </span>
                           <input
-                            type="password"
-                            value={user.confirmPassword}
+                            type="PassWord"
+                            value={user.PassWord}
                             readOnly={!isEditing} // Đặt readOnly dựa vào biến isEditing để chỉ cho phép chỉnh sửa khi đang ở chế độ chỉnh sửa
                             onChange={(e) =>
                               setUser({
                                 ...user,
-                                confirmPassword: e.target.value,
+                                confirmPassWord: e.target.value,
                               })
                             }
                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                           />
                         </label>
-                        {errors.confirmPassword && (
+                        {errors.confirmPassWord && (
                           <span className="text-red-500">
-                            {errors.confirmPassword}
+                            {errors.confirmPassWord}
                           </span>
                         )}
                       </div>
@@ -354,23 +354,23 @@ const UserInfo = () => {
 
                     <hr className="my-4" />
                     <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
-                      Đổi password
+                      Đổi PassWord
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="">
                         <label className="block">
                           <span className="text-gray-700">Mật khẩu mới:</span>
                           <input
-                            type="password"
-                            value={user.password}
+                            type="PassWord"
+                            value={user.PassWord}
                             onChange={(e) =>
-                              setUser({ ...user, password: e.target.value })
+                              setUser({ ...user, PassWord: e.target.value })
                             }
                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                           />
-                          {errors.password && (
+                          {errors.PassWord && (
                             <span className="text-red-500">
-                              {errors.password}
+                              {errors.PassWord}
                             </span>
                           )}
                         </label>
@@ -382,19 +382,19 @@ const UserInfo = () => {
                             Nhập lại mật khẩu mới:
                           </span>
                           <input
-                            type="password"
-                            value={user.confirmPassword}
+                            type="PassWord"
+                            value={user.PassWord}
                             onChange={(e) =>
                               setUser({
                                 ...user,
-                                confirmPassword: e.target.value,
+                                confirmPassWord: e.target.value,
                               })
                             }
                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                           />
-                          {errors.confirmPassword && (
+                          {errors.confirmPassWord && (
                             <span className="text-red-500">
-                              {errors.confirmPassword}
+                              {errors.confirmPassWord}
                             </span>
                           )}
                         </label>

@@ -5,30 +5,30 @@ export const validateUserInfo = (user) => {
   //   errors.fullName = "Họ và tên không được để trống.";
   // }
 
-  if (!user.phone.trim()) {
-    errors.phone = "Số điện thoại không được để trống.";
-  } else if (!/^\d{10}$/.test(user.phone)) {
-    errors.phone = "Số điện thoại không hợp lệ.";
+  if (!user.Phone.trim()) {
+    errors.Phone = "Số điện thoại không được để trống.";
+  } else if (!/^\d{10}$/.test(user.Phone)) {
+    errors.Phone = "Số điện thoại không hợp lệ.";
   }
 
-  if (!user.email.trim()) {
-    errors.email = "Email không được để trống.";
-  } else if (!/\S+@\S+\.\S+/.test(user.email)) {
-    errors.email = "Email không hợp lệ.";
+  if (!user.Email.trim()) {
+    errors.Email = "Email không được để trống.";
+  } else if (!/\S+@\S+\.\S+/.test(user.Email)) {
+    errors.Email = "Email không hợp lệ.";
   }
 
-  if (!user.address.trim()) {
-    errors.address = "Địa chỉ không được để trống.";
+  if (!user.Address.trim()) {
+    errors.Address = "Địa chỉ không được để trống.";
   }
 
-  if (!user.password.trim()) {
-    errors.password = "Mật khẩu không được để trống.";
-  } else if (user.password.length < 6) {
-    errors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
+  if (!user.PassWord.trim()) {
+    errors.PassWord = "Mật khẩu không được để trống.";
+  } else if (user.PassWord.length < 6) {
+    errors.PassWord = "Mật khẩu phải có ít nhất 6 ký tự.";
   }
 
-  if (user.password !== user.confirmPassword) {
-    errors.confirmPassword = "Mật khẩu xác nhận không khớp.";
+  if (user.PassWord !== user.confirmPassWord) {
+    errors.confirmPassWord = "Mật khẩu xác nhận không khớp.";
   }
 
   return errors;

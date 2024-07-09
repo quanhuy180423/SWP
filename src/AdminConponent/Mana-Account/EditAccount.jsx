@@ -148,8 +148,8 @@ function EditAccount() {
                             label="Role"
                         >
                             <MenuItem value={1}>Admin</MenuItem>
-                            <MenuItem value={2}>Staff</MenuItem>
-                            <MenuItem value={3}>User</MenuItem>
+                            <MenuItem value={2}>User</MenuItem>
+                            <MenuItem value={3}>Staff</MenuItem>
                         </Select>
                         {errors.Role && <Alert severity="error">{errors.Role}</Alert>}
                     </FormControl>

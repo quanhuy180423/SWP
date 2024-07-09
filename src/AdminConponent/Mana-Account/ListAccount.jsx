@@ -5,10 +5,10 @@ import Header from "../Header/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faBriefcase, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Search from "../Header/Search";
 
-const ListAccount = () => {
+const ListAccount = ({ role }) => {
     const [accounts, setAccount] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [staffToDelete, setStaffToDelete] = useState(null);
@@ -19,7 +19,16 @@ const ListAccount = () => {
         const getListAccount = async () => {
             try {
                 const response = await getAllUsers();
-                const accountsWithIndex = response.data.map((account, index) => ({
+                const filteredAccounts = response.data.filter(account => {
+                    if (role === "staff") {
+                        return account.Role === 1 || account.Role === 3;
+                    } else if (role === "customer") {
+                        return account.Role === 2;
+                    } else {
+                        return true;
+                    }
+                });
+                const accountsWithIndex = filteredAccounts.map((account, index) => ({
                     ...account,
                     index: index + 1
                 }));
@@ -30,7 +39,7 @@ const ListAccount = () => {
             }
         };
         getListAccount();
-    }, []);
+    }, [role]);
 
     const handleDelete = (UserId) => {
         setStaffToDelete(UserId);
@@ -87,7 +96,7 @@ const ListAccount = () => {
                         break;
                     case 3:
                         roleLabel = "Staff";
-                        bgColor = colors.green[300];
+                        bgColor = colors.blue[300];
                         icon = faBriefcase;
                         break;
                     default:

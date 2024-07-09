@@ -36,6 +36,7 @@ import OrderDetailPage from "./AdminConponent/Mana-Order/OrderDetail";
 import OrderListRequest from "./AdminConponent/Mana-Order/ListOrder";
 import OrderListOfUser from "./page/Order/OrderListOfUser";
 import OrderDetailUser from "./page/Order/OrderdetailUser";
+import OrderManger from "./AdminConponent/Mana-Order/OrderManager";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -65,68 +66,69 @@ const App = () => {
 
           {(user.Role === 1 || user.Role === 2) && (
             <Route path="/admin" element={<LayoutAdmin />}>
-              {user.Role === 1 && <Route index element={<Dashboard />} />}
-
+              <Route index element={<Dashboard />} />
               {user.Role === 1 && (
-                <Route path="/admin/manage-account" element={<ListAccount />} />
+                <>
+                  <Route
+                    path="manage-account/customer"
+                    element={<ListAccount role="customer" />}
+                  />
+                  <Route
+                    path="manage-account/staff"
+                    element={<ListAccount role="staff" />}
+                  />
+                  <Route
+                    path="manage-account/addUser"
+                    element={<AddUserButton />}
+                  />
+                  <Route
+                    path="manage-account/edit/:UserId"
+                    element={<EditAccount />}
+                  />
+                </>
               )}
-              {user.Role === 1 && (
-                <Route
-                  path="/admin/manage-account/addUser"
-                  element={<AddUserButton />}
-                />
-              )}
-              {user.Role === 1 && (
-                <Route
-                  path="/admin/manage-account/edit/:UserId"
-                  element={<EditAccount />}
-                />
-              )}
-
-              <Route path="/admin/manage-blogs" element={<ListBlogs />} />
+              <Route path="manage-blogs" element={<ListBlogs />} />
 
               {/* Material */}
-              <Route path="/admin/manage-material" element={<ListMaterial />} />
+              <Route path="manage-material" element={<ListMaterial />} />
               <Route
-                path="/admin/manage-material/addMaterial"
+                path="manage-material/addMaterial"
                 element={<AddMaterial />}
               />
               <Route
-                path="/admin/manage-material/addCostMaterial"
+                path="manage-material/addCostMaterial"
                 element={<AddCostMaterial />}
               />
               <Route
-                path="/admin/manage-material/editMaterial"
+                path="manage-material/editMaterial"
                 element={<EditMaterial />}
               />
 
+              <Route path="manage-blogs/addBlog" element={<AddBlogs />} />
+              <Route path="manage-diamond" element={<ListDiamond />} />
               <Route
-                path="/admin/manage-blogs/addBlog"
-                element={<AddBlogs />}
-              />
-              <Route path="/admin/manage-diamond" element={<ListDiamond />} />
-              <Route
-                path="/admin/manage-diamond/addDiamond"
+                path="manage-diamond/addDiamond"
                 element={<AddDiamond />}
               />
-              <Route path="/admin/manage-order" element={<ListOrder />} />
+              <Route path="manage-order" element={<ListOrder />} />
               {/* Product */}
-              <Route path="/admin/manage-product" element={<ListProduct />} />
+              <Route path="manage-product" element={<ListProduct />} />
               <Route
-                path="/admin/manage-product/addProduct"
+                path="manage-product/addProduct"
                 element={<AddProduct />}
               />
+              <Route path="manage-order-detail" element={<ListOrderDetail />} />
               <Route
-                path="/admin/manage-order-detail"
-                element={<ListOrderDetail />}
-              />
-              <Route
-                path="/admin/manage-order/List-Request"
+                path="manage-order/List-Request"
                 element={<OrderListRequest />}
               />
               <Route
-                path="/admin/manage-order/List-Request/OrderDetail/:OrderId"
+                path="manage-order/List-Request/OrderDetail/:OrderId"
                 element={<OrderDetailPage />}
+              />
+              <Route
+                path="manage-order/List-Request/Order-Manager"
+                element={<OrderManger />}
               />
             </Route>
           )}

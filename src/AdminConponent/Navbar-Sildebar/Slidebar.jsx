@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import imgProfile from "../../assets/image/img/profile-user.png";
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl, faBoxesStacked, faImage, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl, faBoxesStacked, faImage, faCheckDouble, faPalette } from '@fortawesome/free-solid-svg-icons';
 
 const Item = ({ title, to, icon, selected, setSelected }) => (
     <MenuItem
@@ -109,20 +109,8 @@ const Slidebar = () => {
                             icon={<FontAwesomeIcon icon={faUser} style={{ marginRight: '30px', }} />}
                             style={{ color: 'black', height: '60px' }}
                         >
-                            <Item
-                                title='Account Customer'
-                                to='/admin/manage-account/customer'
-                                icon={faUser}
-                                selected={selected}
-                                setSelected={setSelected}
-                            />
-                            <Item
-                                title='Account Staff'
-                                to='/admin/manage-account/staff'
-                                icon={faUser}
-                                selected={selected}
-                                setSelected={setSelected}
-                            />
+                            <Item title="Account Staff" to="/admin/manage-account/staff" icon={faUser} selected={selected} setSelected={setSelected} />
+                            <Item title="Account Customer" to="/admin/manage-account/customer" icon={faUser} selected={selected} setSelected={setSelected} />
                         </SubMenu>
                         <Item
                             title='Manage product'
@@ -166,16 +154,16 @@ const Slidebar = () => {
                                 setSelected={setSelected}
                             />
                             <Item
-                                title='Order Detail'
-                                to='/admin/manage-order/detail'
+                                title='Order Manager'
+                                to='/admin/manage-order/List-Request/Order-Manager'
                                 icon={faBox}
                                 selected={selected}
                                 setSelected={setSelected}
                             />
                             <Item
-                                title='Order Detail Image'
+                                title='Order Design'
                                 to='/admin/manage-order/detail'
-                                icon={faImage}
+                                icon={faPalette}
                                 selected={selected}
                                 setSelected={setSelected}
                             />

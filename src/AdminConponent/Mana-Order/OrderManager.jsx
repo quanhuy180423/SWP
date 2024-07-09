@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { colors, IconButton } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -32,7 +33,25 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const OrderListRequest = () => {
+const getRowBackgroundColor = (status) => {
+    switch (status) {
+        case 'Request':
+            return colors.red[100];
+        case 'Payment':
+            return colors.blue[100];
+        case 'Processing':
+            return colors.purple[100];
+        case 'Complete':
+            return colors.green[100];
+        case 'Shipped':
+            return colors.green[100];
+        default:
+            return 'inherit';
+    }
+};
+
+
+const OrderManger = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -63,15 +82,14 @@ const OrderListRequest = () => {
     }, []);
 
     const handleSendManager = async (order) => {
-
         const OrderId = order.OrderId;
-        const Status = order.Status = "RqQuote";
-        console.log(order)
+        const Status = order.Status = "AptQuote";
+        console.log(order);
         try {
             await updateStatusOrdeById(OrderId, Status);
             setOrders((prevOrders) =>
                 prevOrders.map((o) =>
-                    o.OrderId === order.OrderId ? { ...o, Status: 'RqQuote' } : o
+                    o.OrderId === order.OrderId ? { ...o, Status: 'AptQuote' } : o
                 )
             );
         } catch (error) {
@@ -88,7 +106,8 @@ const OrderListRequest = () => {
         return <div>{error}</div>;
     }
 
-    const requestOrders = orders.filter((order) => order.Status === 'Request');
+    // Sort orders to prioritize those with status "Request"
+    const sortedOrders = [...orders].sort((a, b) => (a.Status === 'Request' ? -1 : 1));
 
     return (
         <Box p={3}>
@@ -103,14 +122,13 @@ const OrderListRequest = () => {
                             <StyledTableCell>Name Customer</StyledTableCell>
                             <StyledTableCell>Description Order</StyledTableCell>
                             <StyledTableCell>Address</StyledTableCell>
-                            <StyledTableCell
-                                style={{ display: 'flex', justifyContent: 'center' }}
-                            >Actions</StyledTableCell>
+                            <StyledTableCell>Status</StyledTableCell>
+                            <StyledTableCell style={{ display: 'flex', justifyContent: 'center' }}>Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {requestOrders.length > 0 ? (
-                            requestOrders.map((order) => (
+                        {sortedOrders.length > 0 ? (
+                            sortedOrders.map((order) => (
                                 <StyledTableRow key={order.OrderId}>
                                     <StyledTableCell component="th" scope="row">
                                         {order.OrderId}
@@ -118,6 +136,11 @@ const OrderListRequest = () => {
                                     <StyledTableCell>{order.Name}</StyledTableCell>
                                     <StyledTableCell>{order.Description}</StyledTableCell>
                                     <StyledTableCell>{order.Address}</StyledTableCell>
+                                    <StyledTableCell>
+                                        <IconButton style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px', fontSize: '15px' }}>
+                                            {order.Status}
+                                        </IconButton>
+                                    </StyledTableCell>
                                     <StyledTableCell
                                         style={{
                                             display: 'flex',
@@ -134,10 +157,11 @@ const OrderListRequest = () => {
                                             View
                                         </Button>
                                         <Button
-                                            variant="contained" color="secondary"
+                                            variant="contained"
+                                            color="secondary"
                                             onClick={() => handleSendManager(order)}
                                         >
-                                            Send Manager
+                                            Accept Quote
                                         </Button>
                                         {/* <Button variant="contained" color="error">
                                             Decline
@@ -147,8 +171,8 @@ const OrderListRequest = () => {
                             ))
                         ) : (
                             <StyledTableRow>
-                                <StyledTableCell colSpan={5} align="center">
-                                    No order requests found.
+                                <StyledTableCell colSpan={6} align="center">
+                                    No orders found.
                                 </StyledTableCell>
                             </StyledTableRow>
                         )}
@@ -159,4 +183,4 @@ const OrderListRequest = () => {
     );
 };
 
-export default OrderListRequest;
+export default OrderManger;

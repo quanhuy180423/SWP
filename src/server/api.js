@@ -16,8 +16,11 @@ export const getProductsV2 = (id) =>
   axios.get(`${API_URL}/getProductByNameOrId?Name=${id}`);
 export const insertProduct = (product) =>
   axios.post(`${API_URL}/insertProduct`, product);
-export const updateProduct = (id, product) =>
-  axios.put(`${API_URL}/updateProductById`, { id, ...product });
+export const updateProductById = (product) =>
+  axios.put(`${API_URL}/updateProductById`, product);
+
+export const updateStatusOrdeById = (OrderId, Status) =>
+  axios.put(`${API_URL}/updateStatusOrdeById`, { OrderId, Status });
 export const deleteProduct = (ProductId) =>
   axios.delete(`${API_URL}/deleteProductById`, { data: { ProductId } });
 
@@ -39,8 +42,8 @@ export const getOrderByUserId = (UserId) =>
 export const getAllOrders = () => axios.get(`${API_URL}/getAllOrder`);
 export const insertOrder = (order) =>
   axios.post(`${API_URL}/insertOrder`, order);
-export const updateOrder = (id, order) =>
-  axios.put(`${API_URL}/updateOrderById`, { id, ...order });
+export const updateOrder = (order) =>
+  axios.put(`${API_URL}/updateOrderById`, { order });
 export const deleteOrder = (id) =>
   axios.delete(`${API_URL}/deleteOrderById`, { data: { id } });
 
