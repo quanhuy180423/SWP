@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import {
-  Box,
   Button,
   TextField,
   Typography,
@@ -10,6 +9,7 @@ import {
   Divider,
   Container,
   Paper,
+  Grid,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { jwtDecode } from "jwt-decode";
@@ -176,37 +176,24 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
         PassWord: formData.passWord,
       });
 
+      console.log(registrationResponse.data);
+
       if (registrationResponse.status === 201) {
-        const data = registrationResponse.data;
-        const { accessToken } = data;
-
-        // Save token to localStorage
-        localStorage.setItem("accessToken", accessToken);
-
-        // Decode token to get user information
-        const decodedToken = jwtDecode(accessToken);
-        const user = decodedToken.payload;
-
-        // Save user information to localStorage
-        localStorage.setItem("user", JSON.stringify(user));
-
-        // Save login time to cookie
-        const loginTime = new Date().getTime(); // Get current time
-        Cookies.set("loginTime", loginTime, { expires: 30 }); // Save cookie for 30 days
-
-        // Call handler for successful login
-        onLoginSuccess(user);
+        setIsLogin(true);
       } else if (registrationResponse.status === 400) {
-        setError(registrationResponse.data);
-        alert("Account already exists! Redirecting to login page...");
+        setError(registrationResponse.data); // Cập nhật thông báo lỗi từ server
+        alert(registrationResponse.data); // Hiển thị thông báo lỗi từ server
         setIsLogin(true);
       } else {
         throw new Error("Registration failed!");
       }
     } catch (error) {
-      console.error(error);
-      alert("Account already exists! Redirecting to login page...");
-      setIsLogin(true);
+      if (error.response && error.response.status === 400) {
+        setError(error.response.data); // Cập nhật thông báo lỗi từ server
+        alert(error.response.data); // Hiển thị thông báo lỗi từ server
+      } else {
+        console.error(error);
+      }
     }
   };
 
@@ -283,75 +270,91 @@ const AuthPopup = ({ onClose, onLoginSuccess }) => {
           )}
           {!isLogin && (
             <>
-              <TextField
-                label="Username"
-                name="userName"
-                fullWidth
-                onChange={handleChange}
-                onFocus={handleFocus}
-                value={formData.userName}
-                error={!!formErrors.userName}
-                helperText={formErrors.userName}
-              />
-              <TextField
-                label="Full Name"
-                name="name"
-                fullWidth
-                onChange={handleChange}
-                onFocus={handleFocus}
-                value={formData.name}
-                error={!!formErrors.name}
-                helperText={formErrors.name}
-              />
-              <TextField
-                label="Phone"
-                name="phone"
-                fullWidth
-                onChange={handleChange}
-                onFocus={handleFocus}
-                value={formData.phone}
-                error={!!formErrors.phone}
-                helperText={formErrors.phone}
-              />
-              <TextField
-                label="Email"
-                name="email"
-                fullWidth
-                onChange={handleChange}
-                onFocus={handleFocus}
-                value={formData.email}
-                error={!!formErrors.email}
-                helperText={formErrors.email}
-              />
-              <TextField
-                label="Address"
-                name="address"
-                fullWidth
-                onChange={handleChange}
-                onFocus={handleFocus}
-                value={formData.address}
-                error={!!formErrors.address}
-                helperText={formErrors.address}
-              />
-              <TextField
-                label="Password"
-                name="passWord"
-                type="password"
-                fullWidth
-                onChange={handleChange}
-                onFocus={handleFocus}
-                value={formData.passWord}
-                error={!!formErrors.passWord}
-                helperText={formErrors.passWord}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-              >
-                Register
-              </Button>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Username"
+                    name="userName"
+                    fullWidth
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    value={formData.userName}
+                    error={!!formErrors.userName}
+                    helperText={formErrors.userName}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Full Name"
+                    name="name"
+                    fullWidth
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    value={formData.name}
+                    error={!!formErrors.name}
+                    helperText={formErrors.name}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Phone"
+                    name="phone"
+                    fullWidth
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    value={formData.phone}
+                    error={!!formErrors.phone}
+                    helperText={formErrors.phone}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Email"
+                    name="email"
+                    fullWidth
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    value={formData.email}
+                    error={!!formErrors.email}
+                    helperText={formErrors.email}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Address"
+                    name="address"
+                    fullWidth
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    value={formData.address}
+                    error={!!formErrors.address}
+                    helperText={formErrors.address}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Password"
+                    name="passWord"
+                    type="password"
+                    fullWidth
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    value={formData.passWord}
+                    error={!!formErrors.passWord}
+                    helperText={formErrors.passWord}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                  >
+                    Register
+                  </Button>
+                </Grid>
+              </Grid>
             </>
           )}
           {error && (
