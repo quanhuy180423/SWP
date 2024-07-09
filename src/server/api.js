@@ -3,11 +3,22 @@ import axios from "axios";
 // Cấu hình URL của API
 const API_URL = "http://localhost:8090/test";
 
+// Cấu hình api THANH TOÁN ZALOPAY
+export const create_payment_url = () =>
+  axios.post(`${API_URL}/create_payment_url`);
+
 //Hàm sửa lý order
 export const orderRequest = (orderRequest) =>
   axios.post(`${API_URL}/orderRequest`, orderRequest);
+
+//lấy order detail bằng order id
 export const getOrderDetailByOrderId = (OrderId) =>
   axios.get(`${API_URL}/getOrderDetailByOrderId?OrderId=${OrderId}`);
+
+//lấy đổi status của order detail bằng order detail id
+export const updateStatusOrderDetailById = (Order) =>
+  axios.put(`${API_URL}/updateStatusOrderDetailById`, Order);
+
 // Hàm lấy danh sách sản phẩm
 export const getAllProducts = () => axios.get(`${API_URL}/getAllProduct`);
 export const getProductById = (ProductId) =>
@@ -48,7 +59,8 @@ export const deleteOrder = (id) =>
   axios.delete(`${API_URL}/deleteOrderById`, { data: { id } });
 
 // Hàm lấy danh sách đơn hàng chi tiết
-export const getAllOrderDetails = () => axios.get(`${API_URL}/getAllOrder`);
+export const getAllOrderDetail = () =>
+  axios.get(`${API_URL}/getAllOrderDetail`);
 // export const insertOrder = (order) =>
 //   axios.post(`${API_URL}/insertOrder`, order);
 // export const updateOrder = (id, order) =>

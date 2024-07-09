@@ -162,7 +162,7 @@ const Slidebar = () => {
                             />
                             <Item
                                 title='Order Design'
-                                to='/admin/manage-order/detail'
+                                to='manage-order/List-Request/Order-Design'
                                 icon={faPalette}
                                 selected={selected}
                                 setSelected={setSelected}

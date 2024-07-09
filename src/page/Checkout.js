@@ -4,18 +4,19 @@ import axios from "axios";
 
 const Checkout = () => {
   const { cart } = useContext(CartContext);
-  const [user, setUser] = useState("null");
+  const [user, setUser] = useState(null);
+  const [orderId, setOrderId] = useState("");
+  const [bankCode, setBankCode] = useState("COD"); // Default to COD for simplicity
 
-  const API_URL = "http://localhost:8090/test/getUserById";
+  const USER_API_URL = "http://localhost:8090/test/getUserById";
+  const ORDER_API_URL = "http://localhost:8090/test/createOrder";
 
   const getUser = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.Id) {
       const userId = storedUser.Id;
-      console.log(userId);
       try {
-        const response = await axios.get(`${API_URL}?UserId=${userId}`);
-        console.log(response.data);
+        const response = await axios.get(`${USER_API_URL}?UserId=${userId}`);
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -24,30 +25,44 @@ const Checkout = () => {
       console.error("User ID not found in localStorage");
     }
   };
+
   useEffect(() => {
-    if (user === "null") {
+    if (!user) {
       getUser();
     }
-  }, []);
-  // Tính tổng giá tiền với hai số sau dấu phẩy
+  }, [user]);
+
+  // Calculate total cost with two decimal places
   const totalCost = cart.reduce(
     (total, item) => total + item.ProductCost * item.quantity,
     0
   );
-  const formattedTotalCost = parseFloat(totalCost.toFixed(2)); // Làm tròn và định dạng giá tiền
+  const formattedTotalCost = parseFloat(totalCost.toFixed(2));
 
-  // Tính phí vận chuyển và thuế
+  // Calculate shipping and tax
   const shipping = formattedTotalCost * 0.05;
-  const formattedShipping = parseFloat(shipping.toFixed(2)); // Làm tròn và định dạng phí vận chuyển
+  const formattedShipping = parseFloat(shipping.toFixed(2));
 
   const tax = formattedTotalCost * 0.1;
-  const formattedTax = parseFloat(tax.toFixed(2)); // Làm tròn và định dạng thuế
+  const formattedTax = parseFloat(tax.toFixed(2));
 
-  // Tính tổng cộng
+  // Calculate total amount
   const totalAmount = formattedTotalCost + formattedShipping + formattedTax;
 
-  const handleCheckout = () => {
-    // Xu ly thanh toan
+  const handleCheckout = async () => {
+    try {
+      const orderDetails = {
+        orderId: orderId,
+        amount: totalAmount,
+        bankCode: bankCode,
+      };
+      const response = await axios.post(ORDER_API_URL, orderDetails);
+      console.log("Payment URL:", response.data);
+      // Redirect to the payment URL
+      window.location.href = response.data.paymentUrl;
+    } catch (error) {
+      console.error("Error creating payment URL:", error);
+    }
   };
 
   return (
@@ -58,7 +73,6 @@ const Checkout = () => {
       <div className="grid grid-cols-2 gap-4">
         {/* Form thông tin */}
         <div className="col-span-1 bg-white p-8 ">
-          {/* rounded-lg shadow-md */}
           <form>
             <div>
               <h2 className="text-2xl font-bold mb-4">Đại chỉ giao hàng</h2>
@@ -73,8 +87,9 @@ const Checkout = () => {
               <input
                 type="text"
                 id="name"
-                value={user.Name}
+                value={user ? user.Name : ""}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                readOnly
               />
             </div>
             <div className="mb-4">
@@ -87,8 +102,9 @@ const Checkout = () => {
               <input
                 type="text"
                 id="phone"
-                value={user.Phone}
+                value={user ? user.Phone : ""}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                readOnly
               />
             </div>
             <div className="mb-4">
@@ -101,8 +117,9 @@ const Checkout = () => {
               <input
                 type="text"
                 id="address"
-                value={user.Address}
+                value={user ? user.Address : ""}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                readOnly
               />
             </div>
             <div className="mb-4">
@@ -115,7 +132,23 @@ const Checkout = () => {
               <input
                 type="email"
                 id="email"
-                value={user.Email}
+                value={user ? user.Email : ""}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                readOnly
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="order-id"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Mã đơn hàng
+              </label>
+              <input
+                type="text"
+                id="order-id"
+                value={orderId}
+                onChange={(e) => setOrderId(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -128,11 +161,13 @@ const Checkout = () => {
               </label>
               <select
                 id="payment-method"
+                value={bankCode}
+                onChange={(e) => setBankCode(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               >
-                <option>COD (nhận hàng rồi thanh toán)</option>
-                <option>QR Code</option>
-                {/* <option>Cash on Delivery</option> */}
+                <option value="COD">COD (nhận hàng rồi thanh toán)</option>
+                <option value="QR_CODE">QR Code</option>
+                {/* Add more payment methods if needed */}
               </select>
             </div>
           </form>
@@ -176,19 +211,15 @@ const Checkout = () => {
               className="flex justify-between items-center mb-8 p-4 rounded-lg shadow-md"
             >
               <img
-                // src={item.Image}
                 src={item.Image[0]}
                 alt={item.Name}
-                width="550"
+                width="150"
                 className="rounded-lg"
               />
               <div className="flex-1 ml-4">
                 <div className="text-3xl font-bold mb-2">
                   Tên sản phẩm: {item.Name}
                 </div>
-                {/* <div className="mb-2">Loại sản phẩm: {item.CategoryName}</div>
-                <div className="mb-2">Kim cương: {item.GemName}</div>
-                <div className="mb-2">Kích thước: {item.Size}</div> */}
                 <div className="mb-2 text-2xl">
                   Giá thành phẩm: {item.ProductCost.toLocaleString()}₫
                 </div>

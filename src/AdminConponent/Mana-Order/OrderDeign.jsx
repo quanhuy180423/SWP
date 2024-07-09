@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllOrders, updateStatusOrdeById } from '../../server/api';
+import { getAllOrderDetail, updateStatusOrdeById } from '../../server/api';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,7 +12,6 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { colors, IconButton } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -33,73 +32,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const generateStatus = (status) => {
-    switch (status) {
-        case 'RqOrder':
-            return 'Request Order';
-        case 'AptQuote':
-            return 'Accept Quote';
-        case 'ChkOut':
-            return 'Check Out';
-        case 'Pro':
-            return 'Processing';
-        case 'Compl':
-            return 'Complete';
-        case 'Shipped':
-            return 'Shipped';
-        case 'Done':
-            return 'Done';
-        default:
-            return status;
-    }
-};
-
-
-const getRowBackgroundColor = (status) => {
-    switch (status) {
-        case 'RqOrder':
-            return colors.red[100];
-        case 'AptQuote':
-            return colors.blue[100];
-        case 'ChkOut':
-            return colors.yellow[100];
-        case 'Pro':
-            return colors.purple[100];
-        case 'Compl':
-            return colors.green[100];
-        case 'Shipped':
-            return colors.teal[100];
-        case 'Done':
-            return colors.grey[100];
-        default:
-            return 'inherit';
-    }
-};
-
-
-
-const OrderManger = () => {
+const OrderDesign = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchOrders = async () => {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser && storedUser.Id) {
-            const userId = storedUser.Id;
-            console.log(userId);
-            try {
-                const response = await getAllOrders(userId);
-                setOrders(response.data);
-            } catch (error) {
-                console.error('Error fetching orders:', error);
-                setError('Error fetching orders');
-            } finally {
-                setLoading(false);
-            }
-        } else {
-            console.error('User ID not found in localStorage');
-            setError('User ID not found in localStorage');
+        try {
+            const response = await getAllOrderDetail();
+            setOrders(response.data);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            setError('Error fetching orders');
+        } finally {
             setLoading(false);
         }
     };
@@ -110,13 +55,12 @@ const OrderManger = () => {
 
     const handleSendManager = async (order) => {
         const OrderId = order.OrderId;
-        const Status = 'AptQuote'; // Set to the desired status
-        console.log(order);
+        const Status = 'RqQuote';
         try {
             await updateStatusOrdeById(OrderId, Status);
             setOrders((prevOrders) =>
                 prevOrders.map((o) =>
-                    o.OrderId === order.OrderId ? { ...o, Status } : o
+                    o.OrderId === order.OrderId ? { ...o, Status: 'RqQuote' } : o
                 )
             );
         } catch (error) {
@@ -124,7 +68,6 @@ const OrderManger = () => {
             setError('Error updating order status');
         }
     };
-
 
     if (loading) {
         return <div>Loading...</div>;
@@ -134,42 +77,36 @@ const OrderManger = () => {
         return <div>{error}</div>;
     }
 
-    // Sort orders to prioritize those with status "Request"
-    const sortedOrders = [...orders].sort((a, b) => (a.Status === 'Request' ? -1 : 1));
+    const requestOrders = orders.filter((order) => order.Status === 'Design');
 
     return (
         <Box p={3}>
             <Typography variant="h4" gutterBottom>
-                Order Requests
+                Order Requests Design
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Order ID</StyledTableCell>
-                            <StyledTableCell>Name Customer</StyledTableCell>
-                            <StyledTableCell>Description Order</StyledTableCell>
-                            <StyledTableCell>Address</StyledTableCell>
+                            <StyledTableCell>Order Detail ID</StyledTableCell>
+                            <StyledTableCell>Order Date</StyledTableCell>
+                            <StyledTableCell>Product ID</StyledTableCell>
                             <StyledTableCell>Status</StyledTableCell>
-                            <StyledTableCell style={{ display: 'flex', justifyContent: 'center' }}>Actions</StyledTableCell>
+                            <StyledTableCell
+                                style={{ display: 'flex', justifyContent: 'center' }}
+                            >Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortedOrders.length > 0 ? (
-                            sortedOrders.map((order) => (
+                        {requestOrders.length > 0 ? (
+                            requestOrders.map((order) => (
                                 <StyledTableRow key={order.OrderId}>
                                     <StyledTableCell component="th" scope="row">
                                         {order.OrderId}
                                     </StyledTableCell>
-                                    <StyledTableCell>{order.Name}</StyledTableCell>
-                                    <StyledTableCell>{order.Description}</StyledTableCell>
-                                    <StyledTableCell>{order.Address}</StyledTableCell>
-                                    <StyledTableCell>
-                                        <IconButton style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px', fontSize: '15px' }}>
-                                            {generateStatus(order.Status)}
-                                        </IconButton>
-                                    </StyledTableCell>
-
+                                    <StyledTableCell>{order.OrderDate}</StyledTableCell>
+                                    <StyledTableCell>{order.ProductId}</StyledTableCell>
+                                    <StyledTableCell>{order.Status}</StyledTableCell>
                                     <StyledTableCell
                                         style={{
                                             display: 'flex',
@@ -186,11 +123,10 @@ const OrderManger = () => {
                                             View
                                         </Button>
                                         <Button
-                                            variant="contained"
-                                            color="secondary"
+                                            variant="contained" color="secondary"
                                             onClick={() => handleSendManager(order)}
                                         >
-                                            Accept Quote
+                                            Send Manager
                                         </Button>
                                         {/* <Button variant="contained" color="error">
                                             Decline
@@ -200,8 +136,8 @@ const OrderManger = () => {
                             ))
                         ) : (
                             <StyledTableRow>
-                                <StyledTableCell colSpan={6} align="center">
-                                    No orders found.
+                                <StyledTableCell colSpan={5} align="center">
+                                    No order requests found.
                                 </StyledTableCell>
                             </StyledTableRow>
                         )}
@@ -212,4 +148,4 @@ const OrderManger = () => {
     );
 };
 
-export default OrderManger;
+export default OrderDesign;

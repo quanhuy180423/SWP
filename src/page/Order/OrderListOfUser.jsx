@@ -32,35 +32,48 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+const generateStatus = (status) => {
+    switch (status) {
+        case 'RqOrder':
+            return 'Request Order';
+        case 'AptQuote':
+            return 'Accept Quote';
+        case 'ChkOut':
+            return 'Check Out';
+        case 'Pro':
+            return 'Processing';
+        case 'Compl':
+            return 'Complete';
+        case 'Shipped':
+            return 'Shipped';
+        case 'Done':
+            return 'Done';
+        default:
+            return status;
+    }
+};
+
+
 const getRowBackgroundColor = (status) => {
     switch (status) {
-        case 'Request':
+        case 'RqOrder':
             return colors.red[100];
-        case 'Payment':
+        case 'AptQuote':
             return colors.blue[100];
-        case 'Processing':
+        case 'ChkOut':
+            return colors.yellow[100];
+        case 'Pro':
             return colors.purple[100];
-        case 'Complete':
+        case 'Compl':
             return colors.green[100];
+        case 'Shipped':
+            return colors.teal[100];
+        case 'Done':
+            return colors.grey[100];
         default:
             return 'inherit';
     }
 };
-
-const generRateStatus = (status) => {
-    switch (status) {
-        case 'AptQuote':
-            return 'Accept';
-        case 'Payment':
-            return 'Payment';
-        case 'Processing':
-            return 'Processing';
-        case 'Complete':
-            return 'Complete';
-        default:
-            return 'none';
-    }
-}
 
 const OrderListOfUser = () => {
     const [orders, setOrders] = useState([]);
@@ -133,7 +146,7 @@ const OrderListOfUser = () => {
                                             <StyledTableCell
                                                 style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px' }}
                                             >
-                                                {generRateStatus(order.Status)}
+                                                {generateStatus(order.Status)}
                                             </StyledTableCell>
                                         </IconButton>
                                         <IconButton>
@@ -145,13 +158,7 @@ const OrderListOfUser = () => {
                                                 View your order
                                             </Button>
                                         </IconButton>
-                                        <IconButton>
-                                            <Button
-                                                style={{ borderRadius: '15px', backgroundColor: colors.orange[100] }}
-                                            >
-                                                Accept and Payment order
-                                            </Button>
-                                        </IconButton>
+
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))

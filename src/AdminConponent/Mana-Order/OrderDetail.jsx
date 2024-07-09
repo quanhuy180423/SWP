@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getOrderDetailByOrderId, getProductById, updateProductById } from '../../server/api';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField, InputLabel, Alert, Grid } from '@mui/material';
 import Header from '../Header/Header';
+import handleUploadImages from '../../firebase/HandleUploadToFirebase';
 
 const OrderDetailPage = () => {
     const { OrderId } = useParams();
@@ -10,7 +11,10 @@ const OrderDetailPage = () => {
     const [productDetail, setProductDetail] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isUpdatePriceOpen, setIsUpdatePriceOpen] = useState(false);
+    const [isUpdateImageOpen, setIsUpdateImageOpen] = useState(false);
     const [newPrice, setNewPrice] = useState('');
+    const [imageFiles, setImageFiles] = useState([]);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const fetchOrderDetail = async () => {
@@ -50,14 +54,37 @@ const OrderDetailPage = () => {
     const handleSavePrice = async () => {
         if (newPrice && productDetail) {
             try {
-                const updatedProduct = { ...productDetail, ProductCost: newPrice }; // Assuming MaterialCost is the field to update
-                console.log(updatedProduct)
+                const updatedProduct = { ...productDetail, ProductCost: newPrice };
                 await updateProductById(updatedProduct);
-                setProductDetail(updatedProduct); // Update local state with the new price
+                setProductDetail(updatedProduct);
                 setIsUpdatePriceOpen(false);
             } catch (error) {
                 console.error('Error updating product price:', error);
             }
+        }
+    };
+
+    const handleUpdateImage = () => {
+        setIsUpdateImageOpen(true);
+    };
+
+    const handleImageChange = (event) => {
+        setImageFiles(event.target.files);
+    };
+
+    const handleSaveImage = async () => {
+        if (imageFiles.length > 0 && productDetail) {
+            try {
+                const imageUrls = await handleUploadImages(imageFiles);
+                const updatedProduct = { ...productDetail, Images: imageUrls }; // Assuming product has Images field to store multiple URLs
+                await updateProductById(updatedProduct);
+                setProductDetail(updatedProduct);
+                setIsUpdateImageOpen(false);
+            } catch (error) {
+                console.error('Error updating product image:', error);
+            }
+        } else {
+            setErrors({ Image: 'Please select images to upload' });
         }
     };
 
@@ -77,7 +104,7 @@ const OrderDetailPage = () => {
                             <TableBody>
                                 {Object.entries(orderDetail).map(([key, value]) => (
                                     <TableRow key={key}>
-                                        <TableCell variant="head"> <strong>{key}</strong></TableCell>
+                                        <TableCell variant="head"><strong>{key}</strong></TableCell>
                                         <TableCell>{value}</TableCell>
                                     </TableRow>
                                 ))}
@@ -96,10 +123,17 @@ const OrderDetailPage = () => {
                                 <TableBody>
                                     {Object.entries(productDetail).map(([key, value]) => (
                                         <TableRow key={key}>
-                                            <TableCell variant="head"> <strong>{key}</strong></TableCell>
+                                            <TableCell variant="head"><strong>{key}</strong></TableCell>
                                             <TableCell>
                                                 {key === 'Image' ? (
-                                                    <img src={value} alt={productDetail.Name} width="100" />
+
+                                                    <Grid container spacing={1}>
+                                                        {value.map((url, index) => (
+                                                            <Grid item xs={3} key={index}>
+                                                                <img src={url} alt={productDetail.Name} width='150' height='150' />
+                                                            </Grid>
+                                                        ))}
+                                                    </Grid>
                                                 ) : key === 'Description' ? (
                                                     <div dangerouslySetInnerHTML={{ __html: value }} />
                                                 ) : key === 'ProductCost' ? (
@@ -117,6 +151,9 @@ const OrderDetailPage = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleUpdatePrice} color="primary">Update Price</Button>
+                    {orderDetail && orderDetail.Status === 'Design' && (
+                        <Button onClick={handleUpdateImage} color="primary">Update Image</Button>
+                    )}
                     <Button onClick={handleClosePopup} color="primary">Close</Button>
                 </DialogActions>
             </Dialog>
@@ -136,6 +173,27 @@ const OrderDetailPage = () => {
                 <DialogActions>
                     <Button onClick={handleSavePrice} color="primary">Save</Button>
                     <Button onClick={() => setIsUpdatePriceOpen(false)} color="secondary">Cancel</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={isUpdateImageOpen} onClose={() => setIsUpdateImageOpen(false)} maxWidth="sm" fullWidth>
+                <DialogTitle>Update Image</DialogTitle>
+                <DialogContent>
+                    <Box>
+                        <InputLabel>Images</InputLabel>
+                        <input
+                            type="file"
+                            name="Images"
+                            onChange={handleImageChange}
+                            multiple
+                            style={{ display: 'block', marginTop: '8px' }}
+                        />
+                        {errors.Image && <Alert severity="error">{errors.Image}</Alert>}
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleSaveImage} color="primary">Save</Button>
+                    <Button onClick={() => setIsUpdateImageOpen(false)} color="secondary">Cancel</Button>
                 </DialogActions>
             </Dialog>
         </Box>

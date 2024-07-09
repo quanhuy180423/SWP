@@ -17,11 +17,11 @@ const ReviewStep = ({ prevStep, formData }) => {
     CategoryId: formData.step2.categoryId,
     GemId: formData.step3.diamondId,
     QuantityGem: formData.step3.quantityGem,
-    Productdescription: formData.step4.richText,
+    Productdescription: formData.step4.richText || "",
     Description: "description",
     Image: [],
     ProductCost: "0",
-    Status: "Request",
+    Status: "RqOrder",
     PaymentMethods: "1",
     WarrantyCard: "Yes", // Assuming you have this information
   });

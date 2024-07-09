@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllOrders, updateStatusOrdeById } from '../../server/api';
+import { getAllOrders, getOrderDetailByOrderId, updateStatusOrderDetailById } from '../../server/api';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -38,22 +38,13 @@ const OrderListRequest = () => {
     const [error, setError] = useState(null);
 
     const fetchOrders = async () => {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser && storedUser.Id) {
-            const userId = storedUser.Id;
-            console.log(userId);
-            try {
-                const response = await getAllOrders(userId);
-                setOrders(response.data);
-            } catch (error) {
-                console.error('Error fetching orders:', error);
-                setError('Error fetching orders');
-            } finally {
-                setLoading(false);
-            }
-        } else {
-            console.error('User ID not found in localStorage');
-            setError('User ID not found in localStorage');
+        try {
+            const response = await getAllOrders();
+            setOrders(response.data);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            setError('Error fetching orders');
+        } finally {
             setLoading(false);
         }
     };
@@ -62,16 +53,17 @@ const OrderListRequest = () => {
         fetchOrders();
     }, []);
 
-    const handleSendManager = async (order) => {
-
-        const OrderId = order.OrderId;
-        const Status = order.Status = "RqQuote";
-        console.log(order)
+    const handleUpdateStatus = async (order, newOrderStatus, newDetailStatus) => {
         try {
-            await updateStatusOrdeById(OrderId, Status);
+            await updateStatusOrderDetailById({ OrderId: order.OrderId, Status: newOrderStatus });
+            const orderDetailsResponse = await getOrderDetailByOrderId(order.OrderId);
+            const orderDetails = orderDetailsResponse.data;
+            await Promise.all(orderDetails.map(detail =>
+                updateStatusOrderDetailById({ OrderDetailId: detail.OrderDetailId, Status: newDetailStatus })
+            ));
             setOrders((prevOrders) =>
                 prevOrders.map((o) =>
-                    o.OrderId === order.OrderId ? { ...o, Status: 'RqQuote' } : o
+                    o.OrderId === order.OrderId ? { ...o, Status: newOrderStatus } : o
                 )
             );
         } catch (error) {
@@ -88,7 +80,7 @@ const OrderListRequest = () => {
         return <div>{error}</div>;
     }
 
-    const requestOrders = orders.filter((order) => order.Status === 'Request');
+    const filteredOrders = orders.filter(order => order.Status === 'ChkOut' || order.Status === 'RqOrder');
 
     return (
         <Box p={3}>
@@ -100,24 +92,24 @@ const OrderListRequest = () => {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Order ID</StyledTableCell>
-                            <StyledTableCell>Name Customer</StyledTableCell>
-                            <StyledTableCell>Description Order</StyledTableCell>
-                            <StyledTableCell>Address</StyledTableCell>
+                            <StyledTableCell>Order Date</StyledTableCell>
+                            <StyledTableCell>Product ID</StyledTableCell>
+                            <StyledTableCell>Status</StyledTableCell>
                             <StyledTableCell
                                 style={{ display: 'flex', justifyContent: 'center' }}
                             >Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {requestOrders.length > 0 ? (
-                            requestOrders.map((order) => (
+                        {filteredOrders.length > 0 ? (
+                            filteredOrders.map((order) => (
                                 <StyledTableRow key={order.OrderId}>
                                     <StyledTableCell component="th" scope="row">
                                         {order.OrderId}
                                     </StyledTableCell>
-                                    <StyledTableCell>{order.Name}</StyledTableCell>
-                                    <StyledTableCell>{order.Description}</StyledTableCell>
-                                    <StyledTableCell>{order.Address}</StyledTableCell>
+                                    <StyledTableCell>{order.OrderDate}</StyledTableCell>
+                                    <StyledTableCell>{order.ProductId}</StyledTableCell>
+                                    <StyledTableCell>{order.Status}</StyledTableCell>
                                     <StyledTableCell
                                         style={{
                                             display: 'flex',
@@ -133,22 +125,31 @@ const OrderListRequest = () => {
                                         >
                                             View
                                         </Button>
-                                        <Button
-                                            variant="contained" color="secondary"
-                                            onClick={() => handleSendManager(order)}
-                                        >
-                                            Send Manager
-                                        </Button>
-                                        {/* <Button variant="contained" color="error">
-                                            Decline
-                                        </Button> */}
+                                        {order.Status === 'RqOrder' && (
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleUpdateStatus(order, 'AptQuote', 'AptQuote')}
+                                            >
+                                                Send Manager
+                                            </Button>
+                                        )}
+                                        {order.Status === 'ChkOut' && (
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleUpdateStatus(order, 'Pro', 'Design')}
+                                            >
+                                                Send Design
+                                            </Button>
+                                        )}
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))
                         ) : (
                             <StyledTableRow>
                                 <StyledTableCell colSpan={5} align="center">
-                                    No order requests found.
+                                    No orders found.
                                 </StyledTableCell>
                             </StyledTableRow>
                         )}

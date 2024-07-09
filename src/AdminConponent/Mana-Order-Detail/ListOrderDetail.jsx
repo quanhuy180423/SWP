@@ -4,7 +4,7 @@ import Header from "../Header/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import ActionButtons from "../Mana-Account/ActionButtons";
 import { Link } from "react-router-dom";
-import { deleteOrderDetail, getAllOrderDetails } from "../../server/api";
+import { deleteOrderDetail, getAllOrderDetail } from "../../server/api";
 import Search from "../Header/Search";
 
 const ListOrderDetail = () => {
@@ -16,7 +16,7 @@ const ListOrderDetail = () => {
     useEffect(() => {
         const getListOrderDetails = async () => {
             try {
-                const response = await getAllOrderDetails();
+                const response = await getAllOrderDetail();
                 setOrderDetails(response.data);
             } catch (error) {
                 console.error(error);

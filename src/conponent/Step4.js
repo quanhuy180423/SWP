@@ -2,7 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
 const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
-  const [richText, setRichText] = useState(formData.richText || "");
+  const defaultText = "No additional details provided.";
+  const [richText, setRichText] = useState(formData.richText || defaultText);
   const editorRef = useRef(null);
 
   const [error, setError] = useState("");

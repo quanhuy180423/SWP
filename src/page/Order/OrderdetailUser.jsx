@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getOrderDetailByOrderId, getProductById } from '../../server/api';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField } from '@mui/material';
-
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Grid, colors } from '@mui/material';
+import { CartContext } from '../../cart/CartContext';  // Import the CartContext
 
 const OrderDetailUser = () => {
     const { OrderId } = useParams();
+    const navigate = useNavigate();
     const [orderDetail, setOrderDetail] = useState(null);
     const [productDetail, setProductDetail] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [isUpdatePriceOpen, setIsUpdatePriceOpen] = useState(false);
-    const [newPrice, setNewPrice] = useState('');
+    const { addToCart } = useContext(CartContext);  // Use the CartContext
 
     useEffect(() => {
         const fetchOrderDetail = async () => {
@@ -35,23 +35,37 @@ const OrderDetailUser = () => {
         }
     };
 
+    const handleAcceptAndPayment = async () => {
+        try {
+            const response = await getProductById(orderDetail.ProductId);
+            const product = response.data;
+            addToCart(product, 1);  // Assuming quantity is 1
+            navigate('/checkout');
+        } catch (error) {
+            console.error('Error fetching product detail:', error);
+        }
+    };
+
     const handleClosePopup = () => {
         setIsPopupOpen(false);
     };
-
-
-
-
-
 
     return (
         <Box p={3}>
             {orderDetail && (
                 <Box mb={3}>
-                    <Typography variant="h4" gutterBottom></Typography>
+                    <Typography variant="h4" gutterBottom>Order Details</Typography>
                     <Box mt={2} sx={{ display: 'flex', justifyContent: 'end', marginBottom: '20px' }}>
                         <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderDetail.ProductId)}>
                             View Product Details
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ borderRadius: '5px', backgroundColor: colors.red[100], marginLeft: '30px' }}
+                            onClick={handleAcceptAndPayment}
+                        >
+                            Accept and Payment order
                         </Button>
                     </Box>
                     <TableContainer component={Paper}>
@@ -59,7 +73,7 @@ const OrderDetailUser = () => {
                             <TableBody>
                                 {Object.entries(orderDetail).map(([key, value]) => (
                                     <TableRow key={key}>
-                                        <TableCell variant="head">{key}</TableCell>
+                                        <TableCell variant="head"><strong>{key}</strong></TableCell>
                                         <TableCell>{value}</TableCell>
                                     </TableRow>
                                 ))}
@@ -78,12 +92,20 @@ const OrderDetailUser = () => {
                                 <TableBody>
                                     {Object.entries(productDetail).map(([key, value]) => (
                                         <TableRow key={key}>
-                                            <TableCell variant="head">{key}</TableCell>
+                                            <TableCell variant="head"><strong>{key}</strong></TableCell>
                                             <TableCell>
                                                 {key === 'Image' ? (
-                                                    <img src={value} alt={productDetail.Name} width="100" />
+                                                    <Grid container spacing={1}>
+                                                        {value.map((url, index) => (
+                                                            <Grid item xs={3} key={index}>
+                                                                <img src={url} alt={productDetail.Name} width='150' height='150' />
+                                                            </Grid>
+                                                        ))}
+                                                    </Grid>
                                                 ) : key === 'Description' ? (
                                                     <div dangerouslySetInnerHTML={{ __html: value }} />
+                                                ) : key === 'ProductCost' ? (
+                                                    <strong>{value}</strong>
                                                 ) : (
                                                     value
                                                 )}
@@ -96,7 +118,6 @@ const OrderDetailUser = () => {
                     )}
                 </DialogContent>
                 <DialogActions>
-
                     <Button onClick={handleClosePopup} color="primary">Close</Button>
                 </DialogActions>
             </Dialog>
