@@ -40,7 +40,7 @@ const generateStatus = (status) => {
             return 'Accept Quote';
         case 'ChkOut':
             return 'Check Out';
-        case 'Pro':
+        case 'banked':
             return 'Processing';
         case 'Compl':
             return 'Complete';
@@ -62,7 +62,7 @@ const getRowBackgroundColor = (status) => {
             return colors.blue[100];
         case 'ChkOut':
             return colors.yellow[100];
-        case 'Pro':
+        case 'banked':
             return colors.purple[100];
         case 'Compl':
             return colors.green[100];

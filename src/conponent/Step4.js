@@ -1,11 +1,22 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
+import {
+  Grid,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Button,
+} from "@mui/material";
 
 const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const defaultText = "No additional details provided.";
   const [richText, setRichText] = useState(formData.richText || defaultText);
+  const [paymentMethod, setPaymentMethod] = useState(
+    formData.PaymentMethod || ""
+  );
   const editorRef = useRef(null);
-
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -16,13 +27,18 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
 
   const handleNext = (e) => {
     e.preventDefault();
-    updateFormData({ richText });
+    updateFormData({ richText, PaymentMethod: paymentMethod });
     nextStep();
   };
 
   const handleEditorChange = (content) => {
     setRichText(content);
     updateFormData({ richText: content });
+  };
+
+  const handlePaymentMethodChange = (event) => {
+    setPaymentMethod(event.target.value);
+    updateFormData({ PaymentMethod: event.target.value });
   };
 
   if (error.length > 0) {
@@ -36,7 +52,46 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
   return (
     <div className="w-full">
       <div className="w-1/2 mx-auto">
-        <h3>Step 4: Additional Details</h3>
+        <h3
+          style={{ fontSize: "30px", fontWeight: "bold", textAlign: "center" }}
+        >
+          Step 4: Additional Details
+        </h3>
+        <div>
+          <Grid item xs={12}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">
+                Phương thức thanh toán dự kiến
+              </FormLabel>
+              <label className="ml-6 rounded-2xl text-center bg-rose-100">
+                Do Chính sách công ty, khách hàng sau khi nhận được giá từ cửa
+                hàng báo trong 24 giờ sẽ phải thanh toán 100% giá trị sản phẩm.
+              </label>
+              <RadioGroup
+                name="PaymentMethod"
+                value={paymentMethod}
+                defaultChecked
+                onChange={handlePaymentMethodChange}
+              >
+                {/* <FormControlLabel
+                  value="CreditCard"
+                  control={<Radio />}
+                  label="Credit Card"
+                /> */}
+                <FormControlLabel
+                  value="BankTransfer"
+                  control={<Radio />}
+                  label="Chuyển khoảng ngân hàng"
+                />
+                {/* <FormControlLabel
+                  value="CoD"
+                  control={<Radio />}
+                  label="Cash"
+                /> */}
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </div>
         <div>
           <Editor
             apiKey="0ywy09pu3fif7crqzb9n5eygtvh5hwbbpj4vold92e6q9r11"
@@ -62,21 +117,19 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
           />
 
           <div className="flex justify-between mt-4">
-            <button
+            <Button
               onClick={() => {
-                updateFormData({ richText });
+                updateFormData({ richText, PaymentMethod: paymentMethod });
                 prevStep();
               }}
-              className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+              variant="contained"
+              color="secondary"
             >
               Back
-            </button>
-            <button
-              onClick={handleNext}
-              className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
-            >
+            </Button>
+            <Button onClick={handleNext} variant="contained" color="primary">
               Next
-            </button>
+            </Button>
           </div>
         </div>
       </div>

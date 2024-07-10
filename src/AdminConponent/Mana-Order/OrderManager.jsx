@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllOrders, updateStatusOrdeById } from '../../server/api';
+import { getAllOrders, getOrderDetailByOrderId, updateStatusOrdeById, updateStatusOrderDetailById } from '../../server/api';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -41,10 +41,10 @@ const generateStatus = (status) => {
             return 'Accept Quote';
         case 'ChkOut':
             return 'Check Out';
-        case 'Pro':
-            return 'Processing';
-        case 'Compl':
-            return 'Complete';
+        // case 'banked':
+        //     return 'Processing';
+        case 'banked':
+            return 'Complete Order';
         case 'Shipped':
             return 'Shipped';
         case 'Done':
@@ -54,7 +54,6 @@ const generateStatus = (status) => {
     }
 };
 
-
 const getRowBackgroundColor = (status) => {
     switch (status) {
         case 'RqOrder':
@@ -63,7 +62,7 @@ const getRowBackgroundColor = (status) => {
             return colors.blue[100];
         case 'ChkOut':
             return colors.yellow[100];
-        case 'Pro':
+        case 'banked':
             return colors.purple[100];
         case 'Compl':
             return colors.green[100];
@@ -75,8 +74,6 @@ const getRowBackgroundColor = (status) => {
             return 'inherit';
     }
 };
-
-
 
 const OrderManger = () => {
     const [orders, setOrders] = useState([]);
@@ -108,15 +105,17 @@ const OrderManger = () => {
         fetchOrders();
     }, []);
 
-    const handleSendManager = async (order) => {
-        const OrderId = order.OrderId;
-        const Status = 'AptQuote'; // Set to the desired status
-        console.log(order);
+    const handleUpdateStatus = async (order, newOrderStatus, newDetailStatus) => {
         try {
-            await updateStatusOrdeById(OrderId, Status);
+            await updateStatusOrdeById({ OrderId: order.OrderId, Status: newOrderStatus });
+            const orderDetailsResponse = await getOrderDetailByOrderId(order.OrderId);
+            const orderDetails = orderDetailsResponse.data;
+            await Promise.all(orderDetails.map(detail =>
+                updateStatusOrderDetailById({ OrderDetailId: detail.OrderDetailId, Status: newDetailStatus })
+            ));
             setOrders((prevOrders) =>
                 prevOrders.map((o) =>
-                    o.OrderId === order.OrderId ? { ...o, Status } : o
+                    o.OrderId === order.OrderId ? { ...o, Status: newOrderStatus } : o
                 )
             );
         } catch (error) {
@@ -125,22 +124,23 @@ const OrderManger = () => {
         }
     };
 
-
     if (loading) {
         return <div>Loading...</div>;
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div>{error}
+
+        </div>;
     }
 
     // Sort orders to prioritize those with status "Request"
-    const sortedOrders = [...orders].sort((a, b) => (a.Status === 'Request' ? -1 : 1));
+    const sortedOrders = [...orders].sort((a, b) => (a.Status === 'RqOrder' ? -1 : 1));
 
     return (
         <Box p={3}>
             <Typography variant="h4" gutterBottom>
-                Order Requests
+                Order For Manager
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -169,7 +169,6 @@ const OrderManger = () => {
                                             {generateStatus(order.Status)}
                                         </IconButton>
                                     </StyledTableCell>
-
                                     <StyledTableCell
                                         style={{
                                             display: 'flex',
@@ -188,13 +187,10 @@ const OrderManger = () => {
                                         <Button
                                             variant="contained"
                                             color="secondary"
-                                            onClick={() => handleSendManager(order)}
+                                            onClick={() => handleUpdateStatus(order, 'ChkOut', 'ChkOut')}
                                         >
                                             Accept Quote
                                         </Button>
-                                        {/* <Button variant="contained" color="error">
-                                            Decline
-                                        </Button> */}
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))

@@ -19,6 +19,13 @@ export const getOrderDetailByOrderId = (OrderId) =>
 export const updateStatusOrderDetailById = (Order) =>
   axios.put(`${API_URL}/updateStatusOrderDetailById`, Order);
 
+//đổi status của order bằng order id
+export const updateStatusOrdeById = (Order) =>
+  axios.put(`${API_URL}/updateStatusOrdeById`, Order);
+
+//lấy toàn bộ order detail
+export const getAllOrderDetail = () =>
+  axios.get(`${API_URL}/getAllOrderDetail`);
 // Hàm lấy danh sách sản phẩm
 export const getAllProducts = () => axios.get(`${API_URL}/getAllProduct`);
 export const getProductById = (ProductId) =>
@@ -30,8 +37,6 @@ export const insertProduct = (product) =>
 export const updateProductById = (product) =>
   axios.put(`${API_URL}/updateProductById`, product);
 
-export const updateStatusOrdeById = (OrderId, Status) =>
-  axios.put(`${API_URL}/updateStatusOrdeById`, { OrderId, Status });
 export const deleteProduct = (ProductId) =>
   axios.delete(`${API_URL}/deleteProductById`, { data: { ProductId } });
 
@@ -59,8 +64,7 @@ export const deleteOrder = (id) =>
   axios.delete(`${API_URL}/deleteOrderById`, { data: { id } });
 
 // Hàm lấy danh sách đơn hàng chi tiết
-export const getAllOrderDetail = () =>
-  axios.get(`${API_URL}/getAllOrderDetail`);
+
 // export const insertOrder = (order) =>
 //   axios.post(`${API_URL}/insertOrder`, order);
 // export const updateOrder = (id, order) =>

@@ -6,10 +6,10 @@ const Checkout = () => {
   const { cart } = useContext(CartContext);
   const [user, setUser] = useState(null);
   const [orderId, setOrderId] = useState("");
-  const [bankCode, setBankCode] = useState("COD"); // Default to COD for simplicity
 
   const USER_API_URL = "http://localhost:8090/test/getUserById";
-  const ORDER_API_URL = "http://localhost:8090/test/createOrder";
+  const ORDER_API_URL = "http://localhost:8090/create_payment_url";
+  const ORDER_DETAIL_API_URL = "http://localhost:8090/test/getAllOrderDetail";
 
   const getUser = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -26,11 +26,37 @@ const Checkout = () => {
     }
   };
 
+  const getOrderDetail = async () => {
+    try {
+      const response = await axios.get(ORDER_DETAIL_API_URL);
+      const orderDetails = response.data;
+
+      // Find the order detail that matches the ProductId in the cart
+      const matchingOrderDetail = orderDetails.find((detail) =>
+        cart.some((item) => item.ProductId === detail.ProductId)
+      );
+
+      if (matchingOrderDetail) {
+        setOrderId(matchingOrderDetail.OrderId);
+      } else {
+        console.error("No matching order detail found for the cart items");
+      }
+    } catch (error) {
+      console.error("Error fetching order details:", error);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       getUser();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (cart.length > 0) {
+      getOrderDetail();
+    }
+  }, [cart]);
 
   // Calculate total cost with two decimal places
   const totalCost = cart.reduce(
@@ -54,7 +80,7 @@ const Checkout = () => {
       const orderDetails = {
         orderId: orderId,
         amount: totalAmount,
-        bankCode: bankCode,
+        bankCode: "NCB",
       };
       const response = await axios.post(ORDER_API_URL, orderDetails);
       console.log("Payment URL:", response.data);
@@ -70,7 +96,11 @@ const Checkout = () => {
       <h1 className="text-center text-3xl font-bold mb-7">
         Thông tin thanh toán
       </h1>
-      <div className="grid grid-cols-2 gap-4">
+      <label className="pl-6 rounded-2xl text-center bg-rose-100 pr-6 text-xl mb-7">
+        Do Chính sách công ty, khách hàng sau khi nhận được giá từ cửa hàng báo
+        trong 24 giờ sẽ phải thanh toán 100% giá trị sản phẩm.
+      </label>
+      <div className="grid grid-cols-2 gap-4 mt-5">
         {/* Form thông tin */}
         <div className="col-span-1 bg-white p-8 ">
           <form>
@@ -151,24 +181,6 @@ const Checkout = () => {
                 onChange={(e) => setOrderId(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="payment-method"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Phương thức thanh toán
-              </label>
-              <select
-                id="payment-method"
-                value={bankCode}
-                onChange={(e) => setBankCode(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              >
-                <option value="COD">COD (nhận hàng rồi thanh toán)</option>
-                <option value="QR_CODE">QR Code</option>
-                {/* Add more payment methods if needed */}
-              </select>
             </div>
           </form>
         </div>

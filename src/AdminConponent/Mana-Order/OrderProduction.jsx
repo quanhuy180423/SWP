@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllOrders, getOrderDetailByOrderId, updateStatusOrdeById, updateStatusOrderDetailById } from '../../server/api';
+import { getAllOrderDetail, updateStatusOrdeById } from '../../server/api';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -32,14 +32,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const OrderListRequest = () => {
+const OrderProduction = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchOrders = async () => {
         try {
-            const response = await getAllOrders();
+            const response = await getAllOrderDetail();
             setOrders(response.data);
         } catch (error) {
             console.error('Error fetching orders:', error);
@@ -53,17 +53,14 @@ const OrderListRequest = () => {
         fetchOrders();
     }, []);
 
-    const handleUpdateStatus = async (order, newOrderStatus, newDetailStatus) => {
+    const handleSendManager = async (order) => {
+        const OrderId = order.OrderId;
+        const Status = 'RqQuote';
         try {
-            await updateStatusOrdeById({ OrderId: order.OrderId, Status: newOrderStatus });
-            const orderDetailsResponse = await getOrderDetailByOrderId(order.OrderId);
-            const orderDetails = orderDetailsResponse.data;
-            await Promise.all(orderDetails.map(detail =>
-                updateStatusOrderDetailById({ OrderDetailId: detail.OrderDetailId, Status: newDetailStatus })
-            ));
+            await updateStatusOrdeById(OrderId, Status);
             setOrders((prevOrders) =>
                 prevOrders.map((o) =>
-                    o.OrderId === order.OrderId ? { ...o, Status: newOrderStatus } : o
+                    o.OrderId === order.OrderId ? { ...o, Status: 'RqQuote' } : o
                 )
             );
         } catch (error) {
@@ -80,21 +77,20 @@ const OrderListRequest = () => {
         return <div>{error}</div>;
     }
 
-    const filteredOrders = orders.filter(order => order.Status === 'banked' || order.Status === 'RqOrder');
+    const requestOrders = orders.filter((order) => order.Status === 'Production');
 
     return (
         <Box p={3}>
             <Typography variant="h4" gutterBottom>
-                Order Requests
+                Order Requests Production
             </Typography>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Order ID</StyledTableCell>
-                            <StyledTableCell>Name</StyledTableCell>
-                            <StyledTableCell>Phone</StyledTableCell>
-                            <StyledTableCell>Address</StyledTableCell>
+                            <StyledTableCell>Order Detail ID</StyledTableCell>
+                            <StyledTableCell>Order Date</StyledTableCell>
+                            <StyledTableCell>Product ID</StyledTableCell>
                             <StyledTableCell>Status</StyledTableCell>
                             <StyledTableCell
                                 style={{ display: 'flex', justifyContent: 'center' }}
@@ -102,15 +98,14 @@ const OrderListRequest = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredOrders.length > 0 ? (
-                            filteredOrders.map((order) => (
+                        {requestOrders.length > 0 ? (
+                            requestOrders.map((order) => (
                                 <StyledTableRow key={order.OrderId}>
                                     <StyledTableCell component="th" scope="row">
                                         {order.OrderId}
                                     </StyledTableCell>
-                                    <StyledTableCell>{order.Name}</StyledTableCell>
-                                    <StyledTableCell>{order.Phone}</StyledTableCell>
-                                    <StyledTableCell>{order.Address}</StyledTableCell>
+                                    <StyledTableCell>{order.OrderDate}</StyledTableCell>
+                                    <StyledTableCell>{order.ProductId}</StyledTableCell>
                                     <StyledTableCell>{order.Status}</StyledTableCell>
                                     <StyledTableCell
                                         style={{
@@ -127,31 +122,22 @@ const OrderListRequest = () => {
                                         >
                                             View
                                         </Button>
-                                        {order.Status === 'RqOrder' && (
-                                            <Button
-                                                variant="contained"
-                                                color="secondary"
-                                                onClick={() => handleUpdateStatus(order, 'RqQuote', 'RqQuote')}
-                                            >
-                                                Send Manager
-                                            </Button>
-                                        )}
-                                        {order.Status === 'banked' && (
-                                            <Button
-                                                variant="contained"
-                                                color="secondary"
-                                                onClick={() => handleUpdateStatus(order, 'banked', 'Design')}
-                                            >
-                                                Send Design
-                                            </Button>
-                                        )}
+                                        <Button
+                                            variant="contained" color="secondary"
+                                            onClick={() => handleSendManager(order)}
+                                        >
+                                            Send Manager
+                                        </Button>
+                                        {/* <Button variant="contained" color="error">
+                                            Decline
+                                        </Button> */}
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))
                         ) : (
                             <StyledTableRow>
                                 <StyledTableCell colSpan={5} align="center">
-                                    No orders found.
+                                    No order requests found.
                                 </StyledTableCell>
                             </StyledTableRow>
                         )}
@@ -162,4 +148,4 @@ const OrderListRequest = () => {
     );
 };
 
-export default OrderListRequest;
+export default OrderProduction;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
 const API_URL = "http://localhost:8090/test/getUserById";
 
@@ -44,7 +45,7 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
     };
 
     fetchUserData();
-  }, [updateFormData]);
+  }, []); // Empty dependency array ensures this runs only once
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,66 +60,69 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
   };
 
   return (
-    <div>
-      <form
+    <Container maxWidth="sm">
+      <Box
+        component="form"
         onSubmit={handleSubmit}
-        className="bg-gray-100 p-6 rounded-lg shadow-md max-w-md mx-auto mb-2"
+        sx={{
+          mt: 3,
+          p: 2,
+          bgcolor: "background.paper",
+          borderRadius: 1,
+          boxShadow: 1,
+        }}
       >
-        <h2 className="text-center mb-5 text-2xl text-gray-800">
+        <Typography variant="h4" component="h1" align="center" gutterBottom>
           Step 1: Personal Information
-        </h2>
-        <label className="block mb-4 text-gray-600">
-          Full Name:
-          <input
-            type="text"
-            name="Name"
-            value={localData.Name}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
-          />
-        </label>
-        <label className="block mb-4 text-gray-600">
-          Phone:
-          <input
-            type="text"
-            name="Phone"
-            value={localData.Phone}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
-          />
-        </label>
-        <label className="block mb-4 text-gray-600">
-          Address:
-          <input
-            type="text"
-            name="Address"
-            value={localData.Address}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
-          />
-        </label>
-        <label className="block mb-4 text-gray-600">
-          Email:
-          <input
-            type="email"
-            name="Email"
-            value={localData.Email}
-            onChange={handleChange}
-            required
-            className="w-full p-2 mt-2 mb-4 border border-gray-300 rounded-lg box-border"
-          />
-        </label>
-        <button
+        </Typography>
+        <TextField
+          label="Full Name"
+          name="Name"
+          value={localData.Name}
+          onChange={handleChange}
+          required
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Phone"
+          name="Phone"
+          value={localData.Phone}
+          onChange={handleChange}
+          required
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Address"
+          name="Address"
+          value={localData.Address}
+          onChange={handleChange}
+          required
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Email"
+          name="Email"
+          type="email"
+          value={localData.Email}
+          onChange={handleChange}
+          required
+          fullWidth
+          margin="normal"
+        />
+        <Button
           type="submit"
-          className="bg-green-500 text-white py-2 px-4 rounded-lg w-full text-lg hover:bg-green-600"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ mt: 2 }}
         >
           Next
-        </button>
-      </form>
-    </div>
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

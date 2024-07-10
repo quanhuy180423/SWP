@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getOrderDetailByOrderId, getProductById, updateProductById } from '../../server/api';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField, InputLabel, Alert, Grid } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField, Alert, Grid } from '@mui/material';
 import Header from '../Header/Header';
 import handleUploadImages from '../../firebase/HandleUploadToFirebase';
+import ImageUpload from '../Upload-Image/UploadImage';  // Adjust the import path as necessary
 
 const OrderDetailPage = () => {
     const { OrderId } = useParams();
@@ -68,15 +69,15 @@ const OrderDetailPage = () => {
         setIsUpdateImageOpen(true);
     };
 
-    const handleImageChange = (event) => {
-        setImageFiles(event.target.files);
+    const handleImagesUpload = (files) => {
+        setImageFiles(files);
     };
 
     const handleSaveImage = async () => {
         if (imageFiles.length > 0 && productDetail) {
             try {
                 const imageUrls = await handleUploadImages(imageFiles);
-                const updatedProduct = { ...productDetail, Images: imageUrls }; // Assuming product has Images field to store multiple URLs
+                const updatedProduct = { ...productDetail, Image: imageUrls }; // Assuming product has Images field to store multiple URLs
                 await updateProductById(updatedProduct);
                 setProductDetail(updatedProduct);
                 setIsUpdateImageOpen(false);
@@ -126,11 +127,10 @@ const OrderDetailPage = () => {
                                             <TableCell variant="head"><strong>{key}</strong></TableCell>
                                             <TableCell>
                                                 {key === 'Image' ? (
-
                                                     <Grid container spacing={1}>
                                                         {value.map((url, index) => (
-                                                            <Grid item xs={3} key={index}>
-                                                                <img src={url} alt={productDetail.Name} width='150' height='150' />
+                                                            <Grid item xs={3} key={index} width='150' height='150'>
+                                                                <img src={url} alt={productDetail.Name} />
                                                             </Grid>
                                                         ))}
                                                     </Grid>
@@ -151,7 +151,7 @@ const OrderDetailPage = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleUpdatePrice} color="primary">Update Price</Button>
-                    {orderDetail && orderDetail.Status === 'Design' && (
+                    {orderDetail && (orderDetail.Status === 'Design' || orderDetail.Status === 'Production') && (
                         <Button onClick={handleUpdateImage} color="primary">Update Image</Button>
                     )}
                     <Button onClick={handleClosePopup} color="primary">Close</Button>
@@ -179,17 +179,7 @@ const OrderDetailPage = () => {
             <Dialog open={isUpdateImageOpen} onClose={() => setIsUpdateImageOpen(false)} maxWidth="sm" fullWidth>
                 <DialogTitle>Update Image</DialogTitle>
                 <DialogContent>
-                    <Box>
-                        <InputLabel>Images</InputLabel>
-                        <input
-                            type="file"
-                            name="Images"
-                            onChange={handleImageChange}
-                            multiple
-                            style={{ display: 'block', marginTop: '8px' }}
-                        />
-                        {errors.Image && <Alert severity="error">{errors.Image}</Alert>}
-                    </Box>
+                    <ImageUpload orderId={OrderId} visible={true} onImagesUpload={handleImagesUpload} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleSaveImage} color="primary">Save</Button>

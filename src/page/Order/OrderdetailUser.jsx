@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getOrderDetailByOrderId, getProductById } from '../../server/api';
+import { getOrderDetailByOrderId, getProductById, updateStatusOrderDetailById } from '../../server/api';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Grid, colors } from '@mui/material';
 import { CartContext } from '../../cart/CartContext';  // Import the CartContext
 
@@ -46,6 +46,16 @@ const OrderDetailUser = () => {
         }
     };
 
+    const handleAcceptAndProduction = async () => {
+        try {
+            const updatedOrderDetail = { ...orderDetail, Status: 'Production' };
+            await updateStatusOrderDetailById(updatedOrderDetail);
+            setOrderDetail(updatedOrderDetail);
+        } catch (error) {
+            console.error('Error updating order status:', error);
+        }
+    };
+
     const handleClosePopup = () => {
         setIsPopupOpen(false);
     };
@@ -59,14 +69,24 @@ const OrderDetailUser = () => {
                         <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderDetail.ProductId)}>
                             View Product Details
                         </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            style={{ borderRadius: '5px', backgroundColor: colors.red[100], marginLeft: '30px' }}
-                            onClick={handleAcceptAndPayment}
-                        >
-                            Accept and Payment order
-                        </Button>
+                        {orderDetail.Status === 'ChkOut' && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                style={{ borderRadius: '5px', backgroundColor: colors.red[200], marginLeft: '30px' }}
+                                onClick={handleAcceptAndPayment}
+                            >
+                                Accept and Payment order
+                            </Button>)}
+                        {orderDetail.Status === 'Design' && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                style={{ borderRadius: '5px', backgroundColor: colors.red[300], marginLeft: '30px' }}
+                                onClick={handleAcceptAndProduction}
+                            >
+                                Accept and Production
+                            </Button>)}
                     </Box>
                     <TableContainer component={Paper}>
                         <Table>

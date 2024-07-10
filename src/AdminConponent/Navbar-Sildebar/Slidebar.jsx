@@ -169,7 +169,7 @@ const Slidebar = () => {
                             />
                             <Item
                                 title='Order Complete'
-                                to='/admin/manage-order/detail'
+                                to='manage-order/List-Request/Order-Production'
                                 icon={faCheckDouble}
                                 selected={selected}
                                 setSelected={setSelected}
