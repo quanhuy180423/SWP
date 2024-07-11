@@ -58,21 +58,18 @@ const Checkout = () => {
     }
   }, [cart]);
 
-  // Calculate total cost with two decimal places
   const totalCost = cart.reduce(
     (total, item) => total + item.ProductCost * item.quantity,
     0
   );
   const formattedTotalCost = parseFloat(totalCost.toFixed(2));
 
-  // Calculate shipping and tax
   const shipping = formattedTotalCost * 0.05;
   const formattedShipping = parseFloat(shipping.toFixed(2));
 
   const tax = formattedTotalCost * 0.1;
   const formattedTax = parseFloat(tax.toFixed(2));
 
-  // Calculate total amount
   const totalAmount = formattedTotalCost + formattedShipping + formattedTax;
 
   const handleCheckout = async () => {
@@ -83,9 +80,8 @@ const Checkout = () => {
         bankCode: "NCB",
       };
       const response = await axios.post(ORDER_API_URL, orderDetails);
-      console.log("Payment URL:", response.data);
-      // Redirect to the payment URL
-      window.location.href = response.data.paymentUrl;
+      const paymentUrl = response.data.paymentUrl; // Assuming the payment URL is in the response data
+      window.location.href = paymentUrl;
     } catch (error) {
       console.error("Error creating payment URL:", error);
     }
@@ -101,11 +97,10 @@ const Checkout = () => {
         trong 24 giờ sẽ phải thanh toán 100% giá trị sản phẩm.
       </label>
       <div className="grid grid-cols-2 gap-4 mt-5">
-        {/* Form thông tin */}
         <div className="col-span-1 bg-white p-8 ">
           <form>
             <div>
-              <h2 className="text-2xl font-bold mb-4">Đại chỉ giao hàng</h2>
+              <h2 className="text-2xl font-bold mb-4">Địa chỉ giao hàng</h2>
             </div>
             <div className="mb-4">
               <label
@@ -184,8 +179,6 @@ const Checkout = () => {
             </div>
           </form>
         </div>
-
-        {/* Summary giỏ hàng */}
         <div className="col-span-1 bg-green-50 p-8 rounded-md h-80">
           <div className="border-t mt-4 pt-4">
             <div className="flex justify-between text-lg font-bold">
@@ -239,7 +232,7 @@ const Checkout = () => {
               <div className="flex items-center font-bold text-2xl">
                 <label htmlFor={`quantity_${index}`}>
                   Số lượng
-                  <div className="flex justify-center"> {item.quantity}</div>
+                  <div className="flex justify-center">{item.quantity}</div>
                 </label>
               </div>
             </li>

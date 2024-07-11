@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Box, colors, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import MenuIcon from '@mui/icons-material/Menu';
 import imgProfile from "../../assets/image/img/profile-user.png";
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl, faBoxesStacked, faImage, faCheckDouble, faPalette } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl, faBoxesStacked, faCheckDouble, faPalette, faHammer } from '@fortawesome/free-solid-svg-icons';
 
 const Item = ({ title, to, icon, selected, setSelected }) => (
     <MenuItem
@@ -168,8 +168,15 @@ const Slidebar = () => {
                                 setSelected={setSelected}
                             />
                             <Item
-                                title='Order Complete'
+                                title='Order Production'
                                 to='manage-order/List-Request/Order-Production'
+                                icon={faHammer}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                            <Item
+                                title='Order Complete'
+                                to='manage-order/List-Request/Order-Complete'
                                 icon={faCheckDouble}
                                 selected={selected}
                                 setSelected={setSelected}

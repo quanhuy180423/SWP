@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getOrderByUserId } from '../../server/api';
+import { getOrderByUserId, getOrderDetailByOrderId, updateStatusOrdeById, updateStatusOrderDetailById } from '../../server/api';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Button, colors, IconButton } from '@mui/material';
+import { Button, colors, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -42,17 +42,16 @@ const generateStatus = (status) => {
             return 'Check Out';
         case 'banked':
             return 'Processing';
-        case 'Compl':
-            return 'Complete';
-        case 'Shipped':
-            return 'Shipped';
+        case 'ProComl':
+            return 'Production Complete';
+        case 'Ship':
+            return 'Ship';
         case 'Done':
             return 'Done';
         default:
             return status;
     }
 };
-
 
 const getRowBackgroundColor = (status) => {
     switch (status) {
@@ -64,12 +63,12 @@ const getRowBackgroundColor = (status) => {
             return colors.yellow[100];
         case 'banked':
             return colors.purple[100];
-        case 'Compl':
+        case 'ProComl':
             return colors.green[100];
-        case 'Shipped':
+        case 'Ship':
             return colors.teal[100];
         case 'Done':
-            return colors.grey[100];
+            return colors.green[200];
         default:
             return 'inherit';
     }
@@ -79,6 +78,8 @@ const OrderListOfUser = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const fetchOrders = async () => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -105,6 +106,43 @@ const OrderListOfUser = () => {
         fetchOrders();
     }, []);
 
+    const handleOpenDialog = (order) => {
+        setSelectedOrder(order);
+        setDialogOpen(true);
+    };
+
+    const handleCloseDialog = () => {
+        setDialogOpen(false);
+        setSelectedOrder(null);
+    };
+
+    const handleSelectReceivingMethod = (method) => {
+        console.log(`Selected method: ${method} for order ID: ${selectedOrder.OrderId}`);
+        if (method === 'Home') {
+            handleUpdateStatus(selectedOrder, 'Ship', 'Ship');
+        }
+        handleCloseDialog();
+    };
+
+    const handleUpdateStatus = async (order, newOrderStatus, newDetailStatus) => {
+        try {
+            await updateStatusOrdeById({ OrderId: order.OrderId, Status: newOrderStatus });
+            const orderDetailsResponse = await getOrderDetailByOrderId(order.OrderId);
+            const orderDetails = orderDetailsResponse.data;
+            await Promise.all(orderDetails.map(detail =>
+                updateStatusOrderDetailById({ OrderDetailId: detail.OrderDetailId, Status: newDetailStatus })
+            ));
+            setOrders((prevOrders) =>
+                prevOrders.map((o) =>
+                    o.OrderId === order.OrderId ? { ...o, Status: newOrderStatus } : o
+                )
+            );
+        } catch (error) {
+            console.error('Error updating order status:', error);
+            setError('Error updating order status');
+        }
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -127,6 +165,7 @@ const OrderListOfUser = () => {
                             <StyledTableCell>Description Order</StyledTableCell>
                             <StyledTableCell>Address</StyledTableCell>
                             <StyledTableCell>Status</StyledTableCell>
+                            <StyledTableCell>Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -149,16 +188,27 @@ const OrderListOfUser = () => {
                                                 {generateStatus(order.Status)}
                                             </StyledTableCell>
                                         </IconButton>
+                                    </StyledTableCell>
+                                    <StyledTableCell>
                                         <IconButton>
                                             <Button
-                                                style={{ borderRadius: '15px', backgroundColor: colors.green[200] }}
+                                                style={{ borderRadius: '15px', backgroundColor: colors.grey[300], color: 'black' }}
                                                 component={Link}
                                                 to={`/order-of-user/order-detail-user/${order.OrderId}`}
                                             >
                                                 View your order
                                             </Button>
                                         </IconButton>
-
+                                        {order.Status === 'ProComl' && (
+                                            <IconButton>
+                                                <Button
+                                                    style={{ borderRadius: '15px', backgroundColor: colors.orange[300], color: 'black' }}
+                                                    onClick={() => handleOpenDialog(order)}
+                                                >
+                                                    Method of receiving goods
+                                                </Button>
+                                            </IconButton>
+                                        )}
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))
@@ -172,6 +222,26 @@ const OrderListOfUser = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+                <DialogTitle>Select Receiving Method</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please select how you would like to receive your goods for order ID: {selectedOrder?.OrderId}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handleSelectReceivingMethod('Store')} color="primary">
+                        Receive goods at the store
+                    </Button>
+                    <Button onClick={() => handleSelectReceivingMethod('Home')} color="primary">
+                        Receive goods at home (Ship)
+                    </Button>
+                    <Button onClick={handleCloseDialog} color="secondary">
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

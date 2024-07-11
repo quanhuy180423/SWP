@@ -39,6 +39,7 @@ import OrderDetailUser from "./page/Order/OrderdetailUser";
 import OrderManger from "./AdminConponent/Mana-Order/OrderManager";
 import OrderDesign from "./AdminConponent/Mana-Order/OrderDeign";
 import OrderProduction from "./AdminConponent/Mana-Order/OrderProduction";
+import OrderComplete from "./AdminConponent/Mana-Order/OrderComplete";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -139,6 +140,10 @@ const App = () => {
               <Route
                 path="manage-order/List-Request/Order-Production"
                 element={<OrderProduction />}
+              />
+              <Route
+                path="manage-order/List-Request/Order-Complete"
+                element={<OrderComplete />}
               />
             </Route>
           )}

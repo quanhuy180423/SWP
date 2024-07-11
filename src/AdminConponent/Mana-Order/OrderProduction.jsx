@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllOrderDetail, updateStatusOrdeById } from '../../server/api';
+import { getAllOrderDetail, updateStatusOrdeById, getOrderDetailByOrderId, updateStatusOrderDetailById } from '../../server/api';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -53,20 +53,29 @@ const OrderProduction = () => {
         fetchOrders();
     }, []);
 
-    const handleSendManager = async (order) => {
-        const OrderId = order.OrderId;
-        const Status = 'RqQuote';
+    const handleUpdateStatus = async (order, newOrderStatus, newDetailStatus) => {
         try {
-            await updateStatusOrdeById(OrderId, Status);
+            await updateStatusOrdeById({ OrderId: order.OrderId, Status: newOrderStatus });
+            const orderDetailsResponse = await getOrderDetailByOrderId(order.OrderId);
+            const orderDetails = orderDetailsResponse.data;
+            await Promise.all(orderDetails.map(detail =>
+                updateStatusOrderDetailById({ OrderDetailId: detail.OrderDetailId, Status: newDetailStatus })
+            ));
             setOrders((prevOrders) =>
                 prevOrders.map((o) =>
-                    o.OrderId === order.OrderId ? { ...o, Status: 'RqQuote' } : o
+                    o.OrderId === order.OrderId ? { ...o, Status: newOrderStatus } : o
                 )
             );
         } catch (error) {
             console.error('Error updating order status:', error);
             setError('Error updating order status');
         }
+    };
+
+    const handleSendManager = async (order) => {
+        const newOrderStatus = 'ProComl';
+        const newDetailStatus = 'ProComl'; // Set this to the appropriate status for the order details
+        await handleUpdateStatus(order, newOrderStatus, newDetailStatus);
     };
 
     if (loading) {
@@ -111,7 +120,7 @@ const OrderProduction = () => {
                                         style={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
-                                            width: '300px',
+                                            width: '400px',
                                         }}
                                     >
                                         <Button
@@ -126,7 +135,7 @@ const OrderProduction = () => {
                                             variant="contained" color="secondary"
                                             onClick={() => handleSendManager(order)}
                                         >
-                                            Send Manager
+                                            Production Completed
                                         </Button>
                                         {/* <Button variant="contained" color="error">
                                             Decline
