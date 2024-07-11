@@ -26,6 +26,11 @@ export const updateStatusOrdeById = (Order) =>
 //lấy toàn bộ order detail
 export const getAllOrderDetail = () =>
   axios.get(`${API_URL}/getAllOrderDetail`);
+
+//lấy order bằng order id
+export const getOrderById = (OrderId) =>
+  axios.get(`${API_URL}/getOrderById?OrderId=${OrderId}`);
+
 // Hàm lấy danh sách sản phẩm
 export const getAllProducts = () => axios.get(`${API_URL}/getAllProduct`);
 export const getProductById = (ProductId) =>

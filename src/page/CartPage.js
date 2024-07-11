@@ -51,7 +51,7 @@ const Cart = () => {
               key={item.ProductId}
               className="flex justify-between items-center mb-8 p-4 rounded-lg shadow-md bg-white"
             >
-              {console.log(item)}
+              {/* {console.log(item)} */}
               <CardMedia
                 className="w-44 h-48 object-cover rounded-lg"
                 component="img"

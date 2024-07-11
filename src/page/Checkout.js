@@ -1,11 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../cart/CartContext";
 import axios from "axios";
+import {
+  Container,
+  Box,
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Divider,
+} from "@mui/material";
+import {
+  getOrderById,
+  getOrderDetailByOrderId,
+  updateStatusOrderDetailById,
+} from "../server/api";
 
 const Checkout = () => {
-  const { cart } = useContext(CartContext);
+  const { cart, removeFromCart } = useContext(CartContext);
   const [user, setUser] = useState(null);
   const [orderId, setOrderId] = useState("");
+  const [orderDetailId, setOrderDetailId] = useState("");
 
   const USER_API_URL = "http://localhost:8090/test/getUserById";
   const ORDER_API_URL = "http://localhost:8090/create_payment_url";
@@ -31,7 +52,6 @@ const Checkout = () => {
       const response = await axios.get(ORDER_DETAIL_API_URL);
       const orderDetails = response.data;
 
-      // Find the order detail that matches the ProductId in the cart
       const matchingOrderDetail = orderDetails.find((detail) =>
         cart.some((item) => item.ProductId === detail.ProductId)
       );
@@ -46,6 +66,33 @@ const Checkout = () => {
     }
   };
 
+  const getOrder = async () => {
+    try {
+      const Order = await getOrderById(orderId);
+      console.log(Order.data[0]);
+      if (Order.data[0].Status === "banked") {
+        const statusOrderDetail = await getOrderDetailByOrderId(orderId);
+        const OrderDetailId = statusOrderDetail.data[0].OrderDetailId;
+        console.log(orderDetailId);
+        const updateStatusOrderDetail = {
+          OrderDetailId: OrderDetailId,
+          Status: "banked",
+        };
+        console.log(statusOrderDetail.data[0].ProductId);
+        await updateStatusOrderDetailById(updateStatusOrderDetail);
+        removeFromCart(statusOrderDetail.data[0].ProductId);
+        console.log("Payment successful, cart cleared.");
+      } else {
+        console.error(
+          "Payment not successful, order status:",
+          Order.data.status
+        );
+      }
+    } catch (error) {
+      console.error("Error checking order status:", error);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       getUser();
@@ -57,6 +104,12 @@ const Checkout = () => {
       getOrderDetail();
     }
   }, [cart]);
+
+  useEffect(() => {
+    if (orderId) {
+      getOrder();
+    }
+  }, [orderId]);
 
   const totalCost = cart.reduce(
     (total, item) => total + item.ProductCost * item.quantity,
@@ -80,166 +133,125 @@ const Checkout = () => {
         bankCode: "NCB",
       };
       const response = await axios.post(ORDER_API_URL, orderDetails);
-      const paymentUrl = response.data.paymentUrl; // Assuming the payment URL is in the response data
+      const paymentUrl = response.data.paymentUrl;
       window.location.href = paymentUrl;
     } catch (error) {
-      console.error("Error creating payment URL:", error);
+      console.error(
+        "Error creating payment URL or checking order status:",
+        error
+      );
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-center text-3xl font-bold mb-7">
+    <Container maxWidth="lg">
+      <Typography variant="h4" align="center" gutterBottom>
         Thông tin thanh toán
-      </h1>
-      <label className="pl-6 rounded-2xl text-center bg-rose-100 pr-6 text-xl mb-7">
+      </Typography>
+      <Typography variant="subtitle1" align="center" gutterBottom>
         Do Chính sách công ty, khách hàng sau khi nhận được giá từ cửa hàng báo
         trong 24 giờ sẽ phải thanh toán 100% giá trị sản phẩm.
-      </label>
-      <div className="grid grid-cols-2 gap-4 mt-5">
-        <div className="col-span-1 bg-white p-8 ">
-          <form>
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Địa chỉ giao hàng</h2>
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+      </Typography>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ padding: 3 }}>
+            <Typography variant="h5" gutterBottom>
+              Địa chỉ giao hàng
+            </Typography>
+            <TextField
+              label="Tên"
+              value={user ? user.Name : ""}
+              fullWidth
+              margin="normal"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField
+              label="Số điện thoại"
+              value={user ? user.Phone : ""}
+              fullWidth
+              margin="normal"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField
+              label="Địa chỉ"
+              value={user ? user.Address : ""}
+              fullWidth
+              margin="normal"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField
+              label="Email"
+              value={user ? user.Email : ""}
+              fullWidth
+              margin="normal"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField
+              label="Mã đơn hàng"
+              value={orderId}
+              onChange={(e) => setOrderId(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ padding: 3 }}>
+            <Typography variant="h5" gutterBottom>
+              Tóm tắt giỏ hàng
+            </Typography>
+            <List>
+              {cart.map((item, index) => (
+                <React.Fragment key={index}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar src={item.Image[0]} alt={item.Name} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={item.Name}
+                      secondary={`Giá: ${item.ProductCost.toLocaleString()}₫ - Số lượng: ${
+                        item.quantity
+                      }`}
+                    />
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              ))}
+            </List>
+            <Box mt={2}>
+              <Typography variant="body1" gutterBottom>
+                Tổng giá: {formattedTotalCost.toLocaleString()}₫
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Phí vận chuyển: {formattedShipping.toLocaleString()}₫
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Thuế: {formattedTax.toLocaleString()}₫
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Thành tiền: {totalAmount.toLocaleString()}₫
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleCheckout}
               >
-                Tên
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={user ? user.Name : ""}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                readOnly
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Số điện thoại
-              </label>
-              <input
-                type="text"
-                id="phone"
-                value={user ? user.Phone : ""}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                readOnly
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="address"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Địa chỉ
-              </label>
-              <input
-                type="text"
-                id="address"
-                value={user ? user.Address : ""}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                readOnly
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={user ? user.Email : ""}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                readOnly
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="order-id"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Mã đơn hàng
-              </label>
-              <input
-                type="text"
-                id="order-id"
-                value={orderId}
-                onChange={(e) => setOrderId(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-          </form>
-        </div>
-        <div className="col-span-1 bg-green-50 p-8 rounded-md h-80">
-          <div className="border-t mt-4 pt-4">
-            <div className="flex justify-between text-lg font-bold">
-              <span>Tổng giá:</span>
-              <span>{formattedTotalCost.toLocaleString()}₫</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold">
-              <span>Phí vận chuyển:</span>
-              <span>{formattedShipping.toLocaleString()}₫</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold">
-              <span>Thuế:</span>
-              <span>{formattedTax.toLocaleString()}₫</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold">
-              <span>Thành tiền:</span>
-              <span>{totalAmount.toLocaleString()}₫</span>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mt-5"
-              onClick={handleCheckout}
-            >
-              Xác nhận đơn hàng
-            </button>
-          </div>
-        </div>
-      </div>
-      <div>
-        <h2 className="text-xl font-bold mb-4">Đơn hàng của bạn</h2>
-        <ul>
-          {cart.map((item, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center mb-8 p-4 rounded-lg shadow-md"
-            >
-              <img
-                src={item.Image[0]}
-                alt={item.Name}
-                width="150"
-                className="rounded-lg"
-              />
-              <div className="flex-1 ml-4">
-                <div className="text-3xl font-bold mb-2">
-                  Tên sản phẩm: {item.Name}
-                </div>
-                <div className="mb-2 text-2xl">
-                  Giá thành phẩm: {item.ProductCost.toLocaleString()}₫
-                </div>
-              </div>
-              <div className="flex items-center font-bold text-2xl">
-                <label htmlFor={`quantity_${index}`}>
-                  Số lượng
-                  <div className="flex justify-center">{item.quantity}</div>
-                </label>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+                Xác nhận đơn hàng
+              </Button>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
