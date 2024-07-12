@@ -4,20 +4,20 @@ import { TextField, Button, Box, Grid, Alert } from '@mui/material';
 import { insertCostMaterial } from "../../server/api";  // Make sure to update the API function accordingly
 
 function AddCostMaterial() {
-    const { materialId } = useParams(); // Get the MaterialId from the URL parameters
+    const { MaterialId } = useParams(); // Get the MaterialId from the URL parameters
     const [formData, setFormData] = useState({
         PurchasePrice: '',
         Price: '',
-        MaterialId: materialId || '', // Initialize MaterialId with the value from the URL or an empty string
+        MaterialId: MaterialId || '', // Initialize MaterialId with the value from the URL or an empty string
     });
     const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        setFormData((prev) => ({ ...prev, MaterialId: materialId })); // Update MaterialId if it changes
-        console.log(materialId)
-    }, [materialId]);
+        setFormData((prev) => ({ ...prev, MaterialId: MaterialId })); // Update MaterialId if it changes
+        console.log(MaterialId)
+    }, [MaterialId]);
 
     const validateForm = () => {
         let tempErrors = {};

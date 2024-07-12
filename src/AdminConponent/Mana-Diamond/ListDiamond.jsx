@@ -73,7 +73,9 @@ const ListDiamond = () => {
             <Header title='MANAGE DIAMONDS' subtitle='Managing the diamonds list' />
             <Box display='flex' justifyContent='flex-end' m={2}>
                 <Search />
-                <Button component={Link} to={'/admin/manage-diamonds/addDiamond'}
+                <Button
+                    component={Link}
+                    to='/admin/manage-diamond/addDiamond'
                     sx={{
                         backgroundColor: colors.blueGrey[300],
                         color: 'white',
@@ -86,6 +88,7 @@ const ListDiamond = () => {
                 >
                     Add Diamond
                 </Button>
+
             </Box>
             <Box
                 m='40px 0 0 0'

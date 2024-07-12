@@ -1,10 +1,28 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
-import { validateUserInfo } from "../validation/validationUser";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-Modal.setAppElement("#root");
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Container,
+  Avatar,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { validateUserInfo } from "../validation/validationUser";
 
 const UserInfo = () => {
   const [user, setUser] = useState({
@@ -16,12 +34,11 @@ const UserInfo = () => {
     confirmPassWord: "",
   });
 
-  const [orders, setOrders] = useState([]);
   const [errors, setErrors] = useState({});
   const [activeSection, setActiveSection] = useState("userInfo");
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // Thêm biến trạng thái cho chế độ chỉnh sửa
+  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
   const API_URL = "http://localhost:8090/test/getUserById";
@@ -31,10 +48,8 @@ const UserInfo = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.Id) {
       const userId = storedUser.Id;
-      console.log(userId);
       try {
         const response = await axios.get(`${API_URL}?UserId=${userId}`);
-        console.log(response.data);
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -83,7 +98,7 @@ const UserInfo = () => {
         setIsUpdateModalOpen(false);
         alert("Thông tin người dùng đã được cập nhật!");
         fetchUserData();
-        setIsEditing(false); // Đặt lại chế độ chỉnh sửa về mặc định sau khi cập nhật thành công
+        setIsEditing(false);
       } catch (error) {
         console.error("Error updating user info:", error);
         alert("Có lỗi xảy ra khi cập nhật thông tin người dùng.");
@@ -94,415 +109,291 @@ const UserInfo = () => {
   };
 
   return (
-    <>
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-center items-start space-x-0 md:space-x-8">
-          <div className="w-full md:w-1/4 bg-gray-100 p-4 rounded-lg">
-            <div className="text-center mb-6">
-              <img
-                src="./img/diamond.png"
-                alt="logo"
-                className="mx-auto w-16 h-16"
-              />
-              <h3 className="text-4xl font-serif text-black">Sun Shine</h3>
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex justify-center">
-              Hồ sơ
-            </h2>
-            <ul className="space-y-4">
-              <li
-                className={`cursor-pointer p-2 rounded ${
-                  activeSection === "userInfo"
-                    ? "bg-black text-white"
-                    : "bg-gray-400 text-white"
-                }`}
-                onClick={() => setActiveSection("userInfo")}
-              >
-                Thông tin người dùng
-              </li>
-              <li
-                className={`cursor-pointer p-2 rounded ${
-                  activeSection === "orders"
-                    ? "bg-black text-white"
-                    : "bg-gray-400 text-white"
-                }`}
-                onClick={() => handleUpdateOrders()}
-              >
-                Đơn hàng
-              </li>
-              <li
-                className={`cursor-pointer p-2 rounded ${
-                  activeSection === "orders"
-                    ? "bg-black text-white"
-                    : "bg-gray-400 text-white"
-                }`}
-                onClick={() => handleUpdateCart()} // Sửa lại đoạn này
-              >
-                Đơn hàng
-              </li>
+    <Container maxWidth="md">
+      <Grid container spacing={4} justifyContent="center">
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              <Grid container direction="column" alignItems="center">
+                <Avatar
+                  src="./img/diamond.png"
+                  sx={{ width: 64, height: 64, mb: 2 }}
+                />
+                <Typography variant="h4">Sun Shine</Typography>
+              </Grid>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="h5" align="center" gutterBottom>
+                Hồ sơ
+              </Typography>
+              <List component="nav">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    selected={activeSection === "userInfo"}
+                    onClick={() => setActiveSection("userInfo")}
+                  >
+                    <ListItemText primary="Thông tin người dùng" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={handleUpdateOrders}>
+                    <ListItemText primary="Đơn hàng" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={handleUpdateCart}>
+                    <ListItemText primary="Giỏ hàng" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => setIsLogoutModalOpen(true)}>
+                    <ListItemText primary="Đăng xuất" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
 
-              <li
-                className={`cursor-pointer p-2 rounded ${
-                  activeSection === "logout"
-                    ? "bg-black text-white"
-                    : "bg-gray-400 text-white"
-                }`}
-                onClick={() => setIsLogoutModalOpen(true)}
-              >
-                Đăng xuất
-              </li>
-            </ul>
-          </div>
-
-          <div className="w-full md:w-3/4 mt-8 md:mt-0">
-            {activeSection === "userInfo" && (
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
-                  Thông tin người dùng
-                </h3>
-                {!isEditing ? ( // Kiểm tra chế độ chỉnh sửa
-                  <>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="">
-                        <label className="block">
-                          <span className="text-gray-700">Họ và tên:</span>
-                          <input
-                            type="text"
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardContent>
+              {activeSection === "userInfo" && (
+                <>
+                  <Typography variant="h5" align="center" gutterBottom>
+                    Thông tin người dùng
+                  </Typography>
+                  {!isEditing ? (
+                    <>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Họ và tên"
                             value={user.Name}
-                            readOnly // Đặt readOnly để ngăn người dùng chỉnh sửa trường này khi không ở chế độ chỉnh sửa
-                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                            fullWidth
+                            InputProps={{ readOnly: true }}
                           />
-                        </label>
-                      </div>
-
-                      <div className="">
-                        <label className="block">
-                          <span className="text-gray-700">Số điện thoại:</span>
-                          <input
-                            type="text"
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Số điện thoại"
                             value={user.Phone}
-                            readOnly // Đặt readOnly để ngăn người dùng chỉnh sửa trường này khi không ở chế độ chỉnh sửa
-                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                            fullWidth
+                            InputProps={{ readOnly: true }}
                           />
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block">
-                          <span className="text-gray-700">Email:</span>
-                          <input
-                            type="Email"
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Email"
                             value={user.Email}
-                            readOnly // Đặt readOnly để ngăn người dùng chỉnh sửa trường này khi không ở chế độ chỉnh sửa
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                            fullWidth
+                            InputProps={{ readOnly: true }}
                           />
-                        </label>
-                      </div>
-
-                      <div>
-                        <label className="block">
-                          <span className="text-gray-700">Địa chỉ:</span>
-                          <input
-                            type="text"
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Địa chỉ"
                             value={user.Address}
-                            readOnly // Đặt readOnly để ngăn người dùng chỉnh sửa trường này khi không ở chế độ chỉnh sửa
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                            fullWidth
+                            InputProps={{ readOnly: true }}
                           />
-                        </label>
-                      </div>
-                    </div>
-
-                    <hr className="my-4" />
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
-                      Đổi Password
-                    </h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="">
-                        <label className="block">
-                          <span className="text-gray-700">Mật khẩu mới:</span>
-                          <input
-                            type="PassWord"
+                        </Grid>
+                      </Grid>
+                      <Divider sx={{ my: 2 }} />
+                      <Typography variant="h6" align="center" gutterBottom>
+                        Đổi mật khẩu
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Mật khẩu mới"
                             value={user.PassWord}
-                            readOnly={!isEditing} // Đặt readOnly dựa vào biến isEditing để chỉ cho phép chỉnh sửa khi đang ở chế độ chỉnh sửa
+                            fullWidth
+                            type="password"
+                            InputProps={{ readOnly: !isEditing }}
                             onChange={(e) =>
                               setUser({ ...user, PassWord: e.target.value })
                             }
-                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                            error={Boolean(errors.PassWord)}
+                            helperText={errors.PassWord}
                           />
-                        </label>
-                        {errors.PassWord && (
-                          <span className="text-red-500">
-                            {errors.PassWord}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="">
-                        <label className="block">
-                          <span className="text-gray-700">
-                            Nhập lại mật khẩu mới:
-                          </span>
-                          <input
-                            type="PassWord"
-                            value={user.PassWord}
-                            readOnly={!isEditing} // Đặt readOnly dựa vào biến isEditing để chỉ cho phép chỉnh sửa khi đang ở chế độ chỉnh sửa
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Nhập lại mật khẩu mới"
+                            value={user.confirmPassWord}
+                            fullWidth
+                            type="password"
+                            InputProps={{ readOnly: !isEditing }}
                             onChange={(e) =>
                               setUser({
                                 ...user,
                                 confirmPassWord: e.target.value,
                               })
                             }
-                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                            error={Boolean(errors.confirmPassWord)}
+                            helperText={errors.confirmPassWord}
                           />
-                        </label>
-                        {errors.confirmPassWord && (
-                          <span className="text-red-500">
-                            {errors.confirmPassWord}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex justify-center">
-                      <button
-                        type="button" // Sử dụng type "button" để ngăn form submit mặc định của button
-                        onClick={() => setIsEditing(true)} // Khi click vào nút chỉnh sửa, setIsEditing(true) để chuyển sang chế độ chỉnh sửa
-                        className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-black"
-                      >
-                        Chỉnh sửa thông tin
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  // Chế độ chỉnh sửa
-                  <form className="space-y-4" onSubmit={handleUpdateClick}>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="">
-                        <label className="block">
-                          <span className="text-gray-700">Họ và tên:</span>
-                          <input
-                            type="text"
+                        </Grid>
+                      </Grid>
+                      <Grid container justifyContent="center" sx={{ mt: 2 }}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => setIsEditing(true)}
+                        >
+                          Chỉnh sửa thông tin
+                        </Button>
+                      </Grid>
+                    </>
+                  ) : (
+                    <form onSubmit={handleUpdateClick}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Họ và tên"
                             value={user.Name}
+                            fullWidth
                             onChange={(e) =>
                               setUser({ ...user, Name: e.target.value })
                             }
-                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                            error={Boolean(errors.Name)}
+                            helperText={errors.Name}
                           />
-                          {errors.Name && (
-                            <span className="text-red-500">{errors.Name}</span>
-                          )}
-                        </label>
-                      </div>
-
-                      <div className="">
-                        <label className="block">
-                          <span className="text-gray-700">Số điện thoại:</span>
-                          <input
-                            type="text"
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Số điện thoại"
                             value={user.Phone}
+                            fullWidth
                             onChange={(e) =>
                               setUser({ ...user, Phone: e.target.value })
                             }
-                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                            error={Boolean(errors.Phone)}
+                            helperText={errors.Phone}
                           />
-                          {errors.Phone && (
-                            <span className="text-red-500">{errors.Phone}</span>
-                          )}
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block">
-                          <span className="text-gray-700">Email:</span>
-                          <input
-                            type="Email"
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Email"
                             value={user.Email}
+                            fullWidth
                             onChange={(e) =>
                               setUser({ ...user, Email: e.target.value })
                             }
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                            error={Boolean(errors.Email)}
+                            helperText={errors.Email}
                           />
-                          {errors.Email && (
-                            <span className="text-red-500">{errors.Email}</span>
-                          )}
-                        </label>
-                      </div>
-
-                      <div>
-                        <label className="block">
-                          <span className="text-gray-700">Địa chỉ:</span>
-                          <input
-                            type="text"
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Địa chỉ"
                             value={user.Address}
+                            fullWidth
                             onChange={(e) =>
                               setUser({ ...user, Address: e.target.value })
                             }
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                            error={Boolean(errors.Address)}
+                            helperText={errors.Address}
                           />
-                          {errors.Address && (
-                            <span className="text-red-500">
-                              {errors.Address}
-                            </span>
-                          )}
-                        </label>
-                      </div>
-                    </div>
-
-                    <hr className="my-4" />
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
-                      Đổi PassWord
-                    </h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="">
-                        <label className="block">
-                          <span className="text-gray-700">Mật khẩu mới:</span>
-                          <input
-                            type="PassWord"
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Mật khẩu mới"
                             value={user.PassWord}
+                            fullWidth
+                            type="password"
                             onChange={(e) =>
                               setUser({ ...user, PassWord: e.target.value })
                             }
-                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                            error={Boolean(errors.PassWord)}
+                            helperText={errors.PassWord}
                           />
-                          {errors.PassWord && (
-                            <span className="text-red-500">
-                              {errors.PassWord}
-                            </span>
-                          )}
-                        </label>
-                      </div>
-
-                      <div className="">
-                        <label className="block">
-                          <span className="text-gray-700">
-                            Nhập lại mật khẩu mới:
-                          </span>
-                          <input
-                            type="PassWord"
-                            value={user.PassWord}
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Nhập lại mật khẩu mới"
+                            value={user.confirmPassWord}
+                            fullWidth
+                            type="password"
                             onChange={(e) =>
                               setUser({
                                 ...user,
                                 confirmPassWord: e.target.value,
                               })
                             }
-                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                            error={Boolean(errors.confirmPassWord)}
+                            helperText={errors.confirmPassWord}
                           />
-                          {errors.confirmPassWord && (
-                            <span className="text-red-500">
-                              {errors.confirmPassWord}
-                            </span>
-                          )}
-                        </label>
-                      </div>
-                    </div>
+                        </Grid>
+                      </Grid>
+                      <Grid container justifyContent="center" sx={{ mt: 2 }}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          type="submit"
+                        >
+                          Lưu thay đổi
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            setIsEditing(false);
+                            setUser({
+                              ...user,
+                              confirmPassWord: user.PassWord,
+                            });
+                          }}
+                          sx={{ ml: 2 }}
+                        >
+                          Hủy bỏ
+                        </Button>
+                      </Grid>
+                    </form>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-                    <div className="flex justify-center">
-                      <button
-                        type="submit"
-                        className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-black"
-                      >
-                        Cập nhật thông tin
-                      </button>
-                      <button
-                        type="button"
-                        className="mt-4 ml-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
-                        onClick={() => setIsEditing(false)} // Khi click vào nút hủy, setIsEditing(false) để thoát khỏi chế độ chỉnh sửa
-                        //và hiển thị lại thông tin người dùng
-                      >
-                        Hủy
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </div>
-            )}
+      <Dialog
+        open={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+      >
+        <DialogTitle>Đăng xuất</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có chắc chắn muốn đăng xuất không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsLogoutModalOpen(false)}>Hủy</Button>
+          <Button onClick={handleLogout} color="primary">
+            Đăng xuất
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-            {activeSection === "orders" && (
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-4xl font-semibold text-gray-800 mb-4 flex justify-center">
-                  Đơn hàng
-                </h3>
-                {/* Display orders here */}
-              </div>
-            )}
-
-            {activeSection === "cart" && (
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-4xl font-semibold text-gray-800 mb-4 flex justify-center">
-                  Giỏ hàng
-                </h3>
-                {/* Display cart here */}
-              </div>
-            )}
-
-            <Modal
-              isOpen={isLogoutModalOpen}
-              onRequestClose={() => setIsLogoutModalOpen(false)}
-              contentLabel="Logout Modal"
-              className="Modal"
-              overlayClassName="Overlay"
-            >
-              <div className="p-5 bg-white">
-                <h2 className="text-2xl font-semibold flex justify-center">
-                  Đăng xuất
-                </h2>
-                <p className="mt-2">Bạn có chắc chắn muốn đăng xuất không?</p>
-                <div className="mt-4 flex justify-between">
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                  >
-                    Có
-                  </button>
-                  <button
-                    onClick={() => setIsLogoutModalOpen(false)}
-                    className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-                  >
-                    Không
-                  </button>
-                </div>
-              </div>
-            </Modal>
-
-            <Modal
-              isOpen={isUpdateModalOpen}
-              onRequestClose={() => setIsUpdateModalOpen(false)}
-              contentLabel="Update Modal"
-              className="Modal"
-              overlayClassName="Overlay"
-            >
-              <div className="p-5 bg-white">
-                <h2 className="text-2xl font-semibold flex justify-center">
-                  Cập nhật thông tin
-                </h2>
-                <p className="mt-2">
-                  Bạn có chắc chắn muốn cập nhật thông tin không?
-                </p>
-                <div className="mt-4 flex justify-between">
-                  <button
-                    onClick={handleConfirmUpdate}
-                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                  >
-                    Có
-                  </button>
-                  <button
-                    onClick={() => setIsUpdateModalOpen(false)}
-                    className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-                  >
-                    Không
-                  </button>
-                </div>
-              </div>
-            </Modal>
-          </div>
-        </div>
-      </div>
-    </>
+      <Dialog
+        open={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+      >
+        <DialogTitle>Xác nhận cập nhật</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có chắc chắn muốn cập nhật thông tin người dùng không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsUpdateModalOpen(false)}>Hủy</Button>
+          <Button onClick={handleConfirmUpdate} color="primary">
+            Xác nhận
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Container>
   );
 };
 

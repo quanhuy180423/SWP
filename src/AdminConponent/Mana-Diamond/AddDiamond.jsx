@@ -1,20 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Grid, Alert } from '@mui/material';
-import { insertGem } from "../../server/api"; // Giả sử bạn có một hàm API để thêm kim cương
+import { TextField, Button, Box, Grid, Alert, InputLabel } from '@mui/material';
+import handleUploadImages from "../../firebase/HandleUploadToFirebase";
+import { insertGem } from "../../server/api"; // API function to add a diamond
 
 function AddDiamond() {
     const [formData, setFormData] = useState({
-        name: '',
-        color: '',
-        caraWeight: '',
-        clarity: '',
-        cut: '',
-        costIdGem: '',
-        addedDate: new Date().toISOString().split('T')[0], // Lấy ngày hiện tại
-        origin: '',
-        image: '',
-        identification: '',
+        Name: '',
+        Color: '',
+        CaraWeight: '',
+        Clarity: '',
+        Cut: '',
+        AddedDate: new Date().toISOString().split('T')[0], // Get current date
+        Origin: '',
+        Image: [], // Changed to store multiple Image URLs
+        Size: '',
+        Identification: '',
     });
     const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
@@ -22,39 +23,58 @@ function AddDiamond() {
 
     const validateForm = () => {
         let tempErrors = {};
-        if (!formData.name) tempErrors.name = "Name is required";
-        if (!formData.color) tempErrors.color = "Color is required";
-        if (!formData.caraWeight) tempErrors.caraWeight = "Cara Weight is required";
-        if (!formData.clarity) tempErrors.clarity = "Clarity is required";
-        if (!formData.cut) tempErrors.cut = "Cut is required";
-        if (!formData.costIdGem) tempErrors.costIdGem = "Cost ID Gem is required";
-        if (!formData.origin) tempErrors.origin = "Origin is required";
-        if (!formData.image) tempErrors.image = "Image URL is required";
-        if (!formData.identification) tempErrors.identification = "Identification is required";
+        if (!formData.Name) tempErrors.name = "Name is required";
+        if (!formData.Color) tempErrors.Color = "Color is required";
+        if (!formData.CaraWeight) tempErrors.CaraWeight = "Cara Weight is required";
+        if (!formData.Clarity) tempErrors.Clarity = "Clarity is required";
+        if (!formData.Cut) tempErrors.Cut = "Cut is required";
+        if (!formData.Size) tempErrors.Size = "Cost ID Gem is required";
+        if (!formData.Origin) tempErrors.Origin = "Origin is required";
+        if (formData.Image.length === 0) tempErrors.Images = "Image is required";
+        if (!formData.Identification) tempErrors.Identification = "Identification is required";
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validateForm()) {
-            insertGem(formData)
-                .then(() => {
-                    alert('Diamond added successfully');
-                    navigate('/admin/manage-diamond');
-                })
-                .catch(error => {
-                    if (error.response && error.response.status === 400) {
-                        setErrorMessage('Diamond already exists');
-                    } else {
-                        console.error('Error adding diamond:', error);
-                    }
-                });
+        console.log(formData)
+        console.log(validateForm())
+        if (validateForm() === 'true') {
+
+            try {
+                if (formData.Image.length > 0) {
+                    const ImageUrls = await handleUploadImages(formData.Image);
+                    formData.Image = ImageUrls;
+                    console.log(ImageUrls)
+                }
+
+                insertGem(formData)
+                    .then(() => {
+                        alert('Diamond added successfully');
+                        navigate('/admin/manage-diamond');
+                    })
+                    .catch(error => {
+                        if (error.response && error.response.status === 400) {
+                            setErrorMessage('Diamond already exists');
+                        } else {
+                            console.error('Error adding diamond:', error);
+                        }
+                    });
+            } catch (error) {
+                console.error('Error uploading images:', error);
+            }
         }
     };
 
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value, files } = e.target;
+        if (name === 'Image' && files) {
+            setFormData({ ...formData, Image: files });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     return (
@@ -64,77 +84,77 @@ function AddDiamond() {
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Name"
-                        name="name"
-                        value={formData.name}
+                        name="Name"
+                        value={formData.Name}
                         onChange={handleChange}
-                        error={!!errors.name}
-                        helperText={errors.name}
+                        error={!!errors.Name}
+                        helperText={errors.Name}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Color"
-                        name="color"
-                        value={formData.color}
+                        name="Color"
+                        value={formData.Color}
                         onChange={handleChange}
-                        error={!!errors.color}
-                        helperText={errors.color}
+                        error={!!errors.Color}
+                        helperText={errors.Color}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Cara Weight"
-                        name="caraWeight"
-                        value={formData.caraWeight}
+                        name="CaraWeight"
+                        value={formData.CaraWeight}
                         onChange={handleChange}
-                        error={!!errors.caraWeight}
-                        helperText={errors.caraWeight}
+                        error={!!errors.CaraWeight}
+                        helperText={errors.CaraWeight}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Clarity"
-                        name="clarity"
-                        value={formData.clarity}
+                        name="Clarity"
+                        value={formData.Clarity}
                         onChange={handleChange}
-                        error={!!errors.clarity}
-                        helperText={errors.clarity}
+                        error={!!errors.Clarity}
+                        helperText={errors.Clarity}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Cut"
-                        name="cut"
-                        value={formData.cut}
+                        name="Cut"
+                        value={formData.Cut}
                         onChange={handleChange}
-                        error={!!errors.cut}
-                        helperText={errors.cut}
+                        error={!!errors.Cut}
+                        helperText={errors.Cut}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
-                        label="Cost ID Gem"
-                        name="costIdGem"
-                        value={formData.costIdGem}
+                        label="Size"
+                        name="Size"
+                        value={formData.Size}
                         onChange={handleChange}
-                        error={!!errors.costIdGem}
-                        helperText={errors.costIdGem}
+                        error={!!errors.Size}
+                        helperText={errors.Size}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Added Date"
-                        name="addedDate"
-                        value={formData.addedDate}
+                        name="AddedDate"
+                        value={formData.AddedDate}
                         onChange={handleChange}
-                        error={!!errors.addedDate}
-                        helperText={errors.addedDate}
+                        error={!!errors.AddedDate}
+                        helperText={errors.AddedDate}
                         fullWidth
                         disabled // Disable the field so user can't change the date
                     />
@@ -142,33 +162,35 @@ function AddDiamond() {
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Origin"
-                        name="origin"
-                        value={formData.origin}
+                        name="Origin"
+                        value={formData.Origin}
                         onChange={handleChange}
-                        error={!!errors.origin}
-                        helperText={errors.origin}
+                        error={!!errors.Origin}
+                        helperText={errors.Origin}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Image URL"
-                        name="image"
-                        value={formData.image}
-                        onChange={handleChange}
-                        error={!!errors.image}
-                        helperText={errors.image}
-                        fullWidth
-                    />
+                    <Box>
+                        <InputLabel>Images</InputLabel>
+                        <input
+                            type="file"
+                            name="Image"
+                            onChange={handleChange}
+                            multiple
+                            style={{ display: 'block', marginTop: '8px' }}
+                        />
+                        {errors.Image && <Alert severity="error">{errors.Image}</Alert>}
+                    </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         label="Identification"
-                        name="identification"
-                        value={formData.identification}
+                        name="Identification"
+                        value={formData.Identification}
                         onChange={handleChange}
-                        error={!!errors.identification}
-                        helperText={errors.identification}
+                        error={!!errors.Identification}
+                        helperText={errors.Identification}
                         fullWidth
                     />
                 </Grid>

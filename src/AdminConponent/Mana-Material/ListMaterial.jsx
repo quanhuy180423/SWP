@@ -25,10 +25,22 @@ const ListMaterial = () => {
             const [materialsResponse, costMaterialsResponse] = await Promise.all([getAllMaterial(), getAllCostMaterial()]);
 
             const materialsData = materialsResponse.data;
-            const costMaterialsData = costMaterialsResponse.data;
+            let costMaterialsData = costMaterialsResponse.data;
 
+            // Sort cost materials by update date
+            costMaterialsData.sort((a, b) => new Date(b.UpdateDate) - new Date(a.UpdateDate));
+
+            // Create a map to store the most recent cost material for each MaterialId
+            const latestCostMaterials = {};
+            costMaterialsData.forEach(costMaterial => {
+                if (!latestCostMaterials[costMaterial.MaterialId]) {
+                    latestCostMaterials[costMaterial.MaterialId] = costMaterial;
+                }
+            });
+
+            // Combine data
             const combinedData = materialsData.map(material => {
-                const costMaterial = costMaterialsData.find(cost => cost.MaterialId === material.MaterialId);
+                const costMaterial = latestCostMaterials[material.MaterialId];
                 return {
                     ...material,
                     PurchasePrice: costMaterial ? costMaterial.PurchasePrice : null,
@@ -42,6 +54,7 @@ const ListMaterial = () => {
             console.error(error);
         }
     };
+
 
     const handleEdit = (MaterialId) => {
         console.log("Edit material with ID:", MaterialId);
@@ -64,8 +77,9 @@ const ListMaterial = () => {
     };
 
     const handleAddCostMaterial = (MaterialId) => {
-        navigate(`/admin/manage-account/addCostMaterial/${MaterialId}`);
+        navigate(`/admin/manage-material/addCostMaterial/${MaterialId}`);
     };
+
 
     const columns = [
         { field: 'MaterialId', headerName: 'ID', width: 70 },
@@ -103,7 +117,7 @@ const ListMaterial = () => {
                 <Header title='MANAGE MATERIALS' subtitle='Managing the materials' />
                 <Box display='flex' justifyContent='flex-end' m={2}>
                     <Search />
-                    <Button component={Link} to={'/admin/manage-account/addMaterial'}
+                    <Button component={Link} to='AddMaterial'
                         sx={{
                             backgroundColor: colors.blue[300],
                             color: 'white',
@@ -117,7 +131,7 @@ const ListMaterial = () => {
                     >
                         Add Material
                     </Button>
-                    <Button component={Link} to={'/admin/manage-account/addCostMaterial'}
+                    <Button component={Link} to='addCostMaterial'
                         sx={{
                             backgroundColor: colors.blue[300],
                             color: 'white',

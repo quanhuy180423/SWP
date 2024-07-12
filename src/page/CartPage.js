@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { CartContext } from "../cart/CartContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -13,8 +13,14 @@ import {
 import { Add, Remove, Delete } from "@mui/icons-material";
 
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
+  const { cart, user, removeFromCart, updateQuantity, fetchUserData } =
+    useContext(CartContext);
   const navigate = useNavigate();
+  const API_URL = "http://localhost:8090/test";
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   const totalCost = cart.reduce(
     (total, item) => total + item.ProductCost * item.quantity,
@@ -32,13 +38,13 @@ const Cart = () => {
     console.log("Deleting product with id:", ProductId);
   };
 
-  const handleCheckout = () => {
-    navigate("/checkout");
-  };
-
   const handleQuantityChange = (ProductId, newQuantity) => {
     if (newQuantity < 1) return;
     updateQuantity(ProductId, newQuantity);
+  };
+
+  const handleCheckout = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -51,7 +57,6 @@ const Cart = () => {
               key={item.ProductId}
               className="flex justify-between items-center mb-8 p-4 rounded-lg shadow-md bg-white"
             >
-              {/* {console.log(item)} */}
               <CardMedia
                 className="w-44 h-48 object-cover rounded-lg"
                 component="img"

@@ -17,6 +17,7 @@ import {
   Divider,
 } from "@mui/material";
 import {
+  getAllOrderDetail,
   getOrderById,
   getOrderDetailByOrderId,
   updateStatusOrderDetailById,
@@ -27,6 +28,7 @@ const Checkout = () => {
   const [user, setUser] = useState(null);
   const [orderId, setOrderId] = useState("");
   const [orderDetailId, setOrderDetailId] = useState("");
+  const API_URL = "http://localhost:8090/test";
 
   const USER_API_URL = "http://localhost:8090/test/getUserById";
   const ORDER_API_URL = "http://localhost:8090/create_payment_url";
@@ -126,20 +128,59 @@ const Checkout = () => {
   const totalAmount = formattedTotalCost + formattedShipping + formattedTax;
 
   const handleCheckout = async () => {
+    if (!user) {
+      alert("Bạn cần đăng nhập để thanh toán.");
+      return;
+    }
+
     try {
-      const orderDetails = {
-        orderId: orderId,
+      const orderDetails = await getAllOrderDetail(); // Correctly invoking the function
+      const orderItems = orderDetails.data;
+
+      let existingOrderId = null;
+
+      for (let item of cart) {
+        const matchingOrder = orderItems.find(
+          (order) => order.ProductId === item.ProductId && order.Status === 0
+        );
+        if (matchingOrder) {
+          existingOrderId = matchingOrder.OrderId;
+          break;
+        }
+      }
+      let response = null; // Declaring response variable outside the if block
+      if (!existingOrderId) {
+        const productIds = cart.map((item) => item.ProductId);
+        const orderRequestData = {
+          PaymentMethods: "1",
+          Phone: user.Phone,
+          Address: user.Address,
+          Status: "ChkOut",
+          UserId: user.UserId,
+          Description: "Sản phẩm có sẵn của cửa hàng",
+          Name: user.UserName,
+          ProductIds: productIds,
+        };
+
+        response = await axios.post(`${API_URL}/insertOrder`, orderRequestData);
+        if (response) {
+          setOrderId(response.data.orderId);
+        }
+      } else {
+        setOrderId(existingOrderId);
+      }
+
+      const paymentDetails = {
+        orderId: existingOrderId || response.data.OrderId,
         amount: totalAmount,
         bankCode: "NCB",
       };
-      const response = await axios.post(ORDER_API_URL, orderDetails);
-      const paymentUrl = response.data.paymentUrl;
+
+      const paymentResponse = await axios.post(ORDER_API_URL, paymentDetails);
+      const paymentUrl = paymentResponse.data.paymentUrl;
       window.location.href = paymentUrl;
     } catch (error) {
-      console.error(
-        "Error creating payment URL or checking order status:",
-        error
-      );
+      console.error("Error during checkout process:", error);
     }
   };
 

@@ -61,6 +61,8 @@ export const deleteUser = (UserId) =>
 export const getOrderByUserId = (UserId) =>
   axios.get(`${API_URL}/getOrderByUserId?UserId=${UserId}`);
 export const getAllOrders = () => axios.get(`${API_URL}/getAllOrder`);
+
+//hàm thêm tạo mới order khi dành cho sản phẩm có sẳn của cửa hàng
 export const insertOrder = (order) =>
   axios.post(`${API_URL}/insertOrder`, order);
 export const updateOrder = (order) =>

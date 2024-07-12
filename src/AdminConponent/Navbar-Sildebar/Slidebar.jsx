@@ -182,7 +182,7 @@ const Slidebar = () => {
                                 setSelected={setSelected}
                             />
                         </SubMenu>
-                        <Item
+                        {/* <Item
                             title='Manage Step Process'
                             to='/admin/manage-step-process'
                             icon={faListOl}
@@ -195,7 +195,7 @@ const Slidebar = () => {
                             icon={faComments}
                             selected={selected}
                             setSelected={setSelected}
-                        />
+                        /> */}
                         {/* Add more menu items with icons */}
                     </Box>
                 </Menu>

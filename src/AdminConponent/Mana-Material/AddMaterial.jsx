@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Grid, Alert } from '@mui/material';
 import { insertMaterial } from "../../server/api";  // Make sure to update the API function accordingly
 
-function AddMaterial() {
+const AddMaterial = () => {
     const [formData, setFormData] = useState({
         Name: '',
         Unit: '',

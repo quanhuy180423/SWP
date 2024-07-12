@@ -36,7 +36,7 @@ import OrderDetailPage from "./AdminConponent/Mana-Order/OrderDetail";
 import OrderListRequest from "./AdminConponent/Mana-Order/ListOrder";
 import OrderListOfUser from "./page/Order/OrderListOfUser";
 import OrderDetailUser from "./page/Order/OrderdetailUser";
-import OrderManger from "./AdminConponent/Mana-Order/OrderManager";
+import OrderManager from "./AdminConponent/Mana-Order/OrderManager";
 import OrderDesign from "./AdminConponent/Mana-Order/OrderDeign";
 import OrderProduction from "./AdminConponent/Mana-Order/OrderProduction";
 import OrderComplete from "./AdminConponent/Mana-Order/OrderComplete";
@@ -91,36 +91,39 @@ const App = () => {
                 </>
               )}
               <Route path="manage-blogs" element={<ListBlogs />} />
+              <Route path="manage-blogs/addBlog" element={<AddBlogs />} />
 
               {/* Material */}
               <Route path="manage-material" element={<ListMaterial />} />
               <Route
-                path="manage-material/addMaterial"
+                path="manage-material/AddMaterial"
                 element={<AddMaterial />}
               />
+
               <Route
-                path="manage-material/addCostMaterial"
+                path="manage-material/addCostMaterial/:MaterialId"
                 element={<AddCostMaterial />}
               />
+
               <Route
-                path="manage-material/editMaterial"
+                path="manage-material/editMaterial/:MaterialId"
                 element={<EditMaterial />}
               />
-
-              <Route path="manage-blogs/addBlog" element={<AddBlogs />} />
-              <Route path="manage-diamond" element={<ListDiamond />} />
+              {/* Diamond */}
+              <Route path="/admin/manage-diamond" element={<ListDiamond />} />
               <Route
-                path="manage-diamond/addDiamond"
+                path="/admin/manage-diamond/addDiamond"
                 element={<AddDiamond />}
               />
+
               <Route path="manage-order" element={<ListOrder />} />
+              <Route path="manage-order-detail" element={<ListOrderDetail />} />
               {/* Product */}
               <Route path="manage-product" element={<ListProduct />} />
               <Route
                 path="manage-product/addProduct"
                 element={<AddProduct />}
               />
-              <Route path="manage-order-detail" element={<ListOrderDetail />} />
               <Route
                 path="manage-order/List-Request"
                 element={<OrderListRequest />}
@@ -131,7 +134,7 @@ const App = () => {
               />
               <Route
                 path="manage-order/List-Request/Order-Manager"
-                element={<OrderManger />}
+                element={<OrderManager />}
               />
               <Route
                 path="manage-order/List-Request/Order-Design"

@@ -126,7 +126,8 @@ const JewelryPage = () => {
 
       <Grid
         container
-        spacing={4}
+        // spacing={2}
+        // gap={3}
         className="flex justify-center "
         marginTop={"20px"}
       >
@@ -135,7 +136,8 @@ const JewelryPage = () => {
             item
             xs={12}
             md={6}
-            lg={4}
+            lg={3}
+            // margin="5px 10px"
             key={product.ProductID}
             className="p-5 mx-5 rounded-lg shadow-md"
           >
