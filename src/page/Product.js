@@ -1,20 +1,41 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { CartContext } from "../cart/CartContext";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Button,
+  CircularProgress,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+} from "@mui/material";
 import Swipper from "../Swipper/Swipper"; // Adjust the import path as needed
+import JewelryItem from "../JewelyPage/JewelryItem"; // Adjust the import path as needed
 
 const Product = () => {
   const { ProductId } = useParams();
   const [product, setProduct] = useState({});
-  const [images, setImages] = useState([]);
-  const [size, setSize] = useState("");
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const navigate = useNavigate();
+  const [quantityError, setQuantityError] = useState("");
+  const [size, setSize] = useState("");
+
   const { addToCart } = useContext(CartContext);
   const API_URL = "http://localhost:8090/test/getProductByNameOrId";
+  const API_URL_RELATED = "http://localhost:8090/test/getProductByCategory";
 
   const fetchProductData = async () => {
     if (ProductId) {
@@ -23,194 +44,249 @@ const Product = () => {
         const data = response.data;
         if (data[0]) {
           setProduct(data[0]);
-          console.log(product);
+          fetchRelatedProducts(data[0].CategoryName);
         } else {
           console.error(`No product found with ID ${ProductId}`);
         }
       } catch (error) {
         console.error("Error fetching product data:", error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.error("Product ID not found in URL params");
     }
   };
 
+  const fetchRelatedProducts = async (categoryName) => {
+    try {
+      const response = await axios.get(API_URL_RELATED, {
+        params: { CategoryName: categoryName },
+      });
+      setRelatedProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching related products:", error);
+    }
+  };
+
   useEffect(() => {
     fetchProductData();
+    window.scrollTo(0, 0);
   }, [ProductId]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const handleQuantityChange = (e) => {
+    const value = e.target.value;
+    setQuantity(value);
 
-  if (!product) {
-    return <div>Loading...</div>;
-  }
+    if (value < 1 || value > 10) {
+      setQuantityError("Quantity must be between 1 and 10");
+    } else {
+      setQuantityError("");
+    }
+  };
 
   const handleAddToCart = () => {
-    console.log(product);
-    addToCart(product, parseInt(quantity));
-  };
-
-  const handleOrder = () => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (!isLoggedIn) {
-      setShowLoginForm(true);
-      return;
+    if (!quantityError) {
+      const itemToAdd = {
+        ...product,
+        Size: size, // Add selected size to item
+      };
+      addToCart(itemToAdd, parseInt(quantity));
     }
-
-    const img =
-      "https://th.bing.com/th/id/OIF.72OUna9vZtxLRpFvVGE5Wg?rs=1&pid=ImgDetMain";
-    const orderDetails = {
-      ProductId: product.ProductId,
-      Name: product.Name,
-      CategoryName: product.CategoryName,
-      ProductCost: product.ProductCost,
-      Image: img,
-      Size: size,
-      Quantity: quantity,
-    };
-    localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
-    navigate("/order");
   };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <>
-      <div className="flex flex-col items-center p-5 bg-gray-100 w-full">
-        <div className="flex flex-row max-w-5xl w-full bg-white shadow-md mb-5">
-          <div className="flex-1 flex flex-col items-center justify-center overflow-hidden h-80">
+    <Container maxWidth="lg">
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        p={5}
+        bgcolor="gray.100"
+      >
+        <Box
+          display="flex"
+          flexDirection="row"
+          maxWidth="lg"
+          width="100%"
+          bgcolor="white"
+          boxShadow={3}
+          mb={5}
+        >
+          <Box
+            flex={1}
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            overflow="hidden"
+            height={320}
+          >
             <Swipper images={product.Image} /> {/* Use the Swipper component */}
-          </div>
-          <div className="flex-1 p-5">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">
+          </Box>
+          <Box flex={1} p={5}>
+            <Typography
+              variant="h4"
+              component="h1"
+              color="textPrimary"
+              gutterBottom
+            >
               {product.Name}
-            </h1>
-            <div className="mb-5">
-              <span className="text-2xl text-red-600 font-bold">
-                {product.ProductCost}₫
-              </span>
-            </div>
-
-            {product.CategoryName === "Ring" ? (
-              <div className="mb-5">
-                <label htmlFor="size" className="mr-2 font-bold">
-                  Ring Size:
-                </label>
-                <select
-                  id="size"
-                  name="size"
+            </Typography>
+            <Typography variant="h5" component="div" color="error" gutterBottom>
+              {product.ProductCost}₫
+            </Typography>
+            {product.CategoryName === "Rings" ? (
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Ring Size</InputLabel>
+                <Select
                   value={size}
                   onChange={(e) => setSize(e.target.value)}
-                  className="p-2 border border-gray-300 rounded"
+                  label="Ring Size"
                 >
                   {[9, 10, 11, 12, 13, 14].map((ringSize) => (
-                    <option key={ringSize} value={ringSize}>
+                    <MenuItem key={ringSize} value={ringSize}>
                       {ringSize}
-                    </option>
+                    </MenuItem>
                   ))}
-                </select>
-              </div>
-            ) : product.CategoryName === "Necklace" ? (
-              <div className="mb-5">
-                <label htmlFor="size" className="mr-2 font-bold">
-                  Necklace Size:
-                </label>
-                <select
-                  id="size"
-                  name="size"
+                </Select>
+              </FormControl>
+            ) : product.CategoryName === "Necklaces" ? (
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Necklace Size</InputLabel>
+                <Select
                   value={size}
                   onChange={(e) => setSize(e.target.value)}
-                  className="p-2 border border-gray-300 rounded"
+                  label="Necklace Size"
                 >
                   {[35, 36, 37, 38, 39, 40, 41, 42, 43, 44].map(
                     (necklaceSize) => (
-                      <option key={necklaceSize} value={necklaceSize}>
+                      <MenuItem key={necklaceSize} value={necklaceSize}>
                         {necklaceSize}
-                      </option>
+                      </MenuItem>
                     )
                   )}
-                </select>
-              </div>
+                </Select>
+              </FormControl>
             ) : null}
-
-            <div className="flex items-center mb-5">
-              <label htmlFor="quantity" className="mr-2 font-bold">
-                Quantity:
-              </label>
-              <input
+            <Box display="flex" alignItems="center" mb={5}>
+              <TextField
+                label="Quantity"
                 type="number"
-                id="quantity"
-                name="quantity"
-                min="1"
                 value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-                className="w-16 p-2 border border-gray-300 rounded"
+                onChange={handleQuantityChange}
+                error={!!quantityError}
+                helperText={quantityError}
+                InputProps={{ inputProps: { min: 1, max: 10 } }}
+                variant="outlined"
+                fullWidth
               />
-            </div>
-            <div className="flex gap-2">
-              <button
-                className="flex-1 p-3 bg-red-600 text-white font-bold rounded hover:bg-red-700"
-                onClick={handleOrder}
-              >
-                ORDER
-              </button>
-              <button
-                className="flex-1 p-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700"
+            </Box>
+            <Box display="flex" gap={2}>
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
                 onClick={handleAddToCart}
+                disabled={!!quantityError}
               >
                 ADD TO CART
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-5xl w-full bg-white shadow-md p-5">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            CHI TIẾT SẢN PHẨM
-          </h1>
-          <p className="text-lg text-gray-600 mb-4">
-            Tham chiếu {product.Name}
-          </p>
-          <table className="min-w-full divide-y divide-gray-200 text-left text-gray-600">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Chi tiết
-                </th>
-                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Thông số
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              <tr>
-                <td className="px-6 py-4">Danh mục</td>
-                <td className="px-6 py-4">{product.CategoryName}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4">Tên</td>
-                <td className="px-6 py-4">{product.Name}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4">Giá</td>
-                <td className="px-6 py-4">{product.ProductCost}₫</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4">Chất liệu</td>
-                <td className="px-6 py-4">{product.MaterialName}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4">Kim cương</td>
-                <td className="px-6 py-4">{product.GemName}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <Box>
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Description</h1>
-          <Box dangerouslySetInnerHTML={{ __html: product.Description }} />
+              </Button>
+            </Box>
+          </Box>
         </Box>
-      </div>
-    </>
+        <Box
+          maxWidth="lg"
+          width="100%"
+          bgcolor="white"
+          boxShadow={3}
+          p={5}
+          mb={5}
+        >
+          <Typography
+            variant="h5"
+            component="h2"
+            color="textPrimary"
+            gutterBottom
+          >
+            Detailed Product Description
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Category</TableCell>
+                  <TableCell>{product.CategoryName}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>{product.Name}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Price</TableCell>
+                  <TableCell>{product.ProductCost}₫</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Material</TableCell>
+                  <TableCell>{product.MaterialName}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Diamond</TableCell>
+                  <TableCell>{product.GemName}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+        <Box maxWidth="lg" width="100%" bgcolor="white" boxShadow={3} p={5}>
+          <Typography
+            variant="h5"
+            component="h2"
+            color="textPrimary"
+            gutterBottom
+          >
+            Related Products
+          </Typography>
+          <Grid container spacing={2}>
+            {relatedProducts.slice(0, 4).map((relatedProduct) => (
+              <Grid item xs={12} sm={6} md={3} key={relatedProduct.ProductId}>
+                <JewelryItem
+                  to={`/product/${relatedProduct.ProductId}`}
+                  firstImage={relatedProduct.Image[0]}
+                  title={relatedProduct.Name}
+                  material={relatedProduct.MaterialName}
+                  gem={relatedProduct.GemName}
+                  productCost={relatedProduct.ProductCost}
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <Box display="flex" justifyContent="center" mt={4}>
+            <Button
+              variant="outlined"
+              color="primary"
+              component={Link}
+              to={`/jewelry?CategoryName=${product.CategoryName}`}
+            >
+              See more
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

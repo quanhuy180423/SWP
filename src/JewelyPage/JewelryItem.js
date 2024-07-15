@@ -9,9 +9,9 @@ const JewelryItem = ({ to, firstImage, title, material, gem, productCost }) => {
         <img
           src={firstImage}
           alt={title}
-          style={{ width: "350px", height: "350px", objectFit: "cover" }}
+          style={{ width: "320px", height: "320px", objectFit: "cover" }}
         />
-        <h2 style={{ fontSize: "35px", fontWeight: "bold" }}>{title}</h2>
+        <h2 style={{ fontSize: "30px", fontWeight: "bold" }}>{title}</h2>
         <p>Material:{material}</p>
         <p>Gem: {gem}</p>
         <p style={{ fontWeight: "bold" }}>Price: {productCost}</p>

@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const BlogDetail = () => {
-    const { blogId } = useParams();
+    const { BlogId } = useParams();
     const [blog, setBlog] = useState(null);
     const API_URL = "http://localhost:8090/test/getBlogById";
 
     const getBlog = async () => {
         try {
-            const response = await axios.get(`${API_URL}?blogId=${blogId}`);
+            const response = await axios.get(`${API_URL}?BlogId=${BlogId}`);
             const data = response.data;
             data.map((blog) => {
                 setBlog(blog);
@@ -23,7 +23,7 @@ const BlogDetail = () => {
 
     useEffect(() => {
         getBlog();
-    }, [blogId]);
+    }, [BlogId]);
 
     return (
         <div className="flex justify-center items-center">

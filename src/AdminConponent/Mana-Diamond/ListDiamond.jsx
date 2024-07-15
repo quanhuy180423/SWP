@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, colors } from "@mui/material";
+import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, colors, IconButton } from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import ActionButtons from "../Mana-Account/ActionButtons";
 import { Link } from "react-router-dom";
-import { deleteGemById, getAllGem } from "../../server/api"; // Giả sử bạn có các hàm API tương ứng
+import { deleteGemById, getAllGem } from "../../server/api";
 import Search from "../Header/Search";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ListDiamond = () => {
     const [diamonds, setDiamonds] = useState([]);
@@ -52,16 +53,23 @@ const ListDiamond = () => {
         { field: 'CaraWeight', headerName: 'Cara Weight', width: 150 },
         { field: 'Clarity', headerName: 'Clarity', width: 150 },
         { field: 'Cut', headerName: 'Cut', width: 150 },
-        { field: 'Size', headerName: 'Size', width: 150 },
+        { field: 'Size', headerName: 'Size', width: 100 },
         {
             field: 'Actions',
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
-                <ActionButtons
-                    onEdit={() => handleView(params.row.GemId)}
-                    onDelete={() => handleDelete(params.row.GemId)}
-                />
+                <>
+                    <IconButton component={Link} to={`/admin/manage-diamond/editDiamond/${params.row.GemId}`}>
+                        <FontAwesomeIcon icon={faEdit} />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(params.row.GemId)}>
+                        <FontAwesomeIcon icon={faTrash} />
+                    </IconButton>
+                    <IconButton component={Link} to={`/admin/manage-diamond/Add-Diamond/${params.row.GemId}`}>
+                        <FontAwesomeIcon icon={faPlus} />
+                    </IconButton>
+                </>
             ),
         }
     ];
@@ -88,7 +96,6 @@ const ListDiamond = () => {
                 >
                     Add Diamond
                 </Button>
-
             </Box>
             <Box
                 m='40px 0 0 0'

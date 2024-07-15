@@ -40,6 +40,7 @@ import OrderManager from "./AdminConponent/Mana-Order/OrderManager";
 import OrderDesign from "./AdminConponent/Mana-Order/OrderDeign";
 import OrderProduction from "./AdminConponent/Mana-Order/OrderProduction";
 import OrderComplete from "./AdminConponent/Mana-Order/OrderComplete";
+import AddDiamondCost from "./AdminConponent/Mana-Diamond/AddDiamondCost";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -51,13 +52,13 @@ const App = () => {
             <Route index element={<HomePage />} />
             <Route path="login" element={<LoginForm />} />
             <Route path="order-form" element={<OrderForm />} />
-            <Route path="blog" element={<Blogs />} />
+            <Route path="Blogs" element={<Blogs />} />
             <Route path="/blog/:blogId" element={<BlogDetail />} />
-            <Route path="/product/:ProductId" element={<Product />} />
+            <Route path="/Jewelry/:ProductId" element={<Product />} />
             <Route path="/userinfo/:Id" element={<UserInfo />} />
-            <Route path="diamondpage" element={<DiamondPage />} />
-            <Route path="/diamond-detail/:gemId" element={<DiamondDetail />} />
-            <Route path="/jewelry" element={<JewelryPage />} />
+            <Route path="Diamonds" element={<DiamondPage />} />
+            <Route path="/Diamonds/:GemId" element={<DiamondDetail />} />
+            <Route path="/Jewelry" element={<JewelryPage />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-of-user" element={<OrderListOfUser />} />
@@ -114,6 +115,10 @@ const App = () => {
               <Route
                 path="/admin/manage-diamond/addDiamond"
                 element={<AddDiamond />}
+              />
+              <Route
+                path="/admin/manage-diamond/Add-Diamond/:GemId"
+                element={<AddDiamondCost />}
               />
 
               <Route path="manage-order" element={<ListOrder />} />

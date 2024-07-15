@@ -42,7 +42,7 @@ const DiamondPage = () => {
       <h1 className="title text-3xl font-bold text-center">
         Trang Giá Kim Cương
       </h1>
-      <DiamondFilter onSearch={handleSearch} />
+      {/* <DiamondFilter onSearch={handleSearch} /> */}
       <DiamondList diamonds={diamonds} />
     </div>
   );

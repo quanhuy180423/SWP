@@ -13,7 +13,7 @@ const Breadcrumb = () => {
             <>
               <li className="breadcrumb-item">
                 <Link to="/" className="text-gray-500 hover:underline text-lg">
-                  Trang chủ
+                  Home
                 </Link>
                 <meta itemProp="position" content="1" />
                 {pathnames.length > 0 && <span className="mx-2"> / </span>}

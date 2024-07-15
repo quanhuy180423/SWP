@@ -31,6 +31,10 @@ export const getAllOrderDetail = () =>
 export const getOrderById = (OrderId) =>
   axios.get(`${API_URL}/getOrderById?OrderId=${OrderId}`);
 
+//lấy add gem cost by gemid
+export const insertCostGem = (gemCost) =>
+  axios.post(`${API_URL}/insertCostGem`, gemCost);
+
 // Hàm lấy danh sách sản phẩm
 export const getAllProducts = () => axios.get(`${API_URL}/getAllProduct`);
 export const getProductById = (ProductId) =>

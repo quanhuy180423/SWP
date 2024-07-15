@@ -62,7 +62,7 @@ const Slidebar = () => {
                         {!isCollapsed && (
                             <Box display='flex' justifyContent='center' alignItems='center' ml='15px'>
                                 <Typography variant="h4" color='grey'>
-                                    ADMIN
+                                    {/* ADMIN */}
                                 </Typography>
                             </Box>
                         )}

@@ -94,7 +94,7 @@ const Blogs = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {blogs.map((blog, index) => (
           <Card key={index}>
-            <Link to={`/blog/${blog.BlogID}`}>
+            <Link to={`/blog/${blog.BlogId}`}>
               <CardMedia
                 className="w-full h-96"
                 image="https://th.bing.com/th/id/OIP.ifiZuFOKsVZUSgB3F1viQQHaHa?rs=1&pid=ImgDetMain"

@@ -1,55 +1,117 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import {
+    Box,
+    Grid,
+    Typography,
+    Paper,
+    CircularProgress,
+    CardMedia,
+    colors
+} from '@mui/material';
+import Swipper from '../../Swipper/Swipper';
 
 const DiamondDetail = () => {
-    const { gemId } = useParams();
+    const { GemId } = useParams();
     const [gem, setGem] = useState({});
+    const [loading, setLoading] = useState(true);
     const API_URL = "http://localhost:8090/test/getGemById";
 
     const getDiamond = async () => {
         try {
-            const response = await axios.get(`${API_URL}?gemId=${gemId}`);
+            const response = await axios.get(`${API_URL}?GemId=${GemId}`);
             console.log('API Response:', response.data); // Log dữ liệu trả về từ API để kiểm tra
 
             // Xử lý trường hợp response.data là một mảng
-            if (Array.isArray(response.data) && response.data.length > 0) {
-                setGem(response.data[0]); // Lấy phần tử đầu tiên của mảng
-            } else {
-                console.error("Invalid data format returned from API");
-            }
+            setGem(response.data)
         } catch (error) {
             console.error("Error fetching diamond data:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
         getDiamond();
-    }, [gemId]);
+    }, [GemId]);
+
+    if (loading) {
+        return (
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height="100vh"
+            >
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return (
-        <div className="flex justify-center">
-            <div className="grid grid-cols-2 h-full w-2/3">
-                <div className="">
-                    <img
-                        // src={gem.Image || "https://th.bing.com/th/id/R.9a0f8983b1ec6ecbc0d7fb3574247159?rik=GXhcx17XhwTMMA&pid=ImgRaw&r=0"}
-                        src="https://th.bing.com/th/id/R.9a0f8983b1ec6ecbc0d7fb3574247159?rik=GXhcx17XhwTMMA&pid=ImgRaw&r=0"
-                        alt={gem.Name}
+        <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100vh"
+            bgcolor="gray.100"
+            p={3}
+        >
+            <Grid container spacing={3} maxWidth="lg">
+                <Grid item xs={12} sm={4}>
+                    <Paper elevation={3}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <Box p={3}
 
-                        className=" h-full w-1/2 object-cover"
-                    />
-                </div>
-                <div className=" p-4">
-                    <h1 className="text-2xl font-bold mb-2">{gem.Name}</h1>
-                    <p><strong>Color:</strong> {gem.Color}</p>
-                    <p><strong>Carat Weight:</strong> {gem.CaratWeight}</p>
-                    <p><strong>Clarity:</strong> {gem.Clarity}</p>
-                    <p><strong>Cut:</strong> {gem.Cut}</p>
-                    <p><strong>Origin:</strong> {gem.Origin}</p>
-                    <p><strong>Identification:</strong> {gem.Identification}</p>
-                </div>
-            </div>
-        </div>
+                            sx={{
+                                height: '300px',
+                                width: '300px',
+                                objectFit: 'cover'
+                            }}
+                        >
+                            <Swipper images={gem.Image} />
+                        </Box>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Paper elevation={3}>
+                        <Box p={3}>
+                            <Typography variant="h4" gutterBottom>
+                                {gem.Name}
+                            </Typography>
+                            <Typography variant="body1"
+                                style={{ color: colors.red[600], fontSize: '25px', fontWeight: 'bold' }}
+                                gutterBottom>
+                                {gem.price}₫
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                                <strong>Color:</strong> {gem.Color}
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                                <strong>Carat Weight:</strong> {gem.CaraWeight}
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                                <strong>Clarity:</strong> {gem.Clarity}
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                                <strong>Cut:</strong> {gem.Cut}
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                                <strong>Origin:</strong> {gem.Origin}
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                                <strong>Identification:</strong> {gem.Identification}
+                            </Typography>
+                        </Box>
+                    </Paper>
+                </Grid>
+            </Grid>
+        </Box>
     );
 };
 

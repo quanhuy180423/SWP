@@ -23,14 +23,14 @@ function AddDiamond() {
 
     const validateForm = () => {
         let tempErrors = {};
-        if (!formData.Name) tempErrors.name = "Name is required";
+        if (!formData.Name) tempErrors.Name = "Name is required";
         if (!formData.Color) tempErrors.Color = "Color is required";
         if (!formData.CaraWeight) tempErrors.CaraWeight = "Cara Weight is required";
         if (!formData.Clarity) tempErrors.Clarity = "Clarity is required";
         if (!formData.Cut) tempErrors.Cut = "Cut is required";
-        if (!formData.Size) tempErrors.Size = "Cost ID Gem is required";
+        if (!formData.Size) tempErrors.Size = "Size is required";
         if (!formData.Origin) tempErrors.Origin = "Origin is required";
-        if (formData.Image.length === 0) tempErrors.Images = "Image is required";
+        if (formData.Image.length === 0) tempErrors.Image = "Image is required";
         if (!formData.Identification) tempErrors.Identification = "Identification is required";
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
@@ -38,15 +38,13 @@ function AddDiamond() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
-        console.log(validateForm())
-        if (validateForm() === 'true') {
-
+        if (validateForm()) {
             try {
+                console.log('Submitting form data:', formData); // Add log to check form data
                 if (formData.Image.length > 0) {
                     const ImageUrls = await handleUploadImages(formData.Image);
                     formData.Image = ImageUrls;
-                    console.log(ImageUrls)
+                    console.log('Uploaded Image URLs:', ImageUrls); // Add log to check uploaded image URLs
                 }
 
                 insertGem(formData)
@@ -55,18 +53,19 @@ function AddDiamond() {
                         navigate('/admin/manage-diamond');
                     })
                     .catch(error => {
+                        console.error('Error adding diamond:', error);
                         if (error.response && error.response.status === 400) {
                             setErrorMessage('Diamond already exists');
                         } else {
-                            console.error('Error adding diamond:', error);
+                            setErrorMessage('Error adding diamond');
                         }
                     });
             } catch (error) {
                 console.error('Error uploading images:', error);
+                setErrorMessage('Error uploading images');
             }
         }
     };
-
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;

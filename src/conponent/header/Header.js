@@ -2,8 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../../cart/CartContext";
 import AuthPopup from "../../page/AuthPopup";
-import SearchComponent from "./Search";
-import { AppBar, Toolbar, Typography, Button, Badge } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Badge,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Cookies from "js-cookie";
@@ -11,9 +18,11 @@ import Cookies from "js-cookie";
 const Header = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const { cart } = useContext(CartContext);
   const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
   const navigate = useNavigate();
+
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -50,6 +59,7 @@ const Header = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     Cookies.remove("loginTime");
+    navigate("/");
   };
 
   const openPopup = () => {
@@ -60,56 +70,55 @@ const Header = () => {
     setIsPopupOpen(false);
   };
 
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <AppBar position="sticky" style={{ backgroundColor: "white" }}>
       <Toolbar
         className="flex flex-col lg:flex-row justify-between items-center px-6 bg-white"
-        style={{ marginBottom: "", backgroundColor: "white" }}
+        style={{ height: "50px" }}
       >
         <Link to="/" className="flex items-center my-2 lg:my-0">
           <img src="./img/diamond.png" alt="logo" className="w-12 h-12" />
-          <Typography variant="h6" className="text-xl text-gray-500 pl-2">
+          <Typography
+            variant="h6"
+            className="text-xl font-bold text-gray-500 pl-2"
+          >
             Sun Shine
           </Typography>
         </Link>
 
         <div className="w-full lg:w-3/6 my-2 lg:my-2">
-          <div className="flex justify-center">
-            <div className="flex-1 w-full lg:w-3/5">
-              <SearchComponent />
-            </div>
-          </div>
-
           <div className="flex space-x-4 justify-evenly mt-2 font-sans">
             <Link
               to="/"
-              className="text-xl text-gray-500 font-sans hover:text-black"
+              className="text-xl font-bold text-gray-500 font-sans hover:text-black"
             >
-              Trang chủ
+              Home
             </Link>
             <Link
-              to="/jewelry"
-              className="text-xl text-gray-500 font-sans hover:text-black"
+              to="/Jewelry"
+              className="text-xl font-bold text-gray-500 font-sans hover:text-black"
             >
-              Trang sức
+              Jewelry
             </Link>
             <Link
-              to="/diamondpage"
-              className="text-xl text-gray-500 font-sans hover:text-black"
+              to="/Diamonds"
+              className="text-xl font-bold text-gray-500 font-sans hover:text-black"
             >
-              Kim cương viên
+              Diamonds
             </Link>
             <Link
-              to="/blog"
-              className="text-xl text-gray-500 font-sans hover:text-black"
+              to="/Blogs"
+              className="text-xl font-bold text-gray-500 font-sans hover:text-black"
             >
-              Blog-tin tức
-            </Link>
-            <Link
-              to="/order-form"
-              className="text-xl text-gray-500 font-sans hover:text-black"
-            >
-              Đặt hàng
+              Blog-News
             </Link>
           </div>
         </div>
@@ -117,24 +126,47 @@ const Header = () => {
         <div className="flex flex-col lg:flex-row items-center space-x-4">
           {user ? (
             <div className="flex items-center space-x-2">
-              <Link
-                to={`/userinfo/${user.Id}`}
-                className="flex items-center space-x-1"
-              >
-                <AccountCircleIcon className="text-gray-500 " />
-                <span className="text-gray-500">{user.UserName}</span>
-              </Link>
-              {user.Role === 1 && (
-                <Link to="/admin" className="text-gray-500 hover:text-black">
-                  <span className="text-red-500 font-bold">Dashboard</span>
-                </Link>
-              )}
               <Button
-                onClick={handleLogout}
-                className="text-gray-500 hover:text-black"
+                aria-controls="account-menu"
+                aria-haspopup="true"
+                onClick={handleMenuClick}
+                className="flex items-center space-x-1 text-gray-500"
               >
-                Logout
+                <AccountCircleIcon />
+                <span>{user.UserName}</span>
               </Button>
+              <Menu
+                id="account-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleMenuClose}>
+                  <Link to={`/userinfo/${user.UserId}`}>Profile</Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <Link to="/order-form">Jewelry Production Order</Link>
+                </MenuItem>
+                {user.Role === 1 && (
+                  <MenuItem onClick={handleMenuClose}>
+                    <Link
+                      to="/admin"
+                      style={{ color: "red", fontWeight: "bold" }}
+                    >
+                      Dashboard
+                    </Link>
+                  </MenuItem>
+                )}
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </Menu>
             </div>
           ) : (
             <div className="flex items-center space-x-2">
@@ -143,7 +175,7 @@ const Header = () => {
                 className="text-gray-500 hover:text-black"
                 onClick={openPopup}
               >
-                Tài khoản
+                Login
               </Button>
             </div>
           )}

@@ -2,6 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import JewelryItem from "../JewelyPage/JewelryItem";
 import { Link, useLocation } from "react-router-dom";
+import {
+  Container,
+  Grid,
+  Typography,
+  Button,
+  CircularProgress,
+  Box,
+} from "@mui/material";
 
 const Body = () => {
   const [selectedCategoryName, setSelectedCategoryName] = useState("");
@@ -47,92 +55,128 @@ const Body = () => {
   }, [location.search]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   const renderProductsByCategoryName = (categoryName) => {
     const filteredProducts = products[categoryName] || [];
     return (
-      <div key={categoryName} className="mb-8">
-        <div className="flex justify-between">
-          <Link
-            to={`/jewelry?CategoryName=${categoryName}`}
-            className="text-gray-800"
-          >
-            <h2 className="text-3xl font-bold mb-4 border-b-red-500 border-b-2">
+      <Box key={categoryName} mb={8}>
+        <Box display="flex" justifyContent="space-between" mb={4}>
+          <Link to={`/jewelry?CategoryName=${categoryName}`}>
+            <Typography
+              variant="h4"
+              component="h2"
+              borderBottom={2}
+              borderColor="red"
+            >
               {categoryName}
-            </h2>
+            </Typography>
           </Link>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4">
+        </Box>
+        <Grid container spacing={2}>
           {filteredProducts.slice(0, 4).map((product) => (
-            <JewelryItem
-              key={product.ProductId}
-              to={`/product/${product.ProductId}`}
-              firstImage={product.Image[0]}
-              title={product.Name}
-              material={product.MaterialName}
-              gem={product.GemName}
-              productCost={product.ProductCost}
-            />
+            <Grid item xs={12} sm={6} md={3} key={product.ProductId}>
+              <JewelryItem
+                to={`/product/${product.ProductId}`}
+                firstImage={product.Image[0]}
+                title={product.Name}
+                material={product.MaterialName}
+                gem={product.GemName}
+                productCost={product.ProductCost}
+              />
+            </Grid>
           ))}
-        </div>
-        <div className="flex justify-center m-2">
-          <Link
+        </Grid>
+        <Box display="flex" justifyContent="center" mt={2}>
+          <Button
+            component={Link}
             to={`/jewelry?CategoryName=${categoryName}`}
-            className="text-gray-800 bg-gray-200 hover:bg-gray-300 border-2 border-gray-500 h-9 w-24"
+            variant="outlined"
+            color="primary"
           >
-            <span className="flex justify-center items-center h-7">
-              Xem thêm
-            </span>
-          </Link>
-        </div>
-        <div className="flex justify-center">
-          <hr className="my-4 border-t-2 border-gray-300 w-10/12" />
-        </div>
-      </div>
+            Xem thêm
+          </Button>
+        </Box>
+        <Box display="flex" justifyContent="center" mt={4}>
+          <Box width="83%">
+            <hr className="my-4 border-t-2 border-gray-300" />
+          </Box>
+        </Box>
+      </Box>
     );
   };
 
   return (
-    <div className="body min-h-screen bg-gray-100">
-      <div>
-        <div className="banner flex justify-center items-center">
-          <div className="carousel-container relative overflow-hidden">
-            <div
-              className="carousel flex transition-transform duration-500 ease-in-out"
-              style={{
-                transform: `translateX(-${currentSlide * 100}%)`,
-              }}
-            >
-              <div className="carousel-item flex-none w-full">
-                <img src="./img/banner1.png" alt="img 1" />
-              </div>
-              <div className="carousel-item flex-none w-full">
-                <img src="./img/banner2.png" alt="img 2" />
-              </div>
-              <div className="carousel-item flex-none w-full">
-                <img src="./img/banner3.png" alt="img 3" />
-              </div>
-              <div className="carousel-item flex-none w-full">
-                <img src="./img/banner4.png" alt="img 4" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <Box minHeight="100vh" bgcolor="gray.100">
+      <Box
+        className="banner"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Box position="relative" overflow="hidden" width="100%">
+          <Box
+            className="carousel"
+            display="flex"
+            transition="transform 0.5s ease-in-out"
+            style={{
+              transform: `translateX(-${currentSlide * 100}%)`,
+            }}
+          >
+            <Box className="carousel-item" flex="none" width="100%">
+              <img
+                src="./img/banner1.png"
+                alt="img 1"
+                style={{ width: "100%" }}
+              />
+            </Box>
+            <Box className="carousel-item" flex="none" width="100%">
+              <img
+                src="./img/banner2.png"
+                alt="img 2"
+                style={{ width: "100%" }}
+              />
+            </Box>
+            <Box className="carousel-item" flex="none" width="100%">
+              <img
+                src="./img/banner3.png"
+                alt="img 3"
+                style={{ width: "100%" }}
+              />
+            </Box>
+            <Box className="carousel-item" flex="none" width="100%">
+              <img
+                src="./img/banner4.png"
+                alt="img 4"
+                style={{ width: "100%" }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
 
-      <div className="flex justify-center">
-        <hr className="my-4 border-t-2 border-gray-300 w-10/12" />
-      </div>
+      <Box display="flex" justifyContent="center" mt={4} mb={4}>
+        <Box width="83%">
+          <hr className="my-4 border-t-2 border-gray-300" />
+        </Box>
+      </Box>
 
-      <div className="container mx-auto my-2">
+      <Container>
         {categories.map((categoryName) =>
           renderProductsByCategoryName(categoryName)
         )}
-      </div>
-    </div>
+      </Container>
+    </Box>
   );
 };
 

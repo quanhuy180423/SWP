@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,15 +30,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const DiamondList = ({ diamonds = [] }) => {
+  const navigate = useNavigate();
   const handleViewDetails = (gemId) => {
-    console.log(`Viewing details for GemID: ${gemId}`);
+    navigate(`/Diamonds/${gemId}`);
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center ">
       <TableContainer
         component={Paper}
-        style={{ width: "80%", container: "center" }}
+        style={{ width: "80%", container: "center", marginTop: "20px" }}
       >
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
