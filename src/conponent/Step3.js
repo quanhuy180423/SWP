@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getAllGem } from "../server/api";
-import DiamondList from "./DiamondList";
-import { TextField, Button, Grid } from "@mui/material";
+
+import { TextField, Button, Grid, colors } from "@mui/material";
+import Step3ListDiamond from "./Step3_1";
 
 const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const [localData, setLocalData] = useState({
@@ -44,6 +45,13 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
     updateFormData(updatedData);
   };
 
+  const handleChoose = (gemId) => {
+    const updatedData = { diamondId: gemId, quantityGem: 1 };
+    setLocalData(updatedData);
+    updateFormData(updatedData);
+    setGemIdError(""); // Clear any previous error
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     updateFormData(localData);
@@ -57,9 +65,9 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
         onSubmit={handleSubmit}
       >
         <h2 className="text-center mb-5 text-2xl text-gray-800">
-          Step 3: Chi tiết kim cương
+          Step 3: Detailed Diamond
         </h2>
-        <DiamondList diamonds={diamonds} />
+        <Step3ListDiamond diamonds={diamonds} onChoose={handleChoose} />
         <Grid container spacing={2} mt={2} mb={2} justifyContent="center">
           <Grid item xs={6}>
             <TextField
@@ -94,15 +102,15 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
               updateFormData(localData);
               prevStep();
             }}
-            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+            style={{ backgroundColor: colors.red[200], color: "black" }}
           >
-            Trở lại
+            Back
           </Button>
           <Button
             type="submit"
-            className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+            style={{ backgroundColor: colors.blue[200], color: "black" }}
           >
-            Tiếp tục
+            Next
           </Button>
         </div>
       </form>

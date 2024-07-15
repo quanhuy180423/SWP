@@ -1,20 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import {
-  Grid,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Button,
-} from "@mui/material";
+import { Button } from "@mui/material";
 
 const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const defaultText = "No additional details provided.";
   const [richText, setRichText] = useState(formData.richText || defaultText);
   const [paymentMethod, setPaymentMethod] = useState(
-    formData.PaymentMethod || ""
+    formData.PaymentMethod || "0"
   );
   const editorRef = useRef(null);
   const [error, setError] = useState("");
@@ -36,11 +28,6 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
     updateFormData({ richText: content });
   };
 
-  const handlePaymentMethodChange = (event) => {
-    setPaymentMethod(event.target.value);
-    updateFormData({ PaymentMethod: event.target.value });
-  };
-
   if (error.length > 0) {
     return (
       <div className="Step4">
@@ -58,43 +45,8 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
           Step 4: Additional Details
         </h3>
         <div>
-          <Grid item xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">
-                Phương thức thanh toán dự kiến
-              </FormLabel>
-              <label className="ml-6 rounded-2xl text-center bg-rose-100">
-                Do Chính sách công ty, khách hàng sau khi nhận được giá từ cửa
-                hàng báo trong 24 giờ sẽ phải thanh toán 100% giá trị sản phẩm.
-              </label>
-              <RadioGroup
-                name="PaymentMethod"
-                value={paymentMethod}
-                defaultChecked
-                onChange={handlePaymentMethodChange}
-              >
-                {/* <FormControlLabel
-                  value="CreditCard"
-                  control={<Radio />}
-                  label="Credit Card"
-                /> */}
-                <FormControlLabel
-                  value="BankTransfer"
-                  control={<Radio />}
-                  label="Chuyển khoảng ngân hàng"
-                />
-                {/* <FormControlLabel
-                  value="CoD"
-                  control={<Radio />}
-                  label="Cash"
-                /> */}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-        </div>
-        <div>
           <Editor
-            apiKey="0ywy09pu3fif7crqzb9n5eygtvh5hwbbpj4vold92e6q9r11"
+            apiKey="os4d30ks8s1mm7ib9m5mkdik7gx1yov0gxkwelf5n5f3gz64"
             init={{
               plugins:
                 "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofDescriptions footnotes mergetags autocorrect typography inlinecss markdown",

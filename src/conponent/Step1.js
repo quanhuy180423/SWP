@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  colors,
+} from "@mui/material";
 
 const API_URL = "http://localhost:8090/test/getUserById";
 
@@ -117,7 +124,7 @@ const Step1 = ({ nextStep, updateFormData, formData }) => {
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, backgroundColor: colors.blue[200], color: "black" }}
         >
           Next
         </Button>

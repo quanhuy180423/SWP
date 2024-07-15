@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllGem, getAllMaterial, getAllCategories } from "../server/api";
+import { getAllMaterial, getAllCategories } from "../server/api";
 import {
   TextField,
   Button,
@@ -8,9 +8,11 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Typography,
+  colors,
 } from "@mui/material";
 
-const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
+const Step2 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const [localData, setLocalData] = useState({
     materialId: formData.materialId || "",
     quantityMaterial: formData.quantityMaterial || 0,
@@ -20,7 +22,7 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
 
   const [materials, setMaterials] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [gemIdError, setGemIdError] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,11 +46,43 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
     setLocalData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (localData.quantityMaterial < 1) {
+      newErrors.quantityMaterial = "Quantity Material must be at least 1";
+    }
+
+    if (localData.size <= 9 || localData.size >= 45) {
+      newErrors.size = "Size must be greater than 9 and less than 45";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    updateFormData(localData);
-    nextStep();
+    if (validateForm()) {
+      updateFormData(localData);
+      nextStep();
+    }
+  };
+
+  const getSizeUnit = (categoryId) => {
+    const category = categories.find((cat) => cat.CategoryId === categoryId);
+    if (category) {
+      if (category.Name.toLowerCase() === "rings") {
+        return "mm";
+      } else if (
+        category.Name.toLowerCase() === "necklaces" ||
+        category.Name.toLowerCase() === "bracelets"
+      ) {
+        return "cm";
+      }
+    }
+    return "";
   };
 
   return (
@@ -58,13 +92,13 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
         onSubmit={handleSubmit}
       >
         <h2 className="text-center mb-5 text-2xl text-gray-800">
-          Step 3: Chi tiết trang sức
+          Step 2: Detailed jewelry
         </h2>
 
         <Grid container spacing={2} mt={2} mb={2} justifyContent="center">
           <Grid item xs={6}>
             <FormControl fullWidth margin="normal">
-              <InputLabel>Material</InputLabel>
+              <Typography>Material</Typography>
               <Select
                 name="materialId"
                 value={localData.materialId}
@@ -83,20 +117,22 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
           </Grid>
 
           <Grid item xs={6}>
+            <Typography>Quantity Material</Typography>
             <TextField
-              label="Trọng lượng (Chỉ)"
               name="quantityMaterial"
               value={localData.quantityMaterial}
               onChange={handleChange}
               fullWidth
               margin="normal"
               type="number"
+              error={!!errors.quantityMaterial}
+              helperText={errors.quantityMaterial}
             />
           </Grid>
 
           <Grid item xs={6}>
             <FormControl fullWidth margin="normal">
-              <InputLabel>Category</InputLabel>
+              <Typography>Category</Typography>
               <Select
                 name="categoryId"
                 value={localData.categoryId}
@@ -115,14 +151,18 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
           </Grid>
 
           <Grid item xs={6}>
+            <Typography>
+              {`Size (${getSizeUnit(localData.categoryId)})`}
+            </Typography>
             <TextField
-              label="Size (Ni)"
               name="size"
               value={localData.size}
               onChange={handleChange}
               fullWidth
               margin="normal"
               type="number"
+              error={!!errors.size}
+              helperText={errors.size}
             />
           </Grid>
         </Grid>
@@ -131,15 +171,15 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
           <Button
             type="button"
             onClick={prevStep}
-            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+            style={{ backgroundColor: colors.red[200], color: "black" }}
           >
-            Trở lại
+            Back
           </Button>
           <Button
             type="submit"
-            className="bg-green-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
+            style={{ backgroundColor: colors.blue[200], color: "black" }}
           >
-            Tiếp tục
+            Next
           </Button>
         </div>
       </form>
@@ -147,4 +187,4 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
   );
 };
 
-export default Step3;
+export default Step2;
