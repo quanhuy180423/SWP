@@ -131,19 +131,6 @@ const ListMaterial = () => {
                     >
                         Add Material
                     </Button>
-                    <Button component={Link} to='addCostMaterial'
-                        sx={{
-                            backgroundColor: colors.blue[300],
-                            color: 'white',
-                            '&:hover': {
-                                backgroundColor: 'green',
-                                color: 'white',
-                            },
-                        }}
-                        variant="contained"
-                    >
-                        Add Cost Material
-                    </Button>
                 </Box>
                 <Box
                     m='40px 0 0 0'

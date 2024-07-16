@@ -4,25 +4,21 @@ import axios from "axios";
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  // Khởi tạo giỏ hàng từ localStorage nếu có, nếu không thì trống
   const initialCart = JSON.parse(localStorage.getItem("cart")) || [];
   const [cart, setCart] = useState(initialCart);
   const [user, setUser] = useState(null);
   const API_URL = "http://localhost:8090/test/getUserById";
-  // Cập nhật localStorage mỗi khi giỏ hàng thay đổi
+
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Hàm lấy thông tin người dùng
   const fetchUserData = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.Id) {
       const userId = storedUser.Id;
-      console.log(userId);
       try {
         const response = await axios.get(`${API_URL}?UserId=${userId}`);
-        console.log(response.data);
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -65,6 +61,10 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -73,6 +73,7 @@ export const CartProvider = ({ children }) => {
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,
         fetchUserData,
       }}
     >

@@ -41,6 +41,7 @@ import OrderDesign from "./AdminConponent/Mana-Order/OrderDeign";
 import OrderProduction from "./AdminConponent/Mana-Order/OrderProduction";
 import OrderComplete from "./AdminConponent/Mana-Order/OrderComplete";
 import AddDiamondCost from "./AdminConponent/Mana-Diamond/AddDiamondCost";
+import EditProduct from "./AdminConponent/Mana-Product/EditProduct";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -59,13 +60,19 @@ const App = () => {
             <Route path="Diamonds" element={<DiamondPage />} />
             <Route path="/Diamonds/:GemId" element={<DiamondDetail />} />
             <Route path="/Jewelry" element={<JewelryPage />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/order-of-user" element={<OrderListOfUser />} />
-            <Route
-              path="/order-of-user/order-detail-user/:OrderId"
-              element={<OrderDetailUser />}
-            />
+            {user !== null ? (
+              <>
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/order-of-user" element={<OrderListOfUser />} />
+                <Route
+                  path="/order-of-user/order-detail-user/:OrderId"
+                  element={<OrderDetailUser />}
+                />
+              </>
+            ) : (
+              <Route index element={<HomePage />} />
+            )}
           </Route>
 
           {(user.Role === 1 || user.Role === 2) && (
@@ -128,6 +135,10 @@ const App = () => {
               <Route
                 path="manage-product/addProduct"
                 element={<AddProduct />}
+              />
+              <Route
+                path="manage-product/Edit-Product/:ProductId"
+                element={<EditProduct />}
               />
               <Route
                 path="manage-order/List-Request"

@@ -69,8 +69,11 @@ export const getAllOrders = () => axios.get(`${API_URL}/getAllOrder`);
 //hàm thêm tạo mới order khi dành cho sản phẩm có sẳn của cửa hàng
 export const insertOrder = (order) =>
   axios.post(`${API_URL}/insertOrder`, order);
-export const updateOrder = (order) =>
-  axios.put(`${API_URL}/updateOrderById`, { order });
+
+//Update order
+export const updateOrderById = (order) =>
+  axios.put(`${API_URL}/updateOrderById`, order);
+
 export const deleteOrder = (id) =>
   axios.delete(`${API_URL}/deleteOrderById`, { data: { id } });
 

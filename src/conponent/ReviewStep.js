@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import Alert from "@mui/material/Alert";
 import { orderRequest } from "../server/api";
 
 const ReviewStep = ({ prevStep, formData }) => {
-  const [orderForm, setOrderForm] = useState({
+  const [orderForm] = useState({
     UserId: formData.step1.UserId,
     UserName: formData.step1.UserName,
     ProductName: formData.step1.Name,
@@ -22,7 +21,7 @@ const ReviewStep = ({ prevStep, formData }) => {
     Image: [],
     ProductCost: "0",
     Status: "RqOrder",
-    PaymentMethods: "1",
+    PaymentMethods: "0", //chưa có phương thức thanh toán
     WarrantyCard: "Yes", // Assuming you have this information
   });
 

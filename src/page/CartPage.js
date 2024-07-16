@@ -16,7 +16,6 @@ const Cart = () => {
   const { cart, user, removeFromCart, updateQuantity, fetchUserData } =
     useContext(CartContext);
   const navigate = useNavigate();
-  const API_URL = "http://localhost:8090/test";
 
   useEffect(() => {
     fetchUserData();
@@ -49,7 +48,7 @@ const Cart = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-center text-3xl font-bold mb-7">Giỏ hàng của bạn</h1>
+      <h1 className="text-center text-3xl font-bold mb-7">Your cart</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="col-span-2">
           {cart.map((item, index) => (
@@ -65,13 +64,13 @@ const Cart = () => {
               />
               <CardContent className="flex-1 ml-4">
                 <Typography variant="h5" fontWeight={"bold"}>
-                  Tên sản phẩm: {item.Name}
+                  Name: {item.Name}
                 </Typography>
-                <Typography>Loại sản phẩm: {item.CategoryName}</Typography>
-                <Typography>Kim cương: {item.GemName}</Typography>
-                <Typography>Kích thước: {item.Size}</Typography>
+                <Typography>Category: {item.CategoryName}</Typography>
+                <Typography>Diamond: {item.GemName}</Typography>
+                <Typography>Size: {item.Size}</Typography>
                 <Typography fontWeight={"bold"}>
-                  Giá thành phẩm: {item.ProductCost} đ
+                  Price: {item.ProductCost} đ
                 </Typography>
                 <div className="flex items-center mt-2">
                   <IconButton
@@ -106,23 +105,31 @@ const Cart = () => {
 
         <div className="col-span-1 bg-slate-200 p-4 rounded-lg grid place-items-center h-60">
           <Typography variant="h5" className="mb-2">
-            Hóa đơn
+            Bill
           </Typography>
-          <Typography>
-            Phí vận chuyển: {formattedShipping.toLocaleString()}₫
-          </Typography>
-          <Typography>Thuế: {formattedTax.toLocaleString()}₫</Typography>
           <Typography variant="h6" className="font-bold">
-            Thành cộng: {totalAmount.toLocaleString()}₫
+            Price: {totalAmount.toLocaleString()}₫
           </Typography>
-          <Button
-            onClick={handleCheckout}
-            variant="contained"
-            color="primary"
-            className="mt-4"
-          >
-            Thanh toán
-          </Button>
+          {totalAmount <= 0 ? (
+            <Button
+              onClick={handleCheckout}
+              variant="contained"
+              color="primary"
+              className="mt-4"
+              disabled
+            >
+              Check out
+            </Button>
+          ) : (
+            <Button
+              onClick={handleCheckout}
+              variant="contained"
+              color="primary"
+              className="mt-4"
+            >
+              Check out
+            </Button>
+          )}
         </div>
       </div>
     </div>

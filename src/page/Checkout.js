@@ -15,19 +15,25 @@ import {
   ListItemAvatar,
   Avatar,
   Divider,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import {
   getAllOrderDetail,
   getOrderById,
   getOrderDetailByOrderId,
   updateStatusOrderDetailById,
+  updateOrderById,
 } from "../server/api";
 
 const Checkout = () => {
   const { cart, removeFromCart } = useContext(CartContext);
   const [user, setUser] = useState(null);
   const [orderId, setOrderId] = useState("");
-  const [orderDetailId, setOrderDetailId] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("1");
   const API_URL = "http://localhost:8090/test";
 
   const USER_API_URL = "http://localhost:8090/test/getUserById";
@@ -75,7 +81,7 @@ const Checkout = () => {
       if (Order.data[0].Status === "banked") {
         const statusOrderDetail = await getOrderDetailByOrderId(orderId);
         const OrderDetailId = statusOrderDetail.data[0].OrderDetailId;
-        console.log(orderDetailId);
+        console.log(OrderDetailId);
         const updateStatusOrderDetail = {
           OrderDetailId: OrderDetailId,
           Status: "banked",
@@ -119,17 +125,11 @@ const Checkout = () => {
   );
   const formattedTotalCost = parseFloat(totalCost.toFixed(2));
 
-  const shipping = formattedTotalCost * 0.05;
-  const formattedShipping = parseFloat(shipping.toFixed(2));
-
-  const tax = formattedTotalCost * 0.1;
-  const formattedTax = parseFloat(tax.toFixed(2));
-
-  const totalAmount = formattedTotalCost + formattedShipping + formattedTax;
+  const totalAmount = formattedTotalCost;
 
   const handleCheckout = async () => {
     if (!user) {
-      alert("Bạn cần đăng nhập để thanh toán.");
+      alert("You need to sign in to pay.");
       return;
     }
 
@@ -141,7 +141,8 @@ const Checkout = () => {
 
       for (let item of cart) {
         const matchingOrder = orderItems.find(
-          (order) => order.ProductId === item.ProductId && order.Status === 0
+          (order) =>
+            order.ProductId === item.ProductId && order.Status === "ChkOut"
         );
         if (matchingOrder) {
           existingOrderId = matchingOrder.OrderId;
@@ -152,7 +153,7 @@ const Checkout = () => {
       if (!existingOrderId) {
         const productIds = cart.map((item) => item.ProductId);
         const orderRequestData = {
-          PaymentMethods: "1",
+          PaymentMethods: paymentMethod,
           Phone: user.Phone,
           Address: user.Address,
           Status: "ChkOut",
@@ -176,9 +177,25 @@ const Checkout = () => {
         bankCode: "NCB",
       };
 
-      const paymentResponse = await axios.post(ORDER_API_URL, paymentDetails);
-      const paymentUrl = paymentResponse.data.paymentUrl;
-      window.location.href = paymentUrl;
+      if (paymentMethod === "1") {
+        const paymentResponse = await axios.post(ORDER_API_URL, paymentDetails);
+        const paymentUrl = paymentResponse.data.paymentUrl;
+        window.location.href = paymentUrl;
+      } else {
+        const updatedOrder = {
+          PaymentMethods: paymentMethod,
+          Phone: user.Phone,
+          Address: user.Address,
+          Status: "COD",
+          UserId: user.UserId,
+          Description: "Sản phẩm có sẵn của cửa hàng",
+          Name: user.UserName,
+          OrderId: existingOrderId || response.data.OrderId,
+        };
+        await updateOrderById(updatedOrder);
+        alert("Order will be paid on delivery.");
+        // Add any additional logic needed for COD orders here
+      }
     } catch (error) {
       console.error("Error during checkout process:", error);
     }
@@ -187,20 +204,16 @@ const Checkout = () => {
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" align="center" gutterBottom>
-        Thông tin thanh toán
-      </Typography>
-      <Typography variant="subtitle1" align="center" gutterBottom>
-        Do Chính sách công ty, khách hàng sau khi nhận được giá từ cửa hàng báo
-        trong 24 giờ sẽ phải thanh toán 100% giá trị sản phẩm.
+        Payment Detail
       </Typography>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ padding: 3 }}>
             <Typography variant="h5" gutterBottom>
-              Địa chỉ giao hàng
+              Customer Information
             </Typography>
             <TextField
-              label="Tên"
+              label="Name"
               value={user ? user.Name : ""}
               fullWidth
               margin="normal"
@@ -209,7 +222,7 @@ const Checkout = () => {
               }}
             />
             <TextField
-              label="Số điện thoại"
+              label="Phone"
               value={user ? user.Phone : ""}
               fullWidth
               margin="normal"
@@ -218,7 +231,7 @@ const Checkout = () => {
               }}
             />
             <TextField
-              label="Địa chỉ"
+              label="Address"
               value={user ? user.Address : ""}
               fullWidth
               margin="normal"
@@ -236,18 +249,37 @@ const Checkout = () => {
               }}
             />
             <TextField
-              label="Mã đơn hàng"
+              label="Order ID"
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
               fullWidth
               margin="normal"
+              disabled
             />
+            <FormControl component="fieldset" sx={{ marginTop: 2 }}>
+              <FormLabel component="legend">Payment Method</FormLabel>
+              <RadioGroup
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              >
+                <FormControlLabel
+                  value="1"
+                  control={<Radio />}
+                  label="Payment with VN Pay"
+                />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio />}
+                  label="Cash On Delivery (COD)"
+                />
+              </RadioGroup>
+            </FormControl>
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ padding: 3 }}>
             <Typography variant="h5" gutterBottom>
-              Tóm tắt giỏ hàng
+              Order Summary
             </Typography>
             <List>
               {cart.map((item, index) => (
@@ -258,7 +290,7 @@ const Checkout = () => {
                     </ListItemAvatar>
                     <ListItemText
                       primary={item.Name}
-                      secondary={`Giá: ${item.ProductCost.toLocaleString()}₫ - Số lượng: ${
+                      secondary={`Price: ${item.ProductCost.toLocaleString()}₫ - Quantity: ${
                         item.quantity
                       }`}
                     />
@@ -268,17 +300,8 @@ const Checkout = () => {
               ))}
             </List>
             <Box mt={2}>
-              <Typography variant="body1" gutterBottom>
-                Tổng giá: {formattedTotalCost.toLocaleString()}₫
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Phí vận chuyển: {formattedShipping.toLocaleString()}₫
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Thuế: {formattedTax.toLocaleString()}₫
-              </Typography>
               <Typography variant="h6" gutterBottom>
-                Thành tiền: {totalAmount.toLocaleString()}₫
+                Total Price: {totalAmount.toLocaleString()}₫
               </Typography>
               <Button
                 variant="contained"
@@ -286,7 +309,7 @@ const Checkout = () => {
                 fullWidth
                 onClick={handleCheckout}
               >
-                Xác nhận đơn hàng
+                Check Out
               </Button>
             </Box>
           </Paper>

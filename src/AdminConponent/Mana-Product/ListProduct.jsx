@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import { deleteProduct, getAllProducts } from "../../server/api";
-import { Box, Button, colors, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme } from "@mui/material";
+import { Box, Button, colors, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, IconButton } from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid } from "@mui/x-data-grid";
-import ActionButtons from "../Mana-Account/ActionButtons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ListProduct = () => {
     const [products, setProducts] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
     const theme = useTheme();
-
+    const navigate = useNavigate();
     useEffect(() => {
         const getListProduct = async () => {
             try {
@@ -29,8 +30,10 @@ const ListProduct = () => {
         getListProduct();
     }, []);
 
-    const handleEdit = (productId) => {
-        console.log("Edit product with ID:", productId);
+    const handleEdit = (ProductId) => {
+        console.log(ProductId)
+        navigate(`manage-product/Edit-Product/${ProductId}`)
+
     };
 
     const handleDelete = (ProductId) => {
@@ -58,20 +61,26 @@ const ListProduct = () => {
             width: 70,
         },
         { field: 'Name', headerName: 'Name', width: 250 },
-        { field: 'MaterialName', headerName: 'Material Name', width: 250 },
-        { field: 'CategoryName', headerName: 'Category Name', width: 250 },
-        { field: 'GemName', headerName: 'Gem Name', width: 250 },
+        { field: 'MaterialName', headerName: 'Material Name', width: 150 },
+        { field: 'CategoryName', headerName: 'Category Name', width: 150 },
+        { field: 'GemName', headerName: 'Gem Name', width: 150 },
         { field: 'ProductCost', headerName: 'Price', width: 100 },
         {
             field: 'Actions',
             headerName: 'Actions',
             width: 200,
             renderCell: (params) => (
-                <ActionButtons
-                    onView={() => console.log("View product with ID:", params.row.ProductId)}
-                    onEdit={() => handleEdit(params.row.ProductId)}
-                    onDelete={() => handleDelete(params.row.ProductId)}
-                />
+                <>
+                    <Box display='flex' justifyContent='space-around'>
+                        <IconButton component={Link} to={`/admin/manage-product/Edit-Product/${params.row.ProductId}`} >
+                            <FontAwesomeIcon icon={faEdit} />
+                        </IconButton>
+                        <IconButton onClick={() => handleDelete(params.row.ProductId)}>
+                            <FontAwesomeIcon icon={faTrash} />
+                        </IconButton>
+
+                    </Box>
+                </>
             ),
         }
     ];
@@ -83,7 +92,18 @@ const ListProduct = () => {
             <Box>
                 <Header title='MANAGE PRODUCT' subtitle='Managing the product inventory' />
                 <Box display='flex' justifyContent='flex-end' m={2}>
-                    <Button component={Link} to={'/admin/manage-product/addProduct'}>
+                    <Button component={Link} to={'/admin/manage-product/addProduct'}
+                        sty sx={{
+                            backgroundColor: colors.blue[300],
+                            color: 'white',
+                            '&:hover': {
+                                backgroundColor: 'green',
+                                color: 'white',
+                            },
+                            margin: '0 60px'
+                        }}
+                        variant="contained"
+                    >
                         Add Product
                     </Button>
                 </Box>

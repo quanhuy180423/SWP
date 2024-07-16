@@ -7,7 +7,6 @@ import {
     Typography,
     Paper,
     CircularProgress,
-    CardMedia,
     colors
 } from '@mui/material';
 import Swipper from '../../Swipper/Swipper';
@@ -16,7 +15,7 @@ const DiamondDetail = () => {
     const { GemId } = useParams();
     const [gem, setGem] = useState({});
     const [loading, setLoading] = useState(true);
-    const API_URL = "http://localhost:8090/test/getGemById";
+    const API_URL = "http://localhost:8090/test/getGemAndPriceById";
 
     const getDiamond = async () => {
         try {
@@ -87,7 +86,7 @@ const DiamondDetail = () => {
                             <Typography variant="body1"
                                 style={{ color: colors.red[600], fontSize: '25px', fontWeight: 'bold' }}
                                 gutterBottom>
-                                {gem.price}₫
+                                {gem.Price}₫
                             </Typography>
                             <Typography variant="body1" gutterBottom>
                                 <strong>Color:</strong> {gem.Color}

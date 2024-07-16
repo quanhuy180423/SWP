@@ -79,6 +79,7 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
               helperText={gemIdError}
               fullWidth
               margin="normal"
+              disabled
             />
           </Grid>
 
@@ -89,6 +90,7 @@ const Step3 = ({ nextStep, prevStep, updateFormData, formData }) => {
               InputProps={{
                 readOnly: true,
               }}
+              disabled
               fullWidth
               margin="normal"
             />

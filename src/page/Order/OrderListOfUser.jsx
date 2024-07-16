@@ -80,6 +80,7 @@ const OrderListOfUser = () => {
     const [error, setError] = useState(null);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectedStatus, setSelectedStatus] = useState('All');
 
     const fetchOrders = async () => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -143,6 +144,13 @@ const OrderListOfUser = () => {
         }
     };
 
+    const filterOrders = () => {
+        if (selectedStatus === 'All') {
+            return orders;
+        }
+        return orders.filter(order => order.Status === selectedStatus);
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -156,6 +164,33 @@ const OrderListOfUser = () => {
             <Typography variant="h4" gutterBottom>
                 My Orders
             </Typography>
+            <Box mb={2}>
+                <Button variant={selectedStatus === 'All' ? 'contained' : 'none'} onClick={() => setSelectedStatus('All')}
+                    style={{
+
+                    }}
+                >
+                    All
+                </Button>
+                <Button variant={selectedStatus === 'RqOrder' ? 'contained' : 'none'} onClick={() => setSelectedStatus('RqOrder')}>
+                    Request Order
+                </Button>
+                <Button variant={selectedStatus === 'AptQuote' ? 'contained' : 'none'} onClick={() => setSelectedStatus('AptQuote')}>
+                    Accept Quote
+                </Button>
+                <Button variant={selectedStatus === 'ChkOut' ? 'contained' : 'none'} onClick={() => setSelectedStatus('ChkOut')}>
+                    Check Out
+                </Button>
+                <Button variant={selectedStatus === 'ProComl' ? 'contained' : 'none'} onClick={() => setSelectedStatus('ProComl')}>
+                    Production Complete
+                </Button>
+                <Button variant={selectedStatus === 'Ship' ? 'contained' : 'none'} onClick={() => setSelectedStatus('Ship')}>
+                    Ship
+                </Button>
+                <Button variant={selectedStatus === 'Done' ? 'contained' : 'none'} onClick={() => setSelectedStatus('Done')}>
+                    Done
+                </Button>
+            </Box>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
@@ -169,8 +204,8 @@ const OrderListOfUser = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {orders.length > 0 ? (
-                            orders.map((order) => (
+                        {filterOrders().length > 0 ? (
+                            filterOrders().map((order) => (
                                 <StyledTableRow
                                     key={order.OrderId}
                                 >
@@ -183,7 +218,7 @@ const OrderListOfUser = () => {
                                     <StyledTableCell>
                                         <IconButton>
                                             <StyledTableCell
-                                                style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px' }}
+                                                style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px', width: '180px', display: 'flex', justifyContent: 'center' }}
                                             >
                                                 {generateStatus(order.Status)}
                                             </StyledTableCell>
@@ -214,7 +249,7 @@ const OrderListOfUser = () => {
                             ))
                         ) : (
                             <StyledTableRow>
-                                <StyledTableCell colSpan={5} align="center">
+                                <StyledTableCell colSpan={6} align="center">
                                     No orders found.
                                 </StyledTableCell>
                             </StyledTableRow>

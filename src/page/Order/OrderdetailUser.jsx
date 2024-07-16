@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getOrderDetailByOrderId, getProductById, updateStatusOrderDetailById } from '../../server/api';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Grid, colors } from '@mui/material';
-import { CartContext } from '../../cart/CartContext';  // Import the CartContext
+import { CartContext } from '../../cart/CartContext';
 
 const OrderDetailUser = () => {
     const { OrderId } = useParams();
@@ -10,7 +10,7 @@ const OrderDetailUser = () => {
     const [orderDetail, setOrderDetail] = useState(null);
     const [productDetail, setProductDetail] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const { addToCart } = useContext(CartContext);  // Use the CartContext
+    const { addToCart, clearCart } = useContext(CartContext);
 
     useEffect(() => {
         const fetchOrderDetail = async () => {
@@ -39,7 +39,8 @@ const OrderDetailUser = () => {
         try {
             const response = await getProductById(orderDetail.ProductId);
             const product = response.data;
-            addToCart(product, 1);  // Assuming quantity is 1
+            clearCart();
+            addToCart(product, 1);
             navigate('/checkout');
         } catch (error) {
             console.error('Error fetching product detail:', error);
