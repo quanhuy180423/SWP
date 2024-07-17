@@ -137,7 +137,9 @@ const ReviewStep = ({ prevStep, formData }) => {
         {showConfirmation && (
           <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
-              <p className="text-xl mb-4">Bạn muốn gửi yêu cầu đặt hàng?</p>
+              <p className="text-xl mb-4">
+                Do you want to submit an order request?
+              </p>
               <div className="flex justify-between">
                 <button
                   className="bg-green-500 text-white py-2 px-4 rounded-lg mr-2 hover:opacity-80"
@@ -146,13 +148,13 @@ const ReviewStep = ({ prevStep, formData }) => {
                     handleSubmitOrder();
                   }}
                 >
-                  Đồng ý
+                  I agree
                 </button>
                 <button
                   className="bg-red-500 text-white py-2 px-4 rounded-lg hover:opacity-80"
                   onClick={() => setShowConfirmation(false)}
                 >
-                  Hủy bỏ
+                  Cancel
                 </button>
               </div>
             </div>

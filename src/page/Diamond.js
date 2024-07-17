@@ -27,7 +27,7 @@ const DiamondPage = () => {
         className="article-img mb-5"
       />
       <h1 className="title text-3xl font-bold text-center">
-        Trang Giá Kim Cương
+        Diamond Price Page
       </h1>
       <DiamondList diamonds={diamonds} />
     </div>

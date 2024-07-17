@@ -12,6 +12,9 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import { colors } from '@mui/material';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -23,7 +26,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(({ theme, status }) => ({
+    backgroundColor: theme.palette.grey,
     '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,
     },
@@ -32,10 +36,65 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+const DividerStyled = styled(Divider)(({ theme }) => ({
+    backgroundColor: theme.palette.common.black,
+    height: '30px',
+    alignSelf: 'center',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+}));
+
+const generateStatus = (status) => {
+    switch (status) {
+        case 'RqOrder':
+            return 'Request Order';
+        case 'AptQuote':
+            return 'Accept Quote';
+        case 'ChkOut':
+            return 'Check Out';
+        case 'banked':
+            return 'Processing';
+        case 'ProComl':
+            return 'Production Complete';
+        case 'Ship':
+            return 'Ship';
+        case 'Done':
+            return 'Done';
+        case 'Cancel':
+            return 'Cancelled';
+        default:
+            return status;
+    }
+};
+
+const getRowBackgroundColor = (status) => {
+    switch (status) {
+        case 'RqOrder':
+            return colors.red[100];
+        case 'AptQuote':
+            return colors.blue[100];
+        case 'ChkOut':
+            return colors.yellow[100];
+        case 'banked':
+            return colors.purple[100];
+        case 'ProComl':
+            return colors.green[100];
+        case 'Ship':
+            return colors.teal[100];
+        case 'Done':
+            return colors.green[200];
+        case 'Cancel':
+            return colors.grey[400];
+        default:
+            return 'inherit';
+    }
+};
+
 const OrderListRequest = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState('All');
 
     const fetchOrders = async () => {
         try {
@@ -72,6 +131,22 @@ const OrderListRequest = () => {
         }
     };
 
+    const handleCancelOrder = async (order) => {
+        try {
+            await handleUpdateStatus(order, 'Cancel', 'Cancel');
+        } catch (error) {
+            console.error('Error cancelling order:', error);
+            setError('Error cancelling order');
+        }
+    };
+
+    const filterOrders = () => {
+        if (selectedStatus === 'All') {
+            return orders.filter(order => order.Status === 'RqOrder' || order.Status === 'banked' || order.Status === 'Order_COD ');
+        }
+        return orders.filter(order => order.Status === selectedStatus);
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -80,13 +155,35 @@ const OrderListRequest = () => {
         return <div>{error}</div>;
     }
 
-    const filteredOrders = orders.filter(order => order.Status === 'banked' || order.Status === 'RqOrder');
+    const filteredOrders = filterOrders();
 
     return (
         <Box p={3}>
             <Typography variant="h4" gutterBottom>
                 Order Requests
             </Typography>
+            <Box mb={2} display="flex" alignItems="center">
+                <Button
+                    variant={selectedStatus === 'RqOrder' ? 'contained' : 'none'}
+                    onClick={() => setSelectedStatus('RqOrder')}
+                >
+                    Request Order
+                </Button>
+                <DividerStyled orientation="vertical" flexItem />
+                <Button
+                    variant={selectedStatus === 'banked' ? 'contained' : 'none'}
+                    onClick={() => setSelectedStatus('banked')}
+                >
+                    Banked
+                </Button>
+                <DividerStyled orientation="vertical" flexItem />
+                <Button
+                    variant={selectedStatus === 'Order_COD' ? 'contained' : 'none'}
+                    onClick={() => setSelectedStatus('Order_COD')}
+                >
+                    Order using COD
+                </Button>
+            </Box>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
@@ -96,27 +193,25 @@ const OrderListRequest = () => {
                             <StyledTableCell>Phone</StyledTableCell>
                             <StyledTableCell>Address</StyledTableCell>
                             <StyledTableCell>Status</StyledTableCell>
-                            <StyledTableCell
-                                style={{ display: 'flex', justifyContent: 'center' }}
-                            >Actions</StyledTableCell>
+                            <StyledTableCell>Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredOrders.length > 0 ? (
                             filteredOrders.map((order) => (
-                                <StyledTableRow key={order.OrderId}>
+                                <StyledTableRow key={order.OrderId} status={order.Status}>
                                     <StyledTableCell component="th" scope="row">
                                         {order.OrderId}
                                     </StyledTableCell>
                                     <StyledTableCell>{order.Name}</StyledTableCell>
                                     <StyledTableCell>{order.Phone}</StyledTableCell>
                                     <StyledTableCell>{order.Address}</StyledTableCell>
-                                    <StyledTableCell>{order.Status}</StyledTableCell>
+                                    <StyledTableCell>{generateStatus(order.Status)}</StyledTableCell>
                                     <StyledTableCell
                                         style={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
-                                            width: '300px',
+                                            width: '400px',
                                         }}
                                     >
                                         <Button
@@ -128,13 +223,22 @@ const OrderListRequest = () => {
                                             View
                                         </Button>
                                         {order.Status === 'RqOrder' && (
-                                            <Button
-                                                variant="contained"
-                                                color="secondary"
-                                                onClick={() => handleUpdateStatus(order, 'RqQuote', 'RqQuote')}
-                                            >
-                                                Send Manager
-                                            </Button>
+                                            <>
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => handleUpdateStatus(order, 'RqQuote', 'RqQuote')}
+                                                >
+                                                    Send Manager
+                                                </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    color="error"
+                                                    onClick={() => handleCancelOrder(order)}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </>
                                         )}
                                         {order.Status === 'banked' && (
                                             <Button
@@ -145,12 +249,21 @@ const OrderListRequest = () => {
                                                 Send Design
                                             </Button>
                                         )}
+                                        {order.Status === 'Order_COD' && (
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleUpdateStatus(order, 'Order_COD', 'Design')}
+                                            >
+                                                Send Design
+                                            </Button>
+                                        )}
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))
                         ) : (
                             <StyledTableRow>
-                                <StyledTableCell colSpan={5} align="center">
+                                <StyledTableCell colSpan={6} align="center">
                                     No orders found.
                                 </StyledTableCell>
                             </StyledTableRow>
@@ -161,5 +274,7 @@ const OrderListRequest = () => {
         </Box>
     );
 };
+
+
 
 export default OrderListRequest;

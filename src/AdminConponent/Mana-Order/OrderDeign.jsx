@@ -55,12 +55,12 @@ const OrderDesign = () => {
 
     const handleSendManager = async (order) => {
         const OrderId = order.OrderId;
-        const Status = 'RqQuote';
+        const Status = 'Production';
         try {
             await updateStatusOrdeById(OrderId, Status);
             setOrders((prevOrders) =>
                 prevOrders.map((o) =>
-                    o.OrderId === order.OrderId ? { ...o, Status: 'RqQuote' } : o
+                    o.OrderId === order.OrderId ? { ...o, Status: 'Production' } : o
                 )
             );
         } catch (error) {
@@ -126,7 +126,7 @@ const OrderDesign = () => {
                                             variant="contained" color="secondary"
                                             onClick={() => handleSendManager(order)}
                                         >
-                                            Send Manager
+                                            Send Sale Staff
                                         </Button>
                                         {/* <Button variant="contained" color="error">
                                             Decline

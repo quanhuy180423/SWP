@@ -186,7 +186,7 @@ const Checkout = () => {
           PaymentMethods: paymentMethod,
           Phone: user.Phone,
           Address: user.Address,
-          Status: "COD",
+          Status: "Order_COD",
           UserId: user.UserId,
           Description: "Sản phẩm có sẵn của cửa hàng",
           Name: user.UserName,

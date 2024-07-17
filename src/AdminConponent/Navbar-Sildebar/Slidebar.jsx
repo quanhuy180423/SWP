@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from "@mui/material";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import MenuIcon from '@mui/icons-material/Menu';
@@ -26,6 +26,13 @@ const Item = ({ title, to, icon, selected, setSelected }) => (
 const Slidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState('');
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        // Retrieve the user information from local storage
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+    }, []);
 
     return (
         <Box
@@ -50,7 +57,6 @@ const Slidebar = () => {
                                     color: disabled ? '#d9d9d9' : '#a5e1ff',
                                     backgroundColor: active ? '#f7f7f7' : undefined,
                                     height: '100%'
-
                                 };
                         },
                     }}
@@ -69,7 +75,7 @@ const Slidebar = () => {
                     </MenuItem>
 
                     {/* User */}
-                    {!isCollapsed && (
+                    {!isCollapsed && user && (
                         <Box textAlign='center'>
                             <Box m="10px" display='flex' justifyContent='center'>
                                 <img
@@ -82,15 +88,15 @@ const Slidebar = () => {
                             </Box>
 
                             <Typography
-                                variant="h3"
+                                variant="h5"
                                 color='grey'
                                 fontWeight='bold'
                                 sx={{ m: '10px 0 0 0' }}
                             >
-                                Name
+                                {user.UserName}
                             </Typography>
                             <Typography variant="h5" color='green'>
-                                Role
+                                {user.Role === 1 ? 'Admin' : user.Role === 3 ? 'Staff' : ''}
                             </Typography>
                         </Box>
                     )}
@@ -106,7 +112,7 @@ const Slidebar = () => {
                         />
                         <SubMenu
                             label="Manage Account"
-                            icon={<FontAwesomeIcon icon={faUser} style={{ marginRight: '30px', }} />}
+                            icon={<FontAwesomeIcon icon={faUser} style={{ marginRight: '30px' }} />}
                             style={{ color: 'black', height: '60px' }}
                         >
                             <Item title="Account Staff" to="/admin/manage-account/staff" icon={faUser} selected={selected} setSelected={setSelected} />

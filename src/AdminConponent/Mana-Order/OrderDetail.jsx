@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getOrderDetailByOrderId, getProductById, updateProductById } from '../../server/api';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField, Alert, Grid } from '@mui/material';
 import Header from '../Header/Header';
@@ -8,6 +8,7 @@ import ImageUpload from '../Upload-Image/UploadImage';  // Adjust the import pat
 
 const OrderDetailPage = () => {
     const { OrderId } = useParams();
+    const navigate = useNavigate();
     const [orderDetail, setOrderDetail] = useState(null);
     const [productDetail, setProductDetail] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -93,12 +94,16 @@ const OrderDetailPage = () => {
         <Box p={3}>
             {orderDetail && (
                 <Box mb={3}>
-                    <Typography variant="h4" gutterBottom></Typography>
                     <Header title='Order Details' subtitle='' />
-                    <Box mt={2} sx={{ display: 'flex', justifyContent: 'end', marginBottom: '20px' }}>
+
+                    <Box mt={2} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+                        <Button variant="contained" color="warning" onClick={() => navigate(-1)}>
+                            Back
+                        </Button>
                         <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderDetail.ProductId)}>
                             View Product Details
                         </Button>
+
                     </Box>
                     <TableContainer component={Paper}>
                         <Table>
@@ -150,7 +155,10 @@ const OrderDetailPage = () => {
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleUpdatePrice} color="primary">Update Price</Button>
+
+                    {orderDetail && (orderDetail.Status === 'RqOrder') && (
+                        <Button onClick={handleUpdatePrice} color="primary">Update Price</Button>
+                    )}
                     {orderDetail && (orderDetail.Status === 'Design' || orderDetail.Status === 'Production') && (
                         <Button onClick={handleUpdateImage} color="primary">Update Image</Button>
                     )}
