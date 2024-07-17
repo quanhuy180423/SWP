@@ -87,7 +87,7 @@ const Body = () => {
           {filteredProducts.slice(0, 4).map((product) => (
             <Grid item xs={12} sm={6} md={3} key={product.ProductId}>
               <JewelryItem
-                to={`/product/${product.ProductId}`}
+                to={`/Jewelry/${product.ProductId}`}
                 firstImage={product.Image[0]}
                 title={product.Name}
                 material={product.MaterialName}
@@ -104,7 +104,7 @@ const Body = () => {
             variant="outlined"
             color="primary"
           >
-            Xem thêm
+            See more
           </Button>
         </Box>
         <Box display="flex" justifyContent="center" mt={4}>

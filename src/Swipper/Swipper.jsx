@@ -34,12 +34,12 @@ const Swipper = ({ images = [] }) => {
     );
 };
 
-Swipper.propTypes = {
-    images: PropTypes.arrayOf(PropTypes.string)
-};
+// Swipper.propTypes = {
+//     images: PropTypes.arrayOf(PropTypes.string)
+// };
 
-Swipper.defaultProps = {
-    images: []
-};
+// Swipper.defaultProps = {
+//     images: []
+// };
 
 export default Swipper;

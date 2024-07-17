@@ -29,12 +29,12 @@ const Footer = () => {
               </ListItem>
               <ListItem className="mt-2">
                 <Typography variant="body2" className="text-gray-600">
-                  Địa chỉ: 123 Đường ABC, Thành phố XYZ
+                  Address: 123 Street ABC, City XYZ
                 </Typography>
               </ListItem>
               <ListItem>
                 <Typography variant="body2" className="text-gray-600">
-                  Số điện thoại: 0123 456 789
+                  Phone: 0123 456 789
                 </Typography>
               </ListItem>
               <ListItem>
@@ -47,41 +47,36 @@ const Footer = () => {
 
           <div className="w-1/5">
             <Typography variant="h6" className="text-lg text-gray-800 mb-2">
-              Sản phẩm
+              Jewelry
             </Typography>
             <List>
-              <ListItem className="text-gray-600">Nhẫn</ListItem>
-              <ListItem className="mt-2 text-gray-600">Vòng cổ</ListItem>
-              <ListItem className="mt-2 text-gray-600">Vòng tay</ListItem>
-              <ListItem className="mt-2 text-gray-600">Nhẫn cưới</ListItem>
+              <ListItem className="text-gray-600">Ring</ListItem>
+              <ListItem className="mt-2 text-gray-600">Necklace</ListItem>
+              <ListItem className="mt-2 text-gray-600">Bracelet</ListItem>
             </List>
           </div>
 
           <div className="w-1/5">
             <Typography variant="h6" className="text-lg text-gray-800 mb-2">
-              Chính sách đặt hàng
+              Policy order
             </Typography>
             <List>
-              <ListItem className="text-gray-600">
-                Chính sách & bảo hành
-              </ListItem>
+              <ListItem className="text-gray-600">Policy & bảo hành</ListItem>
               <ListItem className="mt-2 text-gray-600">
-                Điều khoản mua hàng
+                Terms of purchase
               </ListItem>
             </List>
           </div>
 
           <div className="w-1/5">
             <Typography variant="h6" className="text-lg text-gray-800 mb-2">
-              Hỗ trợ khách hàng
+              Customer support
             </Typography>
             <List>
               <ListItem className="text-gray-600">Góp ý</ListItem>
+              <ListItem className="mt-2 text-gray-600">Ordering guide</ListItem>
               <ListItem className="mt-2 text-gray-600">
-                Hướng dẫn đặt hàng
-              </ListItem>
-              <ListItem className="mt-2 text-gray-600">
-                Hướng dẫn kiểm tra đơn hàng
+                Instructions for checking orders
               </ListItem>
             </List>
           </div>

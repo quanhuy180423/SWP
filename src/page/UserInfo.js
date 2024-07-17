@@ -91,17 +91,17 @@ const UserInfo = () => {
 
   const handleConfirmUpdate = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser && storedUser.Id) {
-      const userId = storedUser.Id;
+    if (storedUser && storedUser.UserId) {
+      const userId = storedUser.UserId;
       try {
         await axios.put(API_URL_UPDATE, { userId, ...user });
         setIsUpdateModalOpen(false);
-        alert("Thông tin người dùng đã được cập nhật!");
+        alert("User information has been updated!");
         fetchUserData();
         setIsEditing(false);
       } catch (error) {
         console.error("Error updating user info:", error);
-        alert("Có lỗi xảy ra khi cập nhật thông tin người dùng.");
+        alert("An error occurred while updating user information.");
       }
     } else {
       console.error("User ID not found in localStorage");
@@ -123,7 +123,7 @@ const UserInfo = () => {
               </Grid>
               <Divider sx={{ my: 2 }} />
               <Typography variant="h5" align="center" gutterBottom>
-                Hồ sơ
+                Profile
               </Typography>
               <List component="nav">
                 <ListItem disablePadding>
@@ -131,22 +131,22 @@ const UserInfo = () => {
                     selected={activeSection === "userInfo"}
                     onClick={() => setActiveSection("userInfo")}
                   >
-                    <ListItemText primary="Thông tin người dùng" />
+                    <ListItemText primary="User information" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                   <ListItemButton onClick={handleUpdateOrders}>
-                    <ListItemText primary="Đơn hàng" />
+                    <ListItemText primary="Order" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                   <ListItemButton onClick={handleUpdateCart}>
-                    <ListItemText primary="Giỏ hàng" />
+                    <ListItemText primary="Cart" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                   <ListItemButton onClick={() => setIsLogoutModalOpen(true)}>
-                    <ListItemText primary="Đăng xuất" />
+                    <ListItemText primary="Logout" />
                   </ListItemButton>
                 </ListItem>
               </List>
@@ -160,14 +160,14 @@ const UserInfo = () => {
               {activeSection === "userInfo" && (
                 <>
                   <Typography variant="h5" align="center" gutterBottom>
-                    Thông tin người dùng
+                    User information
                   </Typography>
                   {!isEditing ? (
                     <>
                       <Grid container spacing={2}>
                         <Grid item xs={6}>
                           <TextField
-                            label="Họ và tên"
+                            label="Name"
                             value={user.Name}
                             fullWidth
                             InputProps={{ readOnly: true }}
@@ -175,7 +175,7 @@ const UserInfo = () => {
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
-                            label="Số điện thoại"
+                            label="Phone"
                             value={user.Phone}
                             fullWidth
                             InputProps={{ readOnly: true }}
@@ -191,7 +191,7 @@ const UserInfo = () => {
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
-                            label="Địa chỉ"
+                            label="Address"
                             value={user.Address}
                             fullWidth
                             InputProps={{ readOnly: true }}
@@ -200,12 +200,12 @@ const UserInfo = () => {
                       </Grid>
                       <Divider sx={{ my: 2 }} />
                       <Typography variant="h6" align="center" gutterBottom>
-                        Đổi mật khẩu
+                        Change Password
                       </Typography>
                       <Grid container spacing={2}>
                         <Grid item xs={6}>
                           <TextField
-                            label="Mật khẩu mới"
+                            label="New password"
                             value={user.PassWord}
                             fullWidth
                             type="password"
@@ -219,7 +219,7 @@ const UserInfo = () => {
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
-                            label="Nhập lại mật khẩu mới"
+                            label="Enter password again"
                             value={user.confirmPassWord}
                             fullWidth
                             type="password"
@@ -241,7 +241,7 @@ const UserInfo = () => {
                           color="primary"
                           onClick={() => setIsEditing(true)}
                         >
-                          Chỉnh sửa thông tin
+                          Edit information
                         </Button>
                       </Grid>
                     </>
@@ -250,7 +250,7 @@ const UserInfo = () => {
                       <Grid container spacing={2}>
                         <Grid item xs={6}>
                           <TextField
-                            label="Họ và tên"
+                            label="Name"
                             value={user.Name}
                             fullWidth
                             onChange={(e) =>
@@ -262,7 +262,7 @@ const UserInfo = () => {
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
-                            label="Số điện thoại"
+                            label="Phone"
                             value={user.Phone}
                             fullWidth
                             onChange={(e) =>
@@ -286,7 +286,7 @@ const UserInfo = () => {
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
-                            label="Địa chỉ"
+                            label="Address"
                             value={user.Address}
                             fullWidth
                             onChange={(e) =>
@@ -332,7 +332,7 @@ const UserInfo = () => {
                           color="primary"
                           type="submit"
                         >
-                          Lưu thay đổi
+                          Save
                         </Button>
                         <Button
                           variant="contained"
@@ -346,7 +346,7 @@ const UserInfo = () => {
                           }}
                           sx={{ ml: 2 }}
                         >
-                          Hủy bỏ
+                          Cancel
                         </Button>
                       </Grid>
                     </form>
@@ -362,16 +362,16 @@ const UserInfo = () => {
         open={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
       >
-        <DialogTitle>Đăng xuất</DialogTitle>
+        <DialogTitle>Logout</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Bạn có chắc chắn muốn đăng xuất không?
+            Are you sure you want to Logout?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsLogoutModalOpen(false)}>Hủy</Button>
+          <Button onClick={() => setIsLogoutModalOpen(false)}>Cancel</Button>
           <Button onClick={handleLogout} color="primary">
-            Đăng xuất
+            Logout
           </Button>
         </DialogActions>
       </Dialog>
@@ -380,16 +380,16 @@ const UserInfo = () => {
         open={isUpdateModalOpen}
         onClose={() => setIsUpdateModalOpen(false)}
       >
-        <DialogTitle>Xác nhận cập nhật</DialogTitle>
+        <DialogTitle>Confirm update</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Bạn có chắc chắn muốn cập nhật thông tin người dùng không?
+            Are you sure you want to update user information?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsUpdateModalOpen(false)}>Hủy</Button>
+          <Button onClick={() => setIsUpdateModalOpen(false)}>Cancel</Button>
           <Button onClick={handleConfirmUpdate} color="primary">
-            Xác nhận
+            I'm confirm
           </Button>
         </DialogActions>
       </Dialog>

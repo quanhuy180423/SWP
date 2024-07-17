@@ -264,7 +264,7 @@ const Product = () => {
             {relatedProducts.slice(0, 4).map((relatedProduct) => (
               <Grid item xs={12} sm={6} md={3} key={relatedProduct.ProductId}>
                 <JewelryItem
-                  to={`/product/${relatedProduct.ProductId}`}
+                  to={`/Jewelry/${relatedProduct.ProductId}`}
                   firstImage={relatedProduct.Image[0]}
                   title={relatedProduct.Name}
                   material={relatedProduct.MaterialName}

@@ -94,9 +94,7 @@ const JewelryPage = () => {
         className="article-img mb-5 w-full"
       />
       <Container>
-        <h1 className="text-4xl font-bold flex justify-center mb-4">
-          Trang sức
-        </h1>
+        <h1 className="text-4xl font-bold flex justify-center mb-4">Jewelry</h1>
         <div className="flex justify-center flex-wrap mb-4">
           <Button
             onClick={() => handleCategoryChange("Rings")}
@@ -104,7 +102,7 @@ const JewelryPage = () => {
             className="m-2"
             style={{ marginRight: "20px" }}
           >
-            Nhẫn
+            Ring
           </Button>
           <Button
             onClick={() => handleCategoryChange("Necklaces")}
@@ -114,7 +112,7 @@ const JewelryPage = () => {
             className="m-2"
             style={{ marginRight: "20px" }}
           >
-            Vòng cổ
+            Necklace
           </Button>
           <Button
             onClick={() => handleCategoryChange("Bracelets")}
@@ -123,7 +121,7 @@ const JewelryPage = () => {
             }
             className="m-2"
           >
-            Vòng tay
+            Bracelet
           </Button>
         </div>
 
