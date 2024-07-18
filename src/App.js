@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./page/HomePage";
-import LoginForm from "./page/LoginPage";
 import OrderForm from "./page/OrderForm";
 import Blogs from "./page/Blogs";
 import Product from "./page/Product";
@@ -51,7 +50,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
-            <Route path="login" element={<LoginForm />} />
             <Route path="order-form" element={<OrderForm />} />
             <Route path="Blogs" element={<Blogs />} />
             <Route path="/blog/:blogId" element={<BlogDetail />} />

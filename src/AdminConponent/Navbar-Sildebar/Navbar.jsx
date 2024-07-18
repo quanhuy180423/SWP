@@ -1,37 +1,58 @@
-import React from 'react';
-import { Box, Card, CardContent, CardMedia, IconButton } from "@mui/material";
+import React, { useState } from 'react';
+import { Box, Card, CardContent, CardMedia, IconButton, Menu, MenuItem } from "@mui/material";
 import NotificationIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import SettingsIcon from '@mui/icons-material/Settings';
 import PersonIcon from '@mui/icons-material/Person';
-import logo from '../../assets/image/img/kim_cuong.png'
+import logo from '../../assets/image/img/kim_cuong.png';
+import Cookies from 'js-cookie';
+
 const Navbar = () => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        setUser(null);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
+        Cookies.remove("loginTime");
+        window.location.href = "/";
+    };
+
     return (
         <div>
-            <Box display='flex' justifyContent='space-between' p={2} bgcolor='' position='sticky' >
-                {/* Search bar
-                <Box display='flex' borderRadius='15px' border='2px' bgcolor={colors.blue[200]}>
-                    <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search..." />
-                    <IconButton type="button" sx={{ p: 1 }}>
-                        <SearchIcon />
-                    </IconButton>
-                </Box> */}
-
+            <Box display='flex' justifyContent='space-between' p={2} bgcolor='' position='sticky'>
+                {/* Logo */}
                 <Card style={{ display: 'flex', boxShadow: 'none' }}>
                     <CardMedia style={{ height: '80px', width: '80px' }}>
                         <img src={logo} alt='logo store' />
                     </CardMedia>
                     <CardContent style={{ fontSize: '35px', fontWeight: 'bold' }}>
-                        <h2 >Sun Shine</h2>
+                        <h2>Sun Shine</h2>
                     </CardContent>
                 </Card>
-                {/* Icon */}
+                {/* Icons */}
                 <Box display='flex'>
                     <IconButton>
                         <NotificationIcon />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={handleMenuOpen}>
                         <SettingsIcon />
                     </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    </Menu>
                     <IconButton>
                         <PersonIcon />
                     </IconButton>

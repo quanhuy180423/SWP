@@ -12,6 +12,19 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import {
+    Container,
+    Grid,
+    Card,
+    CardContent,
+    Typography,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl,
+    colors
+} from '@mui/material';
+import Header from '../Header/Header';
 
 ChartJS.register(
     CategoryScale,
@@ -32,8 +45,9 @@ const Dashboard = () => {
     const [TotalOrderDetail, setTotalOrderDetail] = useState(0);
     const [TotalAmountOrderDetail, setTotalAmountOrderDetail] = useState(0);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
     useEffect(() => {
-        fetchOrderData();//số đơn hàng đã bán trong các tháng
+        fetchOrderData();
         fetchNewCustomers();
         fetchTotalOrder();
         fetchTotalOrderDetai();
@@ -54,11 +68,11 @@ const Dashboard = () => {
     const fetchNewCustomers = async () => {
         try {
             const response = await axios.get('http://localhost:8090/test/getTotalUser');
-            const totalUser = response.data[0]?.TotalUser || 0; // Lấy giá trị TotalUser từ response
-            setNewCustomers(totalUser); // Cập nhật state newCustomers
+            const totalUser = response.data[0]?.TotalUser || 0;
+            setNewCustomers(totalUser);
         } catch (error) {
             console.error('Error fetching new customers data:', error);
-            setNewCustomers(0); // Xử lý lỗi và đặt lại giá trị newCustomers thành 0
+            setNewCustomers(0);
         }
     };
 
@@ -75,41 +89,35 @@ const Dashboard = () => {
     const fetchTotalOrder = async () => {
         try {
             const response = await axios.get('http://localhost:8090/test/getTotalOrder');
-            const totalOrder = response.data[0]?.OrderCount || 0; // Lấy giá trị TotalUser từ response
-            setOrdeTotal(totalOrder); // Cập nhật state newCustomers
+            const totalOrder = response.data[0]?.OrderCount || 0;
+            setOrdeTotal(totalOrder);
         } catch (error) {
-            console.error('Error fetching new customers data:', error);
-            setOrdeTotal(0); // Xử lý lỗi và đặt lại giá trị newCustomers thành 0
+            console.error('Error fetching total orders data:', error);
+            setOrdeTotal(0);
         }
     };
 
     const fetchTotalOrderDetai = async () => {
         try {
             const response = await axios.get('http://localhost:8090/test/getTotalOrderDetail');
-            const totalOrderDetail = response.data[0]?.OrderDetailCount || 0; // Lấy giá trị TotalUser từ response
-            setTotalOrderDetail(totalOrderDetail); // Cập nhật state newCustomers
+            const totalOrderDetail = response.data[0]?.OrderDetailCount || 0;
+            setTotalOrderDetail(totalOrderDetail);
         } catch (error) {
-            console.error('Error fetching new customers data:', error);
-            setTotalOrderDetail(0); // Xử lý lỗi và đặt lại giá trị newCustomers thành 0
+            console.error('Error fetching total order details data:', error);
+            setTotalOrderDetail(0);
         }
     };
+
     const fetchTotalAmountOrderDetai = async () => {
         try {
             const response = await axios.get('http://localhost:8090/test/getTotalAmountOrderDetail');
-            const totalProductCost = response.data[0]?.TotalProductCost || 0; // Lấy giá trị TotalUser từ response
-            setTotalAmountOrderDetail(totalProductCost); // Cập nhật state newCustomers
+            const totalProductCost = response.data[0]?.TotalProductCost || 0;
+            setTotalAmountOrderDetail(totalProductCost);
         } catch (error) {
-            console.error('Error fetching new customers data:', error);
-            setTotalAmountOrderDetail(0); // Xử lý lỗi và đặt lại giá trị newCustomers thành 0
+            console.error('Error fetching total order amount data:', error);
+            setTotalAmountOrderDetail(0);
         }
     };
-
-
-    // const ordersPerMonth = orderData.reduce((acc, order) => {
-    //     const month = new Date(order.date).getMonth();
-    //     acc[month] = (acc[month] || 0) + 1;
-    //     return acc;
-    // }, {});
 
     const data = {
         labels: orderData.map(data => data.MonthName),
@@ -123,13 +131,13 @@ const Dashboard = () => {
             },
         ],
     };
-    //biểu đồ đường mô tả doanh thu trong tuần, tháng, quý, năm
+
     const lineChartData = {
-        labels: OrderDetail.map((data) => data.MonthName), // Tên viết tắt của tháng
+        labels: OrderDetail.map((data) => data.MonthName),
         datasets: [
             {
                 label: 'Monthly product sales',
-                data: OrderDetail.map((data) => data.TotalProductCost), // Số order trong từng tháng
+                data: OrderDetail.map((data) => data.TotalProductCost),
                 fill: false,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -138,47 +146,59 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="container mx-auto">
-            <div className='flex mb-20'>
-                <div className="px-4 py-2 bg-blue-300 text-white rounded w-1/2 mr-10">
-                    <h2 className="text-2xl font-bold">Total number of users</h2>
-                    <p>{newCustomers}</p>
-                </div>
-                <div className="px-4 py-2 bg-red-300 text-white rounded w-1/2 mr-10">
-                    <h2 className="text-2xl font-bold">Sales Data</h2>
-                    <p>Total order:{OrderTotal}</p>
-                    <p>Total Product:{TotalOrderDetail}</p>
-                    <p>Total revenue:{TotalAmountOrderDetail} VND</p>
-                </div>
-            </div>
-            <div className="card mb-4">
-                <div className="card-header">
-                    <i className="fas fa-chart-bar me-1"></i>
-                </div>
-                <div className="card-body">
+        <Container>
+            <Header title='Dashboard' />
+            <Grid container spacing={2} mb={4}>
+                <Grid item xs={12} sm={6}>
+                    <Card
+                        sx={{
+                            backgroundColor: colors.lightBlue[100]
+                        }}
+                    >
+                        <CardContent>
+                            <Typography variant="h5" component="h2" display='flex' justifyContent='center'>Total number of users</Typography>
+                            <Typography variant="h3" display='flex' justifyContent='center'>{newCustomers.toLocaleString()}</Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Card
+                        sx={{
+                            backgroundColor: colors.red[100]
+                        }}
+                    >
+                        <CardContent>
+                            <Typography variant="h3" component="h2" fontWeight='bold' display='flex' justifyContent='center'>Sales Data</Typography>
+                            <Typography variant="body1" fontWeight='bold' display='flex' justifyContent='center'>Total order: {OrderTotal.toLocaleString()}</Typography>
+                            <Typography variant="body1" fontWeight='bold' display='flex' justifyContent='center'>Total Product: {TotalOrderDetail.toLocaleString()}</Typography>
+                            <Typography variant="body1" fontWeight='bold' display='flex' justifyContent='center'>Total revenue: {TotalAmountOrderDetail.toLocaleString()} VND</Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+            <Card mb={4}>
+                <CardContent>
+                    <Typography variant="h6">Monthly Orders</Typography>
                     <Bar data={data} />
-                </div>
-            </div>
-            <div className="card mb-4 mt-10">
-                <div className="card-header">
-                    <i className="fas fa-chart-line me-1"></i>
-                    Line Chart
-                </div>
-                <div className="dataCard">
-                    <div>
-                        <label>Select Year: </label>
-                        <select
+                </CardContent>
+            </Card>
+            <Card>
+                <CardContent>
+                    <Typography variant="h6">Line Chart</Typography>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Select Year</InputLabel>
+                        <Select
                             value={selectedYear}
                             onChange={(e) => setSelectedYear(e.target.value)}
+                            label="Select Year"
                         >
-                            <option value={2020}>2020</option>
-                            <option value={2021}>2021</option>
-                            <option value={2022}>2022</option>
-                            <option value={2023}>2023</option>
-                            <option value={2024}>2024</option>
-                            {/* Add more years as needed */}
-                        </select>
-                    </div>
+                            <MenuItem value={2020}>2020</MenuItem>
+                            <MenuItem value={2021}>2021</MenuItem>
+                            <MenuItem value={2022}>2022</MenuItem>
+                            <MenuItem value={2023}>2023</MenuItem>
+                            <MenuItem value={2024}>2024</MenuItem>
+                        </Select>
+                    </FormControl>
                     <Line
                         data={lineChartData}
                         options={{
@@ -194,11 +214,9 @@ const Dashboard = () => {
                             },
                         }}
                     />
-                </div>
-            </div>
-
-
-        </div>
+                </CardContent>
+            </Card>
+        </Container>
     );
 };
 
