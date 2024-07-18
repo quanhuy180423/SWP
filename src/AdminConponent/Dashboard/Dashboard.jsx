@@ -128,7 +128,7 @@ const Dashboard = () => {
         labels: OrderDetail.map((data) => data.MonthName), // Tên viết tắt của tháng
         datasets: [
             {
-                label: 'Monthly Orders',
+                label: 'Monthly product sales',
                 data: OrderDetail.map((data) => data.TotalProductCost), // Số order trong từng tháng
                 fill: false,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -186,7 +186,7 @@ const Dashboard = () => {
                             plugins: {
                                 title: {
                                     display: true,
-                                    text: 'Monthly Orders',
+                                    text: 'Monthly product sales',
                                     font: {
                                         size: 20,
                                     },
