@@ -1,0 +1,62 @@
+[
+    {
+        "label": "Jan",
+        "revenue": 64854,
+        "cost": 2
+    },
+    {
+        "label": "Feb",
+        "revenue": 54628,
+        "cost": 2
+    },
+    {
+        "label": "Mar",
+        "revenue": 117238,
+        "cost": 3
+    },
+    {
+        "label": "Apr",
+        "revenue": 82830,
+        "cost": 4
+    },
+    {
+        "label": "May",
+        "revenue": 91208,
+        "cost": 5
+    },
+    {
+        "label": "Jun",
+        "revenue": 103609,
+        "cost": 6
+    },
+    {
+        "label": "Jul",
+        "revenue": 90974,
+        "cost": 6
+    },
+    {
+        "label": "Aug",
+        "revenue": 82919,
+        "cost": 0
+    },
+    {
+        "label": "Sep",
+        "revenue": 62407,
+        "cost": 7
+    },
+    {
+        "label": "Oct",
+        "revenue": 82528,
+        "cost": 6
+    },
+    {
+        "label": "Nov",
+        "revenue": 56979,
+        "cost": 0
+    },
+    {
+        "label": "Dec",
+        "revenue": 87436,
+        "cost": 7
+    }
+]
