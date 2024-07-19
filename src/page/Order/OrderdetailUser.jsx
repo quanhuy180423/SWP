@@ -23,6 +23,7 @@ const OrderDetailUser = () => {
         };
 
         fetchOrderDetail();
+        handleUpdateStatus();
     }, [OrderId]);
 
     const handleProductDetail = async (ProductId) => {
@@ -80,21 +81,32 @@ const OrderDetailUser = () => {
                                 View Product Details
                             </Button>
                             {orderdetail.Status === 'ChkOut' && (
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    style={{ borderRadius: '5px', backgroundColor: colors.red[200], marginLeft: '30px' }}
-                                    onClick={handleAcceptAndPayment}
-                                >
-                                    Accept and Payment order
-                                </Button>
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        style={{ borderRadius: '5px', backgroundColor: colors.green[400], marginLeft: '30px' }}
+                                        onClick={handleAcceptAndPayment}
+                                    >
+                                        Accept and Payment order
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        style={{ borderRadius: '5px', backgroundColor: colors.red[500], marginLeft: '30px' }}
+                                        onClick={() => handleUpdateStatus(orderdetail, 'Rq_Again', 'Rq_Again')}
+                                    >
+                                        Deny Quote
+                                    </Button>
+                                </>
+
                             )}
                             {(orderdetail.Status === 'Design' || orderdetail.Status === 'D_Again') && (
                                 <>
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        style={{ borderRadius: '5px', backgroundColor: colors.red[300], marginLeft: '30px' }}
+                                        style={{ borderRadius: '5px', backgroundColor: colors.green[400], marginLeft: '30px' }}
                                         onClick={() => handleUpdateStatus(orderdetail, 'Production', 'Production')}
                                     >
                                         Accept and Production
@@ -102,7 +114,7 @@ const OrderDetailUser = () => {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        style={{ borderRadius: '5px', backgroundColor: colors.red[300], marginLeft: '30px' }}
+                                        style={{ borderRadius: '5px', backgroundColor: colors.red[400], marginLeft: '30px' }}
                                         onClick={() => handleUpdateStatus(orderdetail, 'D_Again', 'D_Again')}
                                     >
                                         Design Again

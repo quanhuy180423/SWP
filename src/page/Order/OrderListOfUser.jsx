@@ -168,13 +168,12 @@ const OrderListOfUser = () => {
                     Back
                 </Button>
             </Box>
-
             <Box mb={2} display="flex" alignItems="center">
                 <Button variant={selectedStatus === 'All' ? 'contained' : 'none'} onClick={() => setSelectedStatus('All')}>
                     All
                 </Button>
                 <DividerStyled orientation="vertical" flexItem />
-                <Button variant={selectedStatus === 'RqOrder' ? 'contained' : 'none'} onClick={() => setSelectedStatus('RqOrder')}>
+                <Button variant={selectedStatus === 'RqOrder' ? 'contained' : 'none'} onClick={() => setSelectedStatus('RqOrder' || 'Rq_Again')}>
                     Request Order
                 </Button>
                 <DividerStyled orientation="vertical" flexItem />
@@ -273,15 +272,15 @@ const OrderListOfUser = () => {
                 <DialogTitle>Select Receiving Method</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Please choose a receiving method for your order.
+                        Do you want to have the order delivered to your home?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => handleSelectReceivingMethod('Store')} color="primary">
-                        Store
+                        No
                     </Button>
                     <Button onClick={() => handleSelectReceivingMethod('Home')} color="primary">
-                        Home
+                        Yes
                     </Button>
                 </DialogActions>
             </Dialog>

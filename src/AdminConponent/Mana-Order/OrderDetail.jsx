@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getOrderDetailByOrderId, getProductById, updateProductById } from '../../server/api';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField, Alert, Grid } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TextField, Grid } from '@mui/material';
 import Header from '../Header/Header';
 import handleUploadImages from '../../firebase/HandleUploadToFirebase';
-import ImageUpload from '../Upload-Image/UploadImage';  // Adjust the import path as necessary
+import ImageUpload from '../Upload-Image/UploadImage';
 
 const OrderDetailPage = () => {
     const { OrderId } = useParams();
     const navigate = useNavigate();
-    const [orderDetail, setOrderDetail] = useState(null);
+    const [orderDetail, setOrderDetail] = useState([]);
     const [productDetail, setProductDetail] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isUpdatePriceOpen, setIsUpdatePriceOpen] = useState(false);
@@ -22,7 +22,7 @@ const OrderDetailPage = () => {
         const fetchOrderDetail = async () => {
             try {
                 const response = await getOrderDetailByOrderId(OrderId);
-                setOrderDetail(response.data[0]);
+                setOrderDetail(response.data);
             } catch (error) {
                 console.error('Error fetching order detail:', error);
             }
@@ -78,7 +78,7 @@ const OrderDetailPage = () => {
         if (imageFiles.length > 0 && productDetail) {
             try {
                 const imageUrls = await handleUploadImages(imageFiles);
-                const updatedProduct = { ...productDetail, Image: imageUrls }; // Assuming product has Images field to store multiple URLs
+                const updatedProduct = { ...productDetail, Image: imageUrls };
                 await updateProductById(updatedProduct);
                 setProductDetail(updatedProduct);
                 setIsUpdateImageOpen(false);
@@ -92,32 +92,37 @@ const OrderDetailPage = () => {
 
     return (
         <Box p={3}>
-            {orderDetail && (
-                <Box mb={3}>
-                    <Header title='Order Details' subtitle='' />
+            <Header title='Order Details' subtitle='' />
+            <Button variant="contained" color="warning" onClick={() => navigate(-1)}>
+                Back
+            </Button>
+            {orderDetail.length > 0 ? (
+                orderDetail.map((orderdetail) => (
+                    <Box mb={3} key={orderdetail.OrderDetailId}>
 
-                    <Box mt={2} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                        <Button variant="contained" color="warning" onClick={() => navigate(-1)}>
-                            Back
-                        </Button>
-                        <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderDetail.ProductId)}>
-                            View Product Details
-                        </Button>
 
+                        <Box mt={2} sx={{ display: 'flex', justifyContent: 'end', marginBottom: '20px' }}>
+
+                            <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderdetail.ProductId)}>
+                                View Product Details
+                            </Button>
+                        </Box>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableBody>
+                                    {Object.entries(orderdetail).map(([key, value]) => (
+                                        <TableRow key={key}>
+                                            <TableCell variant="head"><strong>{key}</strong></TableCell>
+                                            <TableCell>{value}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </Box>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableBody>
-                                {Object.entries(orderDetail).map(([key, value]) => (
-                                    <TableRow key={key}>
-                                        <TableCell variant="head"><strong>{key}</strong></TableCell>
-                                        <TableCell>{value}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Box>
+                ))
+            ) : (
+                <Typography variant="h6">No order details available.</Typography>
             )}
 
             <Dialog open={isPopupOpen} onClose={handleClosePopup} maxWidth="md" fullWidth>
@@ -133,11 +138,13 @@ const OrderDetailPage = () => {
                                             <TableCell>
                                                 {key === 'Image' ? (
                                                     <Grid container spacing={1}>
-                                                        {value.map((url, index) => (
-                                                            <Grid item xs={3} key={index} width='150' height='150'>
-                                                                <img src={url} alt={productDetail.Name} />
+                                                        {Array.isArray(value) ? value.map((url, index) => (
+                                                            <Grid item xs={3} key={index}>
+                                                                <img src={url} alt={productDetail.Name} width='150' height='150' />
                                                             </Grid>
-                                                        ))}
+                                                        )) : (
+                                                            <img src={value} alt={productDetail.Name} width='150' height='150' />
+                                                        )}
                                                     </Grid>
                                                 ) : key === 'Description' ? (
                                                     <div dangerouslySetInnerHTML={{ __html: value }} />
@@ -155,11 +162,10 @@ const OrderDetailPage = () => {
                     )}
                 </DialogContent>
                 <DialogActions>
-
-                    {orderDetail && (orderDetail.Status === 'RqOrder') && (
+                    {productDetail && orderDetail.some(detail => detail.Status === 'RqOrder') && (
                         <Button onClick={handleUpdatePrice} color="primary">Update Price</Button>
                     )}
-                    {orderDetail && (orderDetail.Status === 'Design' || orderDetail.Status === 'Production' || orderDetail.Status === 'D_Again') && (
+                    {productDetail && orderDetail.some(detail => ['Design', 'Production', 'D_Again'].includes(detail.Status)) && (
                         <Button onClick={handleUpdateImage} color="primary">Update Image</Button>
                     )}
                     <Button onClick={handleClosePopup} color="primary">Close</Button>

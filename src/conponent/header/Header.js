@@ -146,6 +146,9 @@ const Header = () => {
                   <Link to={`/userinfo/${user.UserId}`}>Profile</Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
+                  <Link to={`/order-of-user`}>My Order</Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
                   <Link to="/order-form">Jewelry Production Order</Link>
                 </MenuItem>
                 {user.Role === 1 && (

@@ -118,7 +118,7 @@ const OrderListRequest = () => {
 
     const filterOrders = () => {
         if (selectedStatus === 'All') {
-            return orders.filter(order => order.Status === 'RqOrder' || order.Status === 'banked' || order.Status === 'Order_COD ');
+            return orders.filter(order => order.Status === 'RqOrder' || order.Status === 'Rq_Again' || order.Status === 'banked' || order.Status === 'Order_COD ');
         }
         return orders.filter(order => order.Status === selectedStatus);
     };
@@ -140,8 +140,8 @@ const OrderListRequest = () => {
             </Typography>
             <Box mb={2} display="flex" alignItems="center">
                 <Button
-                    variant={selectedStatus === 'RqOrder' ? 'contained' : 'none'}
-                    onClick={() => setSelectedStatus('RqOrder')}
+                    variant={(selectedStatus === 'RqOrder' || selectedStatus === 'Rq_Again') ? 'contained' : 'none'}
+                    onClick={() => setSelectedStatus('RqOrder' || 'Rq_Again')}
                 >
                     Request Order
                 </Button>
@@ -202,7 +202,7 @@ const OrderListRequest = () => {
                                         >
                                             View
                                         </Button>
-                                        {order.Status === 'RqOrder' && (
+                                        {(order.Status === 'RqOrder' || order.Status === 'Rq_Again') && (
                                             <>
                                                 <Button
                                                     variant="contained"
@@ -233,7 +233,7 @@ const OrderListRequest = () => {
                                             <Button
                                                 variant="contained"
 
-                                                style={{ width: '200px', backgroundColor: colors.orange[100] }}
+                                                style={{ width: '200px', backgroundColor: colors.orange[400] }}
                                                 onClick={() => handleUpdateStatus(order, 'Design', 'Design')}
                                             >
                                                 Send Design
