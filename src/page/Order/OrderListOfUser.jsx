@@ -97,10 +97,10 @@ const OrderListOfUser = () => {
         fetchOrders();
     }, []);
 
-    const handleOpenDialog = (order) => {
-        setSelectedOrder(order);
-        setDialogOpen(true);
-    };
+    // const handleOpenDialog = (order) => {
+    //     setSelectedOrder(order);
+    //     setDialogOpen(true);
+    // };
 
     const handleCloseDialog = () => {
         setDialogOpen(false);

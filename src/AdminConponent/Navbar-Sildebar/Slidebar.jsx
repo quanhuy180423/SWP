@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Typography } from "@mui/material";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import MenuIcon from '@mui/icons-material/Menu';
 import imgProfile from "../../assets/image/img/profile-user.png";
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faNewspaper, faComments, faClipboardList, faBox, faUser, faGem, faCube, faListOl, faBoxesStacked, faCheckDouble, faPalette, faHammer } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faNewspaper, faSignOut, faClipboardList, faBox, faUser, faGem, faCube, faBoxesStacked, faCheckDouble, faPalette, faHammer } from '@fortawesome/free-solid-svg-icons';
+import Cookies from 'js-cookie';
 
-const Item = ({ title, to, icon, selected, setSelected }) => (
+const Item = ({ title, to, icon, selected, setSelected, onClick }) => (
     <MenuItem
         active={selected === title}
-        onClick={() => setSelected(title)}
+        onClick={() => {
+            setSelected(title);
+            if (onClick) onClick();
+        }}
         style={{ color: 'black', height: '60px' }}
         component={<Link to={to} />}
     >
@@ -26,13 +30,15 @@ const Item = ({ title, to, icon, selected, setSelected }) => (
 const Slidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState('');
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
-    useEffect(() => {
-        // Retrieve the user information from local storage
-        const user = JSON.parse(localStorage.getItem('user'));
-        setUser(user);
-    }, []);
+    const handleLogout = () => {
+        setUser(null);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
+        Cookies.remove("loginTime");
+        window.location.href = "/";
+    };
 
     return (
         <Box
@@ -125,7 +131,6 @@ const Slidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
-
                         <Item
                             title='Manage Blogs'
                             to='/admin/manage-blogs'
@@ -188,21 +193,14 @@ const Slidebar = () => {
                                 setSelected={setSelected}
                             />
                         </SubMenu>
-                        {/* <Item
-                            title='Manage Step Process'
-                            to='/admin/manage-step-process'
-                            icon={faListOl}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
                         <Item
-                            title='Contacts Information'
-                            to='/contacts'
-                            icon={faComments}
+                            title='Logout'
+                            to='/'
+                            icon={faSignOut}
                             selected={selected}
                             setSelected={setSelected}
-                        /> */}
-                        {/* Add more menu items with icons */}
+                            onClick={handleLogout}
+                        />
                     </Box>
                 </Menu>
             </Sidebar>

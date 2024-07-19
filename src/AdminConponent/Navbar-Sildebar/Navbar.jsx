@@ -1,30 +1,13 @@
 import React, { useState } from 'react';
-import { Box, Card, CardContent, CardMedia, IconButton, Menu, MenuItem } from "@mui/material";
-import NotificationIcon from "@mui/icons-material/NotificationsActiveOutlined";
-import SettingsIcon from '@mui/icons-material/Settings';
-import PersonIcon from '@mui/icons-material/Person';
+import { Box, Card, CardContent, CardMedia } from "@mui/material";
 import logo from '../../assets/image/img/kim_cuong.png';
-import Cookies from 'js-cookie';
+
 
 const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
-    const handleMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
 
-    const handleLogout = () => {
-        setUser(null);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("user");
-        Cookies.remove("loginTime");
-        window.location.href = "/";
-    };
 
     return (
         <div>
@@ -39,7 +22,7 @@ const Navbar = () => {
                     </CardContent>
                 </Card>
                 {/* Icons */}
-                <Box display='flex'>
+                {/* <Box display='flex'>
                     <IconButton>
                         <NotificationIcon />
                     </IconButton>
@@ -56,7 +39,7 @@ const Navbar = () => {
                     <IconButton>
                         <PersonIcon />
                     </IconButton>
-                </Box>
+                </Box> */}
             </Box>
         </div>
     );

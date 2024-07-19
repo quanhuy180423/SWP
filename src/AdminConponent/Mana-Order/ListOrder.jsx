@@ -13,7 +13,6 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { colors } from '@mui/material';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -67,28 +66,7 @@ const generateStatus = (status) => {
     }
 };
 
-const getRowBackgroundColor = (status) => {
-    switch (status) {
-        case 'RqOrder':
-            return colors.red[100];
-        case 'AptQuote':
-            return colors.blue[100];
-        case 'ChkOut':
-            return colors.yellow[100];
-        case 'banked':
-            return colors.purple[100];
-        case 'ProComl':
-            return colors.green[100];
-        case 'Ship':
-            return colors.teal[100];
-        case 'Done':
-            return colors.green[200];
-        case 'Cancel':
-            return colors.grey[400];
-        default:
-            return 'inherit';
-    }
-};
+
 
 const OrderListRequest = () => {
     const [orders, setOrders] = useState([]);
