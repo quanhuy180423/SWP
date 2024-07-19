@@ -195,6 +195,18 @@ const Checkout = () => {
   return (
     <>
       <ToastContainer />
+      <Box width="100%" display="flex" justifyContent="end">
+        <Button
+          style={{
+            color: "black",
+            textDecoration: "underline",
+            fontSize: "20px",
+          }}
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+      </Box>
       <Container maxWidth="lg">
         <Typography variant="h4" align="center" gutterBottom>
           Payment Detail

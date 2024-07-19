@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -70,7 +70,7 @@ const OrderListOfUser = () => {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState('All');
-
+    const navigate = useNavigate();
     const fetchOrders = async () => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         if (storedUser && storedUser.Id) {
@@ -160,9 +160,15 @@ const OrderListOfUser = () => {
 
     return (
         <Box p={3}>
-            <Typography variant="h4" gutterBottom>
-                My Orders
+            <Typography variant="h4" gutterBottom style={{ width: '100%', display: 'flex', justifyContent: 'center', fontWeight: 'bold' }}>
+                Orders
             </Typography>
+            <Box width='100%' display='flex' justifyContent='end'>
+                <Button style={{ color: 'black', textDecoration: 'underline', fontSize: '20px' }} onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </Box>
+
             <Box mb={2} display="flex" alignItems="center">
                 <Button variant={selectedStatus === 'All' ? 'contained' : 'none'} onClick={() => setSelectedStatus('All')}>
                     All
@@ -176,7 +182,9 @@ const OrderListOfUser = () => {
                     Check Out
                 </Button>
                 <DividerStyled orientation="vertical" flexItem />
-                <Button variant={(selectedStatus === 'Design' || selectedStatus === 'banked' || selectedStatus === 'Production') ? 'contained' : 'none'} onClick={() => setSelectedStatus('Design' || 'banked' || 'Production')}>
+                <Button variant={(selectedStatus === 'Design' || selectedStatus === 'D_Again' || selectedStatus === 'banked' || selectedStatus === 'Production') ? 'contained' : 'none'}
+                    onClick={() => setSelectedStatus('Design' || 'banked' || 'Production' || 'D_Again')}
+                >
                     Processing
                 </Button>
                 <DividerStyled orientation="vertical" flexItem />

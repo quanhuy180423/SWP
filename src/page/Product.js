@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CartContext } from "../cart/CartContext";
 import {
@@ -32,7 +32,7 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [quantityError, setQuantityError] = useState("");
   const [size, setSize] = useState("");
-
+  const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
   const API_URL = "http://localhost:8090/test/getProductByNameOrId";
   const API_URL_RELATED = "http://localhost:8090/test/getProductByCategory";
@@ -110,6 +110,18 @@ const Product = () => {
 
   return (
     <Container maxWidth="lg">
+      <Box width="100%" display="flex" justifyContent="end">
+        <Button
+          style={{
+            color: "black",
+            textDecoration: "underline",
+            fontSize: "20px",
+          }}
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+      </Box>
       <Box
         display="flex"
         flexDirection="column"

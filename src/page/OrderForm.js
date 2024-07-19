@@ -29,11 +29,6 @@ const OrderForm = () => {
     setCurrentStep((prevStep) => prevStep - 1);
   };
 
-  const handleFinalSubmit = () => {
-    // e.preventDefault();
-    // handleConfirmation();
-  };
-
   return (
     <div className="container mx-auto p-6 grid ">
       <div className="bg-white p-2 rounded-lg shadow-md w-full">
@@ -69,16 +64,9 @@ const OrderForm = () => {
           />
         )}
         {currentStep === 5 && (
-          <ReviewStep
-            prevStep={() => setCurrentStep(4)}
-            formData={formData}
-            // onSubmit={handleFinalSubmit}
-          />
+          <ReviewStep prevStep={() => setCurrentStep(4)} formData={formData} />
         )}
       </div>
-      {/* <div className="w-2/4 mr-6">
-        <img src="./img/hinhLogin.png" alt="form illustration" />
-      </div> */}
     </div>
   );
 };

@@ -47,6 +47,7 @@ const JewelryPage = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const searchParams = new URLSearchParams(location.search);
     const categoryFromUrl = searchParams.get("CategoryName") || "";
 

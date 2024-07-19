@@ -77,7 +77,7 @@ const OrderDesign = () => {
         return <div>{error}</div>;
     }
 
-    const requestOrders = orders.filter((order) => order.Status === 'Design');
+    const requestOrders = orders.filter((order) => order.Status === 'Design' || order.Status === 'D_Again');
 
     return (
         <Box p={3}>

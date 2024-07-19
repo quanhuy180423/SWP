@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { CartContext } from "../cart/CartContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,17 +9,17 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  Box,
 } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
 
 const Cart = () => {
-  const { cart, user, removeFromCart, updateQuantity, fetchUserData } =
-    useContext(CartContext);
+  const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+  // useEffect(() => {
+  //   fetchUserData();
+  // }, []);
 
   const totalCost = cart.reduce(
     (total, item) => total + item.ProductCost * item.quantity,
@@ -49,6 +49,18 @@ const Cart = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-center text-3xl font-bold mb-7">Your cart</h1>
+      <Box width="100%" display="flex" justifyContent="end">
+        <Button
+          style={{
+            color: "black",
+            textDecoration: "underline",
+            fontSize: "20px",
+          }}
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+      </Box>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="col-span-2">
           {cart.map((item, index) => (

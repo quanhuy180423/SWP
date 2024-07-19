@@ -159,7 +159,7 @@ const OrderDetailPage = () => {
                     {orderDetail && (orderDetail.Status === 'RqOrder') && (
                         <Button onClick={handleUpdatePrice} color="primary">Update Price</Button>
                     )}
-                    {orderDetail && (orderDetail.Status === 'Design' || orderDetail.Status === 'Production') && (
+                    {orderDetail && (orderDetail.Status === 'Design' || orderDetail.Status === 'Production' || orderDetail.Status === 'D_Again') && (
                         <Button onClick={handleUpdateImage} color="primary">Update Image</Button>
                     )}
                     <Button onClick={handleClosePopup} color="primary">Close</Button>

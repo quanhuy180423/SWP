@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getOrderDetailByOrderId, getProductById, updateStatusOrderDetailById } from '../../server/api';
+import { getOrderDetailByOrderId, getProductById, updateStatusOrdeById, updateStatusOrderDetailById } from '../../server/api';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Grid, colors } from '@mui/material';
 import { CartContext } from '../../cart/CartContext';
 
 const OrderDetailUser = () => {
     const { OrderId } = useParams();
     const navigate = useNavigate();
-    const [orderDetail, setOrderDetail] = useState(null);
+    const [orderDetail, setOrderDetail] = useState([]);
     const [productDetail, setProductDetail] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const { addToCart, clearCart } = useContext(CartContext);
@@ -16,7 +16,7 @@ const OrderDetailUser = () => {
         const fetchOrderDetail = async () => {
             try {
                 const response = await getOrderDetailByOrderId(OrderId);
-                setOrderDetail(response.data[0]);
+                setOrderDetail(response.data);
             } catch (error) {
                 console.error('Error fetching order detail:', error);
             }
@@ -37,7 +37,7 @@ const OrderDetailUser = () => {
 
     const handleAcceptAndPayment = async () => {
         try {
-            const response = await getProductById(orderDetail.ProductId);
+            const response = await getProductById(orderDetail[0].ProductId); // Access the first order detail to get ProductId
             const product = response.data;
             clearCart();
             addToCart(product, 1);
@@ -47,11 +47,14 @@ const OrderDetailUser = () => {
         }
     };
 
-    const handleAcceptAndProduction = async () => {
+    const handleUpdateStatus = async (order, newOrderStatus, newDetailStatus) => {
         try {
-            const updatedOrderDetail = { ...orderDetail, Status: 'Production' };
-            await updateStatusOrderDetailById(updatedOrderDetail);
-            setOrderDetail(updatedOrderDetail);
+            await updateStatusOrdeById({ OrderId: order.OrderId, Status: newOrderStatus });
+            const orderDetailsResponse = await getOrderDetailByOrderId(order.OrderId);
+            const orderDetails = orderDetailsResponse.data;
+            await Promise.all(orderDetails.map(detail =>
+                updateStatusOrderDetailById({ OrderDetailId: detail.OrderDetailId, Status: newDetailStatus })
+            ));
         } catch (error) {
             console.error('Error updating order status:', error);
         }
@@ -63,48 +66,66 @@ const OrderDetailUser = () => {
 
     return (
         <Box p={3}>
-            {orderDetail && (
-                <Box mb={3}>
-                    <Typography variant="h4" gutterBottom>Order Details</Typography>
-                    <Box mt={2} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                        <Button variant="contained" color="warning" onClick={() => navigate(-1)}>
-                            Back
-                        </Button>
-                        <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderDetail.ProductId)}>
-                            View Product Details
-                        </Button>
-                        {orderDetail.Status === 'ChkOut' && (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                style={{ borderRadius: '5px', backgroundColor: colors.red[200], marginLeft: '30px' }}
-                                onClick={handleAcceptAndPayment}
-                            >
-                                Accept and Payment order
-                            </Button>)}
-                        {orderDetail.Status === 'Design' && (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                style={{ borderRadius: '5px', backgroundColor: colors.red[300], marginLeft: '30px' }}
-                                onClick={handleAcceptAndProduction}
-                            >
-                                Accept and Production
-                            </Button>)}
+            <Typography variant="h4" gutterBottom width='100%' display='flex' justifyContent='center' fontWeight='bold'>Order Details</Typography>
+            <Button variant="contained" color="warning" onClick={() => navigate(-1)}>
+                Back
+            </Button>
+            {orderDetail.length > 0 ? (
+                orderDetail.map((orderdetail) => (
+                    <Box mb={3} key={orderdetail.OrderDetailId}>
+
+                        <Box mt={2} sx={{ display: 'flex', justifyContent: 'end', marginBottom: '20px' }}>
+
+                            <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderdetail.ProductId)}>
+                                View Product Details
+                            </Button>
+                            {orderdetail.Status === 'ChkOut' && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ borderRadius: '5px', backgroundColor: colors.red[200], marginLeft: '30px' }}
+                                    onClick={handleAcceptAndPayment}
+                                >
+                                    Accept and Payment order
+                                </Button>
+                            )}
+                            {(orderdetail.Status === 'Design' || orderdetail.Status === 'D_Again') && (
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        style={{ borderRadius: '5px', backgroundColor: colors.red[300], marginLeft: '30px' }}
+                                        onClick={() => handleUpdateStatus(orderdetail, 'Production', 'Production')}
+                                    >
+                                        Accept and Production
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        style={{ borderRadius: '5px', backgroundColor: colors.red[300], marginLeft: '30px' }}
+                                        onClick={() => handleUpdateStatus(orderdetail, 'D_Again', 'D_Again')}
+                                    >
+                                        Design Again
+                                    </Button>
+                                </>
+                            )}
+                        </Box>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableBody>
+                                    {Object.entries(orderdetail).map(([key, value]) => (
+                                        <TableRow key={key}>
+                                            <TableCell variant="head"><strong>{key}</strong></TableCell>
+                                            <TableCell>{value}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </Box>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableBody>
-                                {Object.entries(orderDetail).map(([key, value]) => (
-                                    <TableRow key={key}>
-                                        <TableCell variant="head"><strong>{key}</strong></TableCell>
-                                        <TableCell>{value}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Box>
+                ))
+            ) : (
+                <Typography variant="h6">No order details available.</Typography>
             )}
 
             <Dialog open={isPopupOpen} onClose={handleClosePopup} maxWidth="md" fullWidth>
