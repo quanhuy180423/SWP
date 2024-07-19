@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { TextField, Button, Box, Grid, Alert } from '@mui/material';
+import { TextField, Button, Box, Grid, Alert, colors } from '@mui/material';
 import { insertCostMaterial } from "../../server/api";  // Make sure to update the API function accordingly
 
 function AddCostMaterial() {
@@ -51,46 +51,60 @@ function AddCostMaterial() {
     };
 
     return (
-        <Box component="form" onSubmit={handleSubmit} sx={{ flexGrow: 1 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-            <Grid container spacing={2} sx={{ '& .MuiTextField-root': { m: 1 } }} style={{ width: '75%' }}>
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Purchase Price"
-                        name="PurchasePrice"
-                        value={formData.PurchasePrice}
-                        onChange={handleChange}
-                        error={!!errors.PurchasePrice}
-                        helperText={errors.PurchasePrice}
-                        fullWidth
-                    />
+        <>
+            <Box
+                width='100%'
+                display='flex'
+                justifyContent='end'
+            >
+                <Button variant="contained" style={{
+                    color: 'black', backgroundColor: colors.orange[400],
+                }} onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </Box >
+            <Box component="form" onSubmit={handleSubmit} sx={{ flexGrow: 1 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                <Grid container spacing={2} sx={{ '& .MuiTextField-root': { m: 1 } }} style={{ width: '75%' }}>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="Purchase Price"
+                            name="PurchasePrice"
+                            value={formData.PurchasePrice}
+                            onChange={handleChange}
+                            error={!!errors.PurchasePrice}
+                            helperText={errors.PurchasePrice}
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="Price"
+                            name="Price"
+                            value={formData.Price}
+                            onChange={handleChange}
+                            error={!!errors.Price}
+                            helperText={errors.Price}
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="Material ID"
+                            name="MaterialId"
+                            value={formData.MaterialId}
+                            onChange={handleChange}
+                            error={!!errors.MaterialId}
+                            helperText={errors.MaterialId}
+                            fullWidth
+                            disabled // Disable the Material ID field to prevent changes
+                        />
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Price"
-                        name="Price"
-                        value={formData.Price}
-                        onChange={handleChange}
-                        error={!!errors.Price}
-                        helperText={errors.Price}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Material ID"
-                        name="MaterialId"
-                        value={formData.MaterialId}
-                        onChange={handleChange}
-                        error={!!errors.MaterialId}
-                        helperText={errors.MaterialId}
-                        fullWidth
-                        disabled // Disable the Material ID field to prevent changes
-                    />
-                </Grid>
-            </Grid>
-            <Button type="submit" variant="contained" style={{ marginTop: 20 }}>Add Cost Material</Button>
-        </Box>
+                <Button type="submit" variant="contained" style={{ marginTop: 20 }}>Add Cost Material</Button>
+            </Box>
+        </>
+
     );
 }
 

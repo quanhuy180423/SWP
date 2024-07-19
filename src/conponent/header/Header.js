@@ -161,6 +161,16 @@ const Header = () => {
                     </Link>
                   </MenuItem>
                 )}
+                {user.Role === 3 && (
+                  <MenuItem onClick={handleMenuClose}>
+                    <Link
+                      to="/admin"
+                      style={{ color: "red", fontWeight: "bold" }}
+                    >
+                      Staff dash board
+                    </Link>
+                  </MenuItem>
+                )}
                 <MenuItem
                   onClick={() => {
                     handleMenuClose();

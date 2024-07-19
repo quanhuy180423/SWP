@@ -73,7 +73,7 @@ const App = () => {
             )}
           </Route>
 
-          {(user.Role === 1 || user.Role === 2) && (
+          {(user.Role === 1 || user.Role === 3) && (
             <Route path="/admin" element={<LayoutAdmin />}>
               <Route index element={<Dashboard />} />
               {user.Role === 1 && (

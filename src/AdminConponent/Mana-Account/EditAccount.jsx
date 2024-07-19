@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { TextField, Button, Box, Grid, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { TextField, Button, Box, Grid, Alert, MenuItem, Select, InputLabel, FormControl, colors } from '@mui/material';
 import { getUserById, updateUser } from "../../server/api"; // Assuming you have API functions for fetching and updating user details
 import Header from '../Header/Header';
 
@@ -35,7 +35,7 @@ function EditAccount() {
         let tempErrors = {};
         if (!formData.UserName) tempErrors.UserName = "UserName is required";
         if (!formData.Name) tempErrors.Name = "Name is required";
-        else if (formData.Name.trim().split(' ').length < 3) tempErrors.Name = "Name must have more than 2 words";
+        else if (formData.Name.trim().split(' ').length < 1) tempErrors.Name = "Name must have more than 1 words";
         if (!formData.Phone) tempErrors.Phone = "Phone number is required";
         if (!formData.Address) tempErrors.Address = "Address is required";
         if (!formData.Email) tempErrors.Email = "Email is required";
@@ -64,99 +64,114 @@ function EditAccount() {
     };
 
     return (
-        <Box component="form" onSubmit={handleSubmit} sx={{ flexGrow: 1 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <>
             <Header title='EDIT ACCOUNT' subtitle='' />
-            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-            <Grid container spacing={2} sx={{ '& .MuiTextField-root': { m: 1 } }} style={{ width: '75%' }}>
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="UserName"
-                        name="UserName"
-                        value={formData.UserName}
-                        onChange={handleChange}
-                        error={!!errors.UserName}
-                        helperText={errors.UserName}
-                        fullWidth
-                        disabled
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Name"
-                        name="Name"
-                        value={formData.Name}
-                        onChange={handleChange}
-                        error={!!errors.Name}
-                        helperText={errors.Name}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="PassWord"
-                        name="PassWord"
-                        type="password"
-                        value={formData.PassWord}
-                        onChange={handleChange}
-                        error={!!errors.PassWord}
-                        helperText={errors.PassWord}
-                        fullWidth
-                    />
-                </Grid>
+            <Box
+                width='100%'
+                display='flex'
+                justifyContent='end'
+            >
+                <Button variant="contained" style={{
+                    color: 'black', backgroundColor: colors.orange[400],
+                }} onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </Box >
+            <Box component="form" onSubmit={handleSubmit} sx={{ flexGrow: 1 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Phone"
-                        name="Phone"
-                        value={formData.Phone}
-                        onChange={handleChange}
-                        error={!!errors.Phone}
-                        helperText={errors.Phone}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Email"
-                        name="Email"
-                        type="email"
-                        value={formData.Email}
-                        onChange={handleChange}
-                        error={!!errors.Email}
-                        helperText={errors.Email}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        label="Address"
-                        name="Address"
-                        value={formData.Address}
-                        onChange={handleChange}
-                        error={!!errors.Address}
-                        helperText={errors.Address}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                    <FormControl fullWidth error={!!errors.Role}>
-                        <InputLabel>Role</InputLabel>
-                        <Select
-                            name="Role"
-                            value={formData.Role}
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                <Grid container spacing={2} sx={{ '& .MuiTextField-root': { m: 1 } }} style={{ width: '75%' }}>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="UserName"
+                            name="UserName"
+                            value={formData.UserName}
                             onChange={handleChange}
-                            label="Role"
-                        >
-                            <MenuItem value={1}>Admin</MenuItem>
-                            <MenuItem value={2}>User</MenuItem>
-                            <MenuItem value={3}>Staff</MenuItem>
-                        </Select>
-                        {errors.Role && <Alert severity="error">{errors.Role}</Alert>}
-                    </FormControl>
+                            error={!!errors.UserName}
+                            helperText={errors.UserName}
+                            fullWidth
+                            disabled
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="Name"
+                            name="Name"
+                            value={formData.Name}
+                            onChange={handleChange}
+                            error={!!errors.Name}
+                            helperText={errors.Name}
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="PassWord"
+                            name="PassWord"
+                            type="password"
+                            value={formData.PassWord}
+                            onChange={handleChange}
+                            error={!!errors.PassWord}
+                            helperText={errors.PassWord}
+                            fullWidth
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="Phone"
+                            name="Phone"
+                            value={formData.Phone}
+                            onChange={handleChange}
+                            error={!!errors.Phone}
+                            helperText={errors.Phone}
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="Email"
+                            name="Email"
+                            type="email"
+                            value={formData.Email}
+                            onChange={handleChange}
+                            error={!!errors.Email}
+                            helperText={errors.Email}
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TextField
+                            label="Address"
+                            name="Address"
+                            value={formData.Address}
+                            onChange={handleChange}
+                            error={!!errors.Address}
+                            helperText={errors.Address}
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <FormControl fullWidth error={!!errors.Role}>
+                            <InputLabel>Role</InputLabel>
+                            <Select
+                                name="Role"
+                                value={formData.Role}
+                                onChange={handleChange}
+                                label="Role"
+                            >
+                                <MenuItem value={1}>Admin</MenuItem>
+                                <MenuItem value={2}>User</MenuItem>
+                                <MenuItem value={3}>Staff</MenuItem>
+                            </Select>
+                            {errors.Role && <Alert severity="error">{errors.Role}</Alert>}
+                        </FormControl>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Button type="submit" variant="contained" style={{ marginTop: 20 }}>Update Account</Button>
-        </Box>
+                <Button type="submit" variant="contained" style={{ marginTop: 20 }}>Update Account</Button>
+            </Box>
+        </>
+
     );
 }
 

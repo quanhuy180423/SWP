@@ -109,23 +109,30 @@ const Slidebar = () => {
 
                     {/* Menu Items */}
                     <Box>
+                        {user.Role === 1 &&
+                            <Item
+                                title='Dashboard'
+                                to='/admin'
+                                icon={faChartBar}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+
+                        }
+                        {user.Role === 1 &&
+                            <SubMenu
+                                label="Manage Account"
+                                icon={<FontAwesomeIcon icon={faUser} style={{ marginRight: '30px' }} />}
+                                style={{ color: 'black', height: '60px' }}
+                            >
+                                <Item title="Account Staff" to="/admin/manage-account/staff" icon={faUser} selected={selected} setSelected={setSelected} />
+                                <Item title="Account Customer" to="/admin/manage-account/customer" icon={faUser} selected={selected} setSelected={setSelected} />
+                            </SubMenu>
+
+                        }
+
                         <Item
-                            title='Dashboard'
-                            to='/admin'
-                            icon={faChartBar}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
-                        <SubMenu
-                            label="Manage Account"
-                            icon={<FontAwesomeIcon icon={faUser} style={{ marginRight: '30px' }} />}
-                            style={{ color: 'black', height: '60px' }}
-                        >
-                            <Item title="Account Staff" to="/admin/manage-account/staff" icon={faUser} selected={selected} setSelected={setSelected} />
-                            <Item title="Account Customer" to="/admin/manage-account/customer" icon={faUser} selected={selected} setSelected={setSelected} />
-                        </SubMenu>
-                        <Item
-                            title='Manage product'
+                            title='Manage Product'
                             to='/admin/manage-product'
                             icon={faBoxesStacked}
                             selected={selected}
@@ -164,13 +171,15 @@ const Slidebar = () => {
                                 selected={selected}
                                 setSelected={setSelected}
                             />
-                            <Item
-                                title='Order Manager'
-                                to='/admin/manage-order/List-Request/Order-Manager'
-                                icon={faBox}
-                                selected={selected}
-                                setSelected={setSelected}
-                            />
+                            {user.Role === 1 &&
+                                <Item
+                                    title='Order Manager'
+                                    to='/admin/manage-order/List-Request/Order-Manager'
+                                    icon={faBox}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />}
+
                             <Item
                                 title='Order Design'
                                 to='manage-order/List-Request/Order-Design'

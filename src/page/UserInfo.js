@@ -91,8 +91,9 @@ const UserInfo = () => {
 
   const handleConfirmUpdate = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser && storedUser.UserId) {
-      const userId = storedUser.UserId;
+    if (storedUser && storedUser.Id) {
+      const userId = storedUser.Id;
+      console.log(user);
       try {
         await axios.put(API_URL_UPDATE, { userId, ...user });
         setIsUpdateModalOpen(false);
