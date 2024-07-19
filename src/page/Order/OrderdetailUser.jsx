@@ -126,7 +126,7 @@ const OrderDetailUser = () => {
                                                 ) : key === 'Description' ? (
                                                     <div dangerouslySetInnerHTML={{ __html: value }} />
                                                 ) : key === 'ProductCost' ? (
-                                                    <strong className='text-red-300'>{value}</strong>
+                                                    <strong className='text-red-600'>{value}</strong>
                                                 ) : (
                                                     value
                                                 )}

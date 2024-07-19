@@ -167,7 +167,7 @@ const OrderManger = () => {
                                     <StyledTableCell>{order.Description}</StyledTableCell>
                                     <StyledTableCell>{order.Address}</StyledTableCell>
                                     <StyledTableCell>
-                                        <IconButton style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px', fontSize: '15px' }}>
+                                        <IconButton style={{ backgroundColor: getRowBackgroundColor(order.Status), fontWeight: 'bold', borderRadius: '15px', fontSize: '15px', width: '200px' }}>
                                             {generateStatus(order.Status)}
                                         </IconButton>
                                     </StyledTableCell>

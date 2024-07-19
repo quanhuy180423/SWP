@@ -103,6 +103,7 @@ const Step2 = ({ nextStep, prevStep, updateFormData, formData }) => {
                 name="materialId"
                 value={localData.materialId}
                 onChange={handleChange}
+                required
               >
                 {materials.map((material) => (
                   <MenuItem
@@ -137,6 +138,7 @@ const Step2 = ({ nextStep, prevStep, updateFormData, formData }) => {
                 name="categoryId"
                 value={localData.categoryId}
                 onChange={handleChange}
+                required
               >
                 {categories.map((category) => (
                   <MenuItem

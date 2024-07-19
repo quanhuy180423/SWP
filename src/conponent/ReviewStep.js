@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { orderRequest } from "../server/api";
 
 const ReviewStep = ({ prevStep, formData }) => {
+  const navigate = useNavigate();
   const [orderForm] = useState({
     UserId: formData.step1.UserId,
     UserName: formData.step1.UserName,
@@ -26,7 +30,6 @@ const ReviewStep = ({ prevStep, formData }) => {
   });
 
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [alert, setAlert] = useState({ message: "", type: "", visible: false });
 
   const handleFinalSubmit = (e) => {
     e.preventDefault();
@@ -38,42 +41,28 @@ const ReviewStep = ({ prevStep, formData }) => {
       .then((response) => {
         console.log("Order submitted successfully:", response.data);
         if (response.status === 200) {
-          window.scrollTo(0, 0); // Scroll to the top of the page
-          setAlert({
-            message: "Order submitted successfully",
-            type: "success",
-            visible: true,
-          });
+          toast.success("Order submitted successfully");
+          setTimeout(() => {
+            navigate("/");
+          }, 2000); // Navigate after 5 seconds
         }
       })
       .catch((error) => {
         console.error("Error submitting order:", error);
-        setAlert({
-          message: "Error submitting order",
-          type: "error",
-          visible: true,
-        });
+        toast.error("Error submitting order");
       });
   };
 
   return (
     <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-2xl mx-auto mb-2">
+      <ToastContainer />
       <h2 className="text-center mb-5 text-2xl text-gray-800">
         Review Your Order
       </h2>
-      {alert.visible && (
-        <Alert
-          severity={alert.type}
-          variant="filled"
-          className="flex justify-center"
-        >
-          {alert.message}
-        </Alert>
-      )}
       <div className="mb-4">
         <h3 className="text-xl mb-2">Step 1: Personal Information</h3>
         <p>
-          <strong>Full Name:</strong> {orderForm.fullName}
+          <strong>Full Name:</strong> {orderForm.UserName}
         </p>
         <p>
           <strong>Phone:</strong> {orderForm.Phone}

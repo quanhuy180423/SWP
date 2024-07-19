@@ -244,7 +244,7 @@ const OrderListRequest = () => {
                                             <Button
                                                 variant="contained"
                                                 color="secondary"
-                                                onClick={() => handleUpdateStatus(order, 'banked', 'Design')}
+                                                onClick={() => handleUpdateStatus(order, 'Design', 'Design')}
                                             >
                                                 Send Design
                                             </Button>
@@ -253,7 +253,7 @@ const OrderListRequest = () => {
                                             <Button
                                                 variant="contained"
                                                 color="secondary"
-                                                onClick={() => handleUpdateStatus(order, 'Order_COD', 'Design')}
+                                                onClick={() => handleUpdateStatus(order, 'Design', 'Design')}
                                             >
                                                 Send Design
                                             </Button>

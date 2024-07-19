@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Button, colors, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -63,29 +63,6 @@ const generateStatus = (status) => {
     }
 };
 
-const getRowBackgroundColor = (status) => {
-    switch (status) {
-        case 'RqOrder':
-            return colors.red[100];
-        case 'AptQuote':
-            return colors.blue[100];
-        case 'ChkOut':
-            return colors.yellow[100];
-        case 'banked':
-            return colors.purple[100];
-        case 'ProComl':
-            return colors.green[100];
-        case 'Ship':
-            return colors.teal[100];
-        case 'Done':
-            return colors.green[200];
-        case 'Cancel':
-            return colors.grey[400];
-        default:
-            return 'inherit';
-    }
-};
-
 const OrderListOfUser = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -101,7 +78,8 @@ const OrderListOfUser = () => {
             console.log(userId);
             try {
                 const response = await getOrderByUserId(userId);
-                setOrders(response.data);
+                const sortOrder = response.data.sort((a, b) => b.OrderId - a.OrderId)
+                setOrders(sortOrder);
             } catch (error) {
                 console.error('Error fetching orders:', error);
                 setError('Error fetching orders');
@@ -165,14 +143,14 @@ const OrderListOfUser = () => {
         }
     };
 
-    const handleSelectProcessingStatus = async (order) => {
-        try {
-            await handleUpdateStatus(order, 'banked', 'banked');
-        } catch (error) {
-            console.error('Error updating order status to processing:', error);
-            setError('Error updating order status to processing');
-        }
-    };
+    // const handleSelectProcessingStatus = async (order) => {
+    //     try {
+    //         await handleUpdateStatus(order, 'banked', 'banked');
+    //     } catch (error) {
+    //         console.error('Error updating order status to processing:', error);
+    //         setError('Error updating order status to processing');
+    //     }
+    // };
 
     const filterOrders = () => {
         if (selectedStatus === 'All') {
@@ -257,7 +235,7 @@ const OrderListOfUser = () => {
                                         >
                                             View Details
                                         </Button>
-                                        {order.Status === 'ChkOut' && (
+                                        {/* {order.Status === 'ChkOut' && (
                                             <Button
                                                 variant="contained"
                                                 color="secondary"
@@ -266,8 +244,8 @@ const OrderListOfUser = () => {
                                             >
                                                 Select Status Processing
                                             </Button>
-                                        )}
-                                        {order.Status !== 'Done' && order.Status !== 'Cancel' && (
+                                        )} */}
+                                        {order.Status === 'RqOrder' && (
                                             <Button
                                                 variant="contained"
                                                 color="error"

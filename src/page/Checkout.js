@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../cart/CartContext";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Container,
   Box,
@@ -22,20 +24,17 @@ import {
   Radio,
 } from "@mui/material";
 import {
-  getAllOrderDetail,
-  getOrderById,
   getOrderDetailByOrderId,
   updateStatusOrderDetailById,
-  updateOrderById,
+  updateStatusOrdeById,
 } from "../server/api";
 
 const Checkout = () => {
-  const { cart, removeFromCart } = useContext(CartContext);
+  const { cart, clearCart } = useContext(CartContext);
   const [user, setUser] = useState(null);
   const [orderId, setOrderId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("1");
   const API_URL = "http://localhost:8090/test";
-
   const USER_API_URL = "http://localhost:8090/test/getUserById";
   const ORDER_API_URL = "http://localhost:8090/create_payment_url";
   const ORDER_DETAIL_API_URL = "http://localhost:8090/test/getAllOrderDetail";
@@ -61,7 +60,9 @@ const Checkout = () => {
       const orderDetails = response.data;
 
       const matchingOrderDetail = orderDetails.find((detail) =>
-        cart.some((item) => item.ProductId === detail.ProductId)
+        cart.some(
+          (item) => item.ProductId === detail.ProductId && item.Status === 0
+        )
       );
 
       if (matchingOrderDetail) {
@@ -71,33 +72,6 @@ const Checkout = () => {
       }
     } catch (error) {
       console.error("Error fetching order details:", error);
-    }
-  };
-
-  const getOrder = async () => {
-    try {
-      const Order = await getOrderById(orderId);
-      console.log(Order.data[0]);
-      if (Order.data[0].Status === "banked") {
-        const statusOrderDetail = await getOrderDetailByOrderId(orderId);
-        const OrderDetailId = statusOrderDetail.data[0].OrderDetailId;
-        console.log(OrderDetailId);
-        const updateStatusOrderDetail = {
-          OrderDetailId: OrderDetailId,
-          Status: "banked",
-        };
-        console.log(statusOrderDetail.data[0].ProductId);
-        await updateStatusOrderDetailById(updateStatusOrderDetail);
-        removeFromCart(statusOrderDetail.data[0].ProductId);
-        console.log("Payment successful, cart cleared.");
-      } else {
-        console.error(
-          "Payment not successful, order status:",
-          Order.data.status
-        );
-      }
-    } catch (error) {
-      console.error("Error checking order status:", error);
     }
   };
 
@@ -113,209 +87,240 @@ const Checkout = () => {
     }
   }, [cart]);
 
-  useEffect(() => {
-    if (orderId) {
-      getOrder();
-    }
-  }, [orderId]);
-
   const totalCost = cart.reduce(
     (total, item) => total + item.ProductCost * item.quantity,
     0
   );
-  const formattedTotalCost = parseFloat(totalCost.toFixed(2));
-
-  const totalAmount = formattedTotalCost;
+  const formattedTotalCost = parseFloat(totalCost.toFixed(2)).toLocaleString();
 
   const handleCheckout = async () => {
     if (!user) {
-      alert("You need to sign in to pay.");
+      toast.error("You need to sign in to pay.");
       return;
     }
 
     try {
-      const orderDetails = await getAllOrderDetail(); // Correctly invoking the function
-      const orderItems = orderDetails.data;
+      await getOrderDetail();
 
-      let existingOrderId = null;
-
-      for (let item of cart) {
-        const matchingOrder = orderItems.find(
-          (order) =>
-            order.ProductId === item.ProductId && order.Status === "ChkOut"
-        );
-        if (matchingOrder) {
-          existingOrderId = matchingOrder.OrderId;
-          break;
-        }
-      }
-      let response = null; // Declaring response variable outside the if block
-      if (!existingOrderId) {
+      if (orderId) {
+        // Existing order found, proceed with payment update
+        handlePaymentUpdate(orderId);
+      } else {
+        // No existing order, insert new order
         const productIds = cart.map((item) => item.ProductId);
+
         const orderRequestData = {
           PaymentMethods: paymentMethod,
           Phone: user.Phone,
           Address: user.Address,
           Status: "ChkOut",
           UserId: user.UserId,
-          Description: "Sản phẩm có sẵn của cửa hàng",
+          Description: "No description",
           Name: user.UserName,
           ProductIds: productIds,
         };
 
-        response = await axios.post(`${API_URL}/insertOrder`, orderRequestData);
+        const response = await axios.post(
+          `${API_URL}/insertOrder`,
+          orderRequestData
+        );
         if (response) {
-          setOrderId(response.data.orderId);
+          setOrderId(response.data.OrderId);
+          handlePaymentUpdate(response.data.OrderId);
         }
-      } else {
-        setOrderId(existingOrderId);
-      }
-
-      const paymentDetails = {
-        orderId: existingOrderId || response.data.OrderId,
-        amount: totalAmount,
-        bankCode: "NCB",
-      };
-
-      if (paymentMethod === "1") {
-        const paymentResponse = await axios.post(ORDER_API_URL, paymentDetails);
-        const paymentUrl = paymentResponse.data.paymentUrl;
-        window.location.href = paymentUrl;
-      } else {
-        const updatedOrder = {
-          PaymentMethods: paymentMethod,
-          Phone: user.Phone,
-          Address: user.Address,
-          Status: "Order_COD",
-          UserId: user.UserId,
-          Description: "Sản phẩm có sẵn của cửa hàng",
-          Name: user.UserName,
-          OrderId: existingOrderId || response.data.OrderId,
-        };
-        await updateOrderById(updatedOrder);
-        alert("Order will be paid on delivery.");
-        // Add any additional logic needed for COD orders here
       }
     } catch (error) {
       console.error("Error during checkout process:", error);
+      toast.error("Error during checkout process. Please try again.");
+    }
+  };
+
+  const handlePaymentUpdate = async (orderId) => {
+    const paymentDetails = {
+      orderId: orderId,
+      amount: totalCost,
+      bankCode: "NCB",
+    };
+
+    try {
+      if (paymentMethod === "1") {
+        const paymentResponse = await axios.post(ORDER_API_URL, paymentDetails);
+        const paymentUrl = paymentResponse.data.paymentUrl;
+        await updateStatusOrderDetail(orderId, "banked");
+        clearCart();
+        window.location.href = paymentUrl;
+      } else {
+        await updateStatusOrderDetail(orderId, "COD");
+        await updateStatusOrder(orderId, "Order_COD");
+        clearCart();
+        toast.success("Order will be paid on delivery.");
+      }
+    } catch (error) {
+      console.error("Error during payment update process:", error);
+      toast.error("Error during payment update process. Please try again.");
+    }
+  };
+
+  const updateStatusOrderDetail = async (orderId, status) => {
+    try {
+      const orderDetails = await getOrderDetailByOrderId(orderId);
+      for (let detail of orderDetails.data) {
+        const updateOrderDetail = {
+          OrderDetailId: detail.OrderDetailId,
+          Status: status,
+        };
+        await updateStatusOrderDetailById(updateOrderDetail);
+      }
+    } catch (error) {
+      console.error("Error updating order detail status:", error);
+    }
+  };
+
+  const updateStatusOrder = async (orderId, status) => {
+    try {
+      const updateOrder = {
+        OrderId: orderId,
+        Status: status,
+      };
+      await updateStatusOrdeById(updateOrder);
+    } catch (error) {
+      console.error("Error updating order status:", error);
     }
   };
 
   return (
-    <Container maxWidth="lg">
-      <Typography variant="h4" align="center" gutterBottom>
-        Payment Detail
-      </Typography>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ padding: 3 }}>
-            <Typography variant="h5" gutterBottom>
-              Customer Information
-            </Typography>
-            <TextField
-              label="Name"
-              value={user ? user.Name : ""}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              label="Phone"
-              value={user ? user.Phone : ""}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              label="Address"
-              value={user ? user.Address : ""}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              label="Email"
-              value={user ? user.Email : ""}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              label="Order ID"
-              value={orderId}
-              onChange={(e) => setOrderId(e.target.value)}
-              fullWidth
-              margin="normal"
-              disabled
-            />
-            <FormControl component="fieldset" sx={{ marginTop: 2 }}>
-              <FormLabel component="legend">Payment Method</FormLabel>
-              <RadioGroup
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              >
-                <FormControlLabel
-                  value="1"
-                  control={<Radio />}
-                  label="Payment with VN Pay"
-                />
-                <FormControlLabel
-                  value="2"
-                  control={<Radio />}
-                  label="Cash On Delivery (COD)"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ padding: 3 }}>
-            <Typography variant="h5" gutterBottom>
-              Order Summary
-            </Typography>
-            <List>
-              {cart.map((item, index) => (
-                <React.Fragment key={index}>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar src={item.Image[0]} alt={item.Name} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={item.Name}
-                      secondary={`Price: ${item.ProductCost.toLocaleString()}₫ - Quantity: ${
-                        item.quantity
-                      }`}
-                    />
-                  </ListItem>
-                  <Divider />
-                </React.Fragment>
-              ))}
-            </List>
-            <Box mt={2}>
-              <Typography variant="h6" gutterBottom>
-                Total Price: {totalAmount.toLocaleString()}₫
+    <>
+      <ToastContainer />
+      <Container maxWidth="lg">
+        <Typography variant="h4" align="center" gutterBottom>
+          Payment Detail
+        </Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Paper elevation={3} sx={{ padding: 3 }}>
+              <Typography variant="h5" gutterBottom>
+                Customer Information
               </Typography>
-              <Button
-                variant="contained"
-                color="primary"
+              <TextField
+                label="Name"
+                value={user ? user.Name : ""}
                 fullWidth
-                onClick={handleCheckout}
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                label="Phone"
+                value={user ? user.Phone : ""}
+                fullWidth
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                label="Address"
+                value={user ? user.Address : ""}
+                fullWidth
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                label="Email"
+                value={user ? user.Email : ""}
+                fullWidth
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                label="Order ID"
+                value={orderId}
+                onChange={(e) => setOrderId(e.target.value)}
+                fullWidth
+                margin="normal"
+                disabled
+              />
+              <FormControl component="fieldset" sx={{ marginTop: 2 }}>
+                <FormLabel component="legend">Payment Method</FormLabel>
+                <RadioGroup
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                >
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Payment with VN Pay"
+                  />
+                  <FormControlLabel
+                    value="2"
+                    control={<Radio />}
+                    label="Cash On Delivery"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Paper elevation={3} sx={{ padding: 3 }}>
+              <Typography variant="h5" gutterBottom>
+                Cart Summary
+              </Typography>
+              <List>
+                {cart.map((item) => (
+                  <React.Fragment key={item.ProductId}>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar src={item.Image} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={item.Name}
+                        secondary={`Quantity: ${
+                          item.quantity
+                        } - Price: ${item.ProductCost.toLocaleString()} đ`}
+                      />
+                    </ListItem>
+                    <Divider />
+                  </React.Fragment>
+                ))}
+              </List>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: 2,
+                }}
               >
-                Check Out
-              </Button>
-            </Box>
-          </Paper>
+                <Typography
+                  variant="h5"
+                  display="flex"
+                  justifyContent="center"
+                  width="100%"
+                >
+                  Total: {formattedTotalCost} đ
+                </Typography>
+              </Box>
+              <Grid item xs={12}>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleCheckout}
+                    sx={{ marginTop: 2 }}
+                  >
+                    Checkout
+                  </Button>
+                </Box>
+              </Grid>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </>
   );
 };
 
