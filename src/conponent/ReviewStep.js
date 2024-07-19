@@ -44,7 +44,7 @@ const ReviewStep = ({ prevStep, formData }) => {
           toast.success("Order submitted successfully");
           setTimeout(() => {
             navigate("/");
-          }, 2000); // Navigate after 5 seconds
+          }, 2000); // Navigate after 2 seconds
         }
       })
       .catch((error) => {

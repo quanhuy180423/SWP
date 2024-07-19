@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-
+import { colors } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -65,8 +65,6 @@ const generateStatus = (status) => {
             return status;
     }
 };
-
-
 
 const OrderListRequest = () => {
     const [orders, setOrders] = useState([]);
@@ -170,8 +168,11 @@ const OrderListRequest = () => {
                             <StyledTableCell>Name</StyledTableCell>
                             <StyledTableCell>Phone</StyledTableCell>
                             <StyledTableCell>Address</StyledTableCell>
+                            <StyledTableCell>Description</StyledTableCell>
                             <StyledTableCell>Status</StyledTableCell>
-                            <StyledTableCell>Actions</StyledTableCell>
+                            <StyledTableCell
+                                style={{ display: 'flex', justifyContent: 'center' }}
+                            >Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -184,12 +185,13 @@ const OrderListRequest = () => {
                                     <StyledTableCell>{order.Name}</StyledTableCell>
                                     <StyledTableCell>{order.Phone}</StyledTableCell>
                                     <StyledTableCell>{order.Address}</StyledTableCell>
+                                    <StyledTableCell>{order.Description}</StyledTableCell>
                                     <StyledTableCell>{generateStatus(order.Status)}</StyledTableCell>
                                     <StyledTableCell
                                         style={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
-                                            width: '400px',
+                                            width: '100%',
                                         }}
                                     >
                                         <Button
@@ -218,22 +220,32 @@ const OrderListRequest = () => {
                                                 </Button>
                                             </>
                                         )}
-                                        {order.Status === 'banked' && (
+                                        {order.Status === 'banked' && order.Description !== 'No description' && (
                                             <Button
                                                 variant="contained"
-                                                color="secondary"
+                                                style={{ width: '200px', backgroundColor: colors.orange[400] }}
                                                 onClick={() => handleUpdateStatus(order, 'Design', 'Design')}
                                             >
                                                 Send Design
                                             </Button>
                                         )}
-                                        {order.Status === 'Order_COD' && (
+                                        {order.Status === 'Order_COD' && order.Description !== 'No description' && (
                                             <Button
                                                 variant="contained"
-                                                color="secondary"
+
+                                                style={{ width: '200px', backgroundColor: colors.orange[100] }}
                                                 onClick={() => handleUpdateStatus(order, 'Design', 'Design')}
                                             >
                                                 Send Design
+                                            </Button>
+                                        )}
+                                        {order.Description === 'No description' && (
+                                            <Button
+                                                variant="contained"
+                                                style={{ backgroundColor: colors.lightGreen[400], width: '200px' }}
+                                                onClick={() => handleUpdateStatus(order, 'Production', 'Production')}
+                                            >
+                                                Send Production
                                             </Button>
                                         )}
                                     </StyledTableCell>
@@ -241,7 +253,7 @@ const OrderListRequest = () => {
                             ))
                         ) : (
                             <StyledTableRow>
-                                <StyledTableCell colSpan={6} align="center">
+                                <StyledTableCell colSpan={7} align="center">
                                     No orders found.
                                 </StyledTableCell>
                             </StyledTableRow>
@@ -252,7 +264,5 @@ const OrderListRequest = () => {
         </Box>
     );
 };
-
-
 
 export default OrderListRequest;

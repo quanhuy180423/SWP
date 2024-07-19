@@ -120,7 +120,7 @@ const OrderComplete = () => {
                                         style={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
-                                            width: '400px',
+                                            width: '100%',
                                         }}
                                     >
                                         <Button

@@ -111,7 +111,7 @@ const OrderDesign = () => {
                                         style={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
-                                            width: '300px',
+                                            width: '100%',
                                         }}
                                     >
                                         <Button
@@ -126,11 +126,8 @@ const OrderDesign = () => {
                                             variant="contained" color="secondary"
                                             onClick={() => handleSendManager(order)}
                                         >
-                                            Send Sale Staff
+                                            Send Customer
                                         </Button>
-                                        {/* <Button variant="contained" color="error">
-                                            Decline
-                                        </Button> */}
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))

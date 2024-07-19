@@ -37,6 +37,8 @@ const generateStatus = (status) => {
     switch (status) {
         case 'RqQuote':
             return 'Request Accept Quote';
+        case 'Cancel':
+            return 'Cancel';
         case 'AptQuote':
             return 'Accept Quote';
         case 'ChkOut':
@@ -62,6 +64,8 @@ const getRowBackgroundColor = (status) => {
             return colors.red[100];
         case 'AptQuote':
             return colors.blue[100];
+        case 'Cancel':
+            return colors.brown[100];
         case 'ChkOut':
             return colors.yellow[100];
         case 'banked':
@@ -175,7 +179,7 @@ const OrderManger = () => {
                                         style={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
-                                            width: '300px',
+                                            width: '100%',
                                         }}
                                     >
                                         <Button

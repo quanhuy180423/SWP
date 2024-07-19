@@ -28,6 +28,7 @@ import {
   updateStatusOrderDetailById,
   updateStatusOrdeById,
 } from "../server/api";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const { cart, clearCart } = useContext(CartContext);
@@ -38,7 +39,7 @@ const Checkout = () => {
   const USER_API_URL = "http://localhost:8090/test/getUserById";
   const ORDER_API_URL = "http://localhost:8090/create_payment_url";
   const ORDER_DETAIL_API_URL = "http://localhost:8090/test/getAllOrderDetail";
-
+  const navigate = useNavigate();
   const getUser = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.Id) {
@@ -154,6 +155,9 @@ const Checkout = () => {
         await updateStatusOrder(orderId, "Order_COD");
         clearCart();
         toast.success("Order will be paid on delivery.");
+        setTimeout(() => {
+          navigate("/");
+        }, 2000); // Navigate after 2 seconds
       }
     } catch (error) {
       console.error("Error during payment update process:", error);

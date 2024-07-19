@@ -66,7 +66,10 @@ const OrderDetailUser = () => {
             {orderDetail && (
                 <Box mb={3}>
                     <Typography variant="h4" gutterBottom>Order Details</Typography>
-                    <Box mt={2} sx={{ display: 'flex', justifyContent: 'end', marginBottom: '20px' }}>
+                    <Box mt={2} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+                        <Button variant="contained" color="warning" onClick={() => navigate(-1)}>
+                            Back
+                        </Button>
                         <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderDetail.ProductId)}>
                             View Product Details
                         </Button>

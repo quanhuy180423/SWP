@@ -97,10 +97,10 @@ const OrderListOfUser = () => {
         fetchOrders();
     }, []);
 
-    // const handleOpenDialog = (order) => {
-    //     setSelectedOrder(order);
-    //     setDialogOpen(true);
-    // };
+    const handleOpenDialog = (order) => {
+        setSelectedOrder(order);
+        setDialogOpen(true);
+    };
 
     const handleCloseDialog = () => {
         setDialogOpen(false);
@@ -143,15 +143,6 @@ const OrderListOfUser = () => {
         }
     };
 
-    // const handleSelectProcessingStatus = async (order) => {
-    //     try {
-    //         await handleUpdateStatus(order, 'banked', 'banked');
-    //     } catch (error) {
-    //         console.error('Error updating order status to processing:', error);
-    //         setError('Error updating order status to processing');
-    //     }
-    // };
-
     const filterOrders = () => {
         if (selectedStatus === 'All') {
             return orders;
@@ -180,13 +171,12 @@ const OrderListOfUser = () => {
                 <Button variant={selectedStatus === 'RqOrder' ? 'contained' : 'none'} onClick={() => setSelectedStatus('RqOrder')}>
                     Request Order
                 </Button>
-
                 <DividerStyled orientation="vertical" flexItem />
                 <Button variant={selectedStatus === 'ChkOut' ? 'contained' : 'none'} onClick={() => setSelectedStatus('ChkOut')}>
                     Check Out
                 </Button>
                 <DividerStyled orientation="vertical" flexItem />
-                <Button variant={(selectedStatus === 'Design' || selectedStatus === 'Production') ? 'contained' : 'none'} onClick={() => setSelectedStatus('Pro')}>
+                <Button variant={(selectedStatus === 'Design' || selectedStatus === 'banked' || selectedStatus === 'Production') ? 'contained' : 'none'} onClick={() => setSelectedStatus('Design' || 'banked' || 'Production')}>
                     Processing
                 </Button>
                 <DividerStyled orientation="vertical" flexItem />
@@ -211,7 +201,9 @@ const OrderListOfUser = () => {
                             <StyledTableCell>Description Order</StyledTableCell>
                             <StyledTableCell>Address</StyledTableCell>
                             <StyledTableCell>Status</StyledTableCell>
-                            <StyledTableCell>Action</StyledTableCell>
+                            <StyledTableCell
+                                style={{ display: 'flex', justifyContent: 'center' }}
+                            >Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -225,7 +217,9 @@ const OrderListOfUser = () => {
                                     <StyledTableCell>{order.Description}</StyledTableCell>
                                     <StyledTableCell>{order.Address}</StyledTableCell>
                                     <StyledTableCell>{generateStatus(order.Status)}</StyledTableCell>
-                                    <StyledTableCell>
+                                    <StyledTableCell
+                                        style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
+                                    >
                                         <Button
                                             component={Link}
                                             to={`/order-of-user/order-detail-user/${order.OrderId}`}
@@ -235,23 +229,22 @@ const OrderListOfUser = () => {
                                         >
                                             View Details
                                         </Button>
-                                        {/* {order.Status === 'ChkOut' && (
-                                            <Button
-                                                variant="contained"
-                                                color="secondary"
-                                                sx={{ mr: 1 }}
-                                                onClick={() => handleSelectProcessingStatus(order)}
-                                            >
-                                                Select Status Processing
-                                            </Button>
-                                        )} */}
-                                        {order.Status === 'RqOrder' && (
+                                        {(order.Status === 'RqOrder' || order.Status === 'Order_COD') && (
                                             <Button
                                                 variant="contained"
                                                 color="error"
                                                 onClick={() => handleCancelOrder(order)}
                                             >
                                                 Cancel
+                                            </Button>
+                                        )}
+                                        {order.Status === 'ProComl' && (
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleOpenDialog(order)}
+                                            >
+                                                Choose method
                                             </Button>
                                         )}
                                     </StyledTableCell>
@@ -267,27 +260,23 @@ const OrderListOfUser = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {selectedOrder && (
-                <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-                    <DialogTitle>Select Receiving Method</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please select the receiving method for order ID {selectedOrder.OrderId}:
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => handleSelectReceivingMethod('Home')} color="primary">
-                            Home
-                        </Button>
-                        <Button onClick={() => handleSelectReceivingMethod('Store')} color="primary">
-                            Store
-                        </Button>
-                        <Button onClick={handleCloseDialog} color="primary" autoFocus>
-                            Cancel
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            )}
+
+            <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+                <DialogTitle>Select Receiving Method</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please choose a receiving method for your order.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handleSelectReceivingMethod('Store')} color="primary">
+                        Store
+                    </Button>
+                    <Button onClick={() => handleSelectReceivingMethod('Home')} color="primary">
+                        Home
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
