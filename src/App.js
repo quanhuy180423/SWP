@@ -41,6 +41,9 @@ import OrderProduction from "./AdminConponent/Mana-Order/OrderProduction";
 import OrderComplete from "./AdminConponent/Mana-Order/OrderComplete";
 import AddDiamondCost from "./AdminConponent/Mana-Diamond/AddDiamondCost";
 import EditProduct from "./AdminConponent/Mana-Product/EditProduct";
+import Material from "./page/Material";
+import PrivacyPolicy from "./conponent/PrivacyPolicy";
+import PaymentMethods from "./conponent/PaymentMethod";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -52,12 +55,15 @@ const App = () => {
             <Route index element={<HomePage />} />
             <Route path="order-form" element={<OrderForm />} />
             <Route path="Blogs" element={<Blogs />} />
-            <Route path="/blog/:blogId" element={<BlogDetail />} />
+            <Route path="/Blog/:BlogId" element={<BlogDetail />} />
             <Route path="/Jewelry/:ProductId" element={<Product />} />
             <Route path="/userinfo/:Id" element={<UserInfo />} />
             <Route path="Diamonds" element={<DiamondPage />} />
+            <Route path="/Material" element={<Material />} />
             <Route path="/Diamonds/:GemId" element={<DiamondDetail />} />
             <Route path="/Jewelry" element={<JewelryPage />} />
+            <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+            <Route path="/PaymentMethod" element={<PaymentMethods />} />
             {user !== null ? (
               <>
                 <Route path="/cart" element={<Cart />} />

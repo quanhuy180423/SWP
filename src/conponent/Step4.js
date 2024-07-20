@@ -42,11 +42,11 @@ const Step4 = ({ nextStep, prevStep, updateFormData, formData }) => {
         <h3
           style={{ fontSize: "30px", fontWeight: "bold", textAlign: "center" }}
         >
-          Step 4: Additional Details
+          Step 4: Additional Details Product
         </h3>
         <div>
           <Editor
-            apiKey="os4d30ks8s1mm7ib9m5mkdik7gx1yov0gxkwelf5n5f3gz64"
+            apiKey="cy6nfm793cpsebdngtbam1krs668s4g1qgwmc0otd5e4cmlc"
             init={{
               plugins:
                 "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofDescriptions footnotes mergetags autocorrect typography inlinecss markdown",

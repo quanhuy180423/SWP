@@ -97,6 +97,11 @@ export const deleteCategory = (id) =>
 
 // Hàm lấy Material
 export const getAllMaterial = () => axios.get(`${API_URL}/getAllMaterial`);
+
+//lấy toàn bộ material và price
+export const getAllMaterialAndPrice = () =>
+  axios.get(`${API_URL}/getAllMaterialAndPrice`);
+
 export const getAllCostMaterial = () =>
   axios.get(`${API_URL}/getAllCostMaterial`);
 export const getMaterialById = (MaterialId) =>

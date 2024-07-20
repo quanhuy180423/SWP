@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Grid, Alert, MenuItem, Select, InputLabel, FormControl, Paper, colors } from '@mui/material';
+import { TextField, Button, Box, Grid, Alert, MenuItem, Select, InputLabel, FormControl, colors } from '@mui/material';
 import { insertProduct, getAllMaterial, getAllCategories, getAllGem } from "../../server/api"; // Assuming you have API functions for fetching materials and categories
 import { Editor } from '@tinymce/tinymce-react';
 import handleUploadImages from "../../firebase/HandleUploadToFirebase";
@@ -256,7 +256,7 @@ function AddProduct() {
 
                     <Grid item xs={12}>
                         <Editor
-                            apiKey='your-tinymce-api-key' // Replace with your TinyMCE API key
+                            apiKey='cy6nfm793cpsebdngtbam1krs668s4g1qgwmc0otd5e4cmlc' // Replace with your TinyMCE API key
                             onInit={(evt, editor) => editorRef.current = editor}
                             initialValue="<p></p>"
                             init={{

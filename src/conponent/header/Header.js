@@ -115,6 +115,12 @@ const Header = () => {
               Diamonds
             </Link>
             <Link
+              to="/Material"
+              className="text-xl font-bold text-gray-500 font-sans hover:text-black"
+            >
+              Material
+            </Link>
+            <Link
               to="/Blogs"
               className="text-xl font-bold text-gray-500 font-sans hover:text-black"
             >

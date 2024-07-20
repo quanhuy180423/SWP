@@ -6,6 +6,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -61,9 +62,11 @@ const Footer = () => {
               Policy order
             </Typography>
             <List>
-              <ListItem className="text-gray-600">Policy & bảo hành</ListItem>
+              <ListItem className="text-gray-600">
+                <Link to={`/PrivacyPolicy`}> Privacy Policy</Link>
+              </ListItem>
               <ListItem className="mt-2 text-gray-600">
-                Terms of purchase
+                <Link to={`/PaymentMethod`}>Terms of purchase</Link>
               </ListItem>
             </List>
           </div>

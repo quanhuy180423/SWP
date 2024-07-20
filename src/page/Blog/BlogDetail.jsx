@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Container, Typography, CircularProgress } from '@mui/material';
 
 const BlogDetail = () => {
     const { BlogId } = useParams();
@@ -11,11 +12,7 @@ const BlogDetail = () => {
         try {
             const response = await axios.get(`${API_URL}?BlogId=${BlogId}`);
             const data = response.data;
-            data.map((blog) => {
-                setBlog(blog);
-            })
-
-
+            setBlog(data); // Assuming that data is an array with a single blog object
         } catch (error) {
             console.error(error);
         }
@@ -26,19 +23,20 @@ const BlogDetail = () => {
     }, [BlogId]);
 
     return (
-        <div className="flex justify-center items-center">
-            <div className="max-w-4xl mx-auto px-4 py-8">
-
-                {blog ? (
-                    <div>
-                        <h2 className="text-2xl font-bold mb-2">{blog.Title}</h2>
-                        <div className="text-lg mb-4" dangerouslySetInnerHTML={{ __html: blog.Content }} />
-                    </div>
-                ) : (
-                    <p>Loading...</p>
-                )}
-            </div>
-        </div>
+        <Container maxWidth="md" style={{ marginTop: '20px' }}>
+            {blog ? (
+                <div>
+                    <Typography variant="h4" component="h2" gutterBottom>
+                        {blog.Title}
+                    </Typography>
+                    <Typography variant="body1" component="div" dangerouslySetInnerHTML={{ __html: blog.Content }} />
+                </div>
+            ) : (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    <CircularProgress />
+                </div>
+            )}
+        </Container>
     );
 };
 

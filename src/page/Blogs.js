@@ -1,7 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardMedia, Typography } from "@mui/material";
+import {
+  Container,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Grid,
+} from "@mui/material";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -53,66 +60,53 @@ const Blogs = () => {
   }, []);
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Danh mục bài viết</h1>
-      <div className="flex justify-center mb-8">
-        <div className="flex justify-around">
-          <div className="m-2">
-            <Link
-              to="/jewelry"
-              className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black"
-            >
-              Tin tức - Blog
-            </Link>
-          </div>
-          <div className="m-2">
-            <Link
-              to="/jewelry"
-              className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black"
-            >
-              Bảng giá vàng
-            </Link>
-          </div>
-          <div className="m-2">
-            <Link
-              to="/jewelry"
-              className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black"
-            >
-              Trang sức vàng
-            </Link>
-          </div>
-          <div className="m-2">
-            <Link
-              to="/jewelry"
-              className="bg-white hover:bg-gray-200 text-black text-lg font-normal py-2 px-4 rounded border-2 border-black"
-            >
-              Góc chia sẻ
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <Container maxWidth="lg" style={{ marginTop: "20px" }}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+        }}
+      >
+        Blog-news
+      </Typography>
+      <Grid container spacing={4}>
         {blogs.map((blog, index) => (
-          <Card key={index}>
-            <Link to={`/blog/${blog.BlogId}`}>
-              <CardMedia
-                className="w-full h-96"
-                image="https://th.bing.com/th/id/OIP.ifiZuFOKsVZUSgB3F1viQQHaHa?rs=1&pid=ImgDetMain"
-                title={blog.Title}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {blog.Title}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {users[blog.UserId]}
-                </Typography>
-              </CardContent>
-            </Link>
-          </Card>
+          <Grid item key={index} xs={12} sm={6} md={4}>
+            <Card>
+              <Link
+                to={`/Blog/${blog.BlogId}`}
+                style={{ textDecoration: "none" }}
+              >
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image="https://th.bing.com/th/id/OIP.ifiZuFOKsVZUSgB3F1viQQHaHa?rs=1&pid=ImgDetMain"
+                  alt={blog.Title}
+                />
+                <CardContent
+                  sx={{
+                    height: "300px",
+                  }}
+                >
+                  <Typography gutterBottom variant="h5" component="div">
+                    {blog.Title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    {users[blog.UserId]}
+                  </Typography>
+                </CardContent>
+              </Link>
+            </Card>
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 
