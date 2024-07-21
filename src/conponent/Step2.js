@@ -7,7 +7,6 @@ import {
   MenuItem,
   Select,
   FormControl,
-  InputLabel,
   Typography,
   colors,
 } from "@mui/material";

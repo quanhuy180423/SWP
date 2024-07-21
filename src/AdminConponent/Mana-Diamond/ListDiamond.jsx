@@ -1,5 +1,16 @@
-import { useState, useEffect } from "react";
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, colors, IconButton } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    useTheme,
+    colors,
+    IconButton,
+} from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
@@ -7,6 +18,8 @@ import { deleteGemById, getAllGem } from "../../server/api";
 import Search from "../Header/Search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ListDiamond = () => {
     const [diamonds, setDiamonds] = useState([]);
@@ -26,11 +39,6 @@ const ListDiamond = () => {
         getListDiamonds();
     }, []);
 
-    const handleView = (id) => {
-        console.log("View diamond with ID:", id);
-        // Bạn có thể thêm logic để điều hướng tới trang chi tiết viên kim cương
-    };
-
     const handleDelete = (GemId) => {
         setDiamondToDelete(GemId);
         setDeleteDialogOpen(true);
@@ -39,30 +47,33 @@ const ListDiamond = () => {
     const confirmDelete = () => {
         deleteGemById(diamondToDelete)
             .then(() => {
-                setDiamonds(diamonds.filter(diamond => diamond.GemId !== diamondToDelete));
+                setDiamonds(diamonds.filter((diamond) => diamond.GemId !== diamondToDelete));
                 setDeleteDialogOpen(false);
-                alert('Diamond deleted successfully');
+                toast.success("Diamond deleted successfully");
             })
-            .catch(error => console.error('Error deleting diamond:', error));
+            .catch((error) => {
+                console.error("Error deleting diamond:", error);
+                toast.error(`Error deleting diamond: Maybe ${error.response.data} in any product.`);
+            });
     };
 
     const columns = [
-        { field: 'GemId', headerName: 'ID' },
-        { field: 'Name', headerName: 'Name', width: 150 },
-        { field: 'Color', headerName: 'Color', width: 150 },
-        { field: 'CaraWeight', headerName: 'Cara Weight', width: 150 },
-        { field: 'Clarity', headerName: 'Clarity', width: 150 },
-        { field: 'Cut', headerName: 'Cut', width: 150 },
-        { field: 'Size', headerName: 'Size', width: 100 },
+        { field: "GemId", headerName: "ID" },
+        { field: "Name", headerName: "Name", width: 150 },
+        { field: "Color", headerName: "Color", width: 150 },
+        { field: "CaraWeight", headerName: "Cara Weight", width: 150 },
+        { field: "Clarity", headerName: "Clarity", width: 150 },
+        { field: "Cut", headerName: "Cut", width: 150 },
+        { field: "Size", headerName: "Size", width: 100 },
         {
-            field: 'Actions',
-            headerName: 'Actions',
+            field: "Actions",
+            headerName: "Actions",
             width: 150,
             renderCell: (params) => (
                 <>
-                    <IconButton component={Link} to={`/admin/manage-diamond/editDiamond/${params.row.GemId}`}>
+                    {/* <IconButton component={Link} to={`/admin/manage-diamond/editDiamond/${params.row.GemId}`}>
                         <FontAwesomeIcon icon={faEdit} />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton onClick={() => handleDelete(params.row.GemId)}>
                         <FontAwesomeIcon icon={faTrash} />
                     </IconButton>
@@ -71,25 +82,25 @@ const ListDiamond = () => {
                     </IconButton>
                 </>
             ),
-        }
+        },
     ];
 
     const rows = diamonds;
 
     return (
         <Box>
-            <Header title='MANAGE DIAMONDS' subtitle='Managing the diamonds list' />
-            <Box display='flex' justifyContent='flex-end' m={2}>
-                <Search />
+            <Header title="MANAGE DIAMONDS" subtitle="Managing the diamonds list" />
+            <Box display="flex" justifyContent="flex-end" m={2}>
+
                 <Button
                     component={Link}
-                    to='/admin/manage-diamond/addDiamond'
+                    to="/admin/manage-diamond/addDiamond"
                     sx={{
                         backgroundColor: colors.blueGrey[300],
-                        color: 'white',
-                        '&:hover': {
-                            backgroundColor: 'green',
-                            color: 'white',
+                        color: "white",
+                        "&:hover": {
+                            backgroundColor: "green",
+                            color: "white",
                         },
                     }}
                     variant="contained"
@@ -98,22 +109,22 @@ const ListDiamond = () => {
                 </Button>
             </Box>
             <Box
-                m='40px 0 0 0'
-                height='75vh'
+                m="40px 0 0 0"
+                height="75vh"
                 sx={{
                     "& .MuiDataGrid-root": {
-                        border: '1px solid gray', // Add border here
-                        borderRadius: '10px', // Add border radius here
-                        overflow: 'hidden', // Ensure rounded corners by clipping the overflow
+                        border: "1px solid gray", // Add border here
+                        borderRadius: "10px", // Add border radius here
+                        overflow: "hidden", // Ensure rounded corners by clipping the overflow
                     },
                     "& .MuiDataGrid-cell": {
-                        borderBottom: 'none',
+                        borderBottom: "none",
                     },
                     "& .MuiDataGrid-virtualScroller": {
                         backgroundColor: colors.blue[50],
                     },
                     "& .MuiDataGrid-footerContainer": {
-                        borderTop: 'none',
+                        borderTop: "none",
                         backgroundColor: theme.palette.grey[300],
                     },
                     "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
@@ -140,6 +151,7 @@ const ListDiamond = () => {
                     <Button onClick={confirmDelete} color="secondary">Delete</Button>
                 </DialogActions>
             </Dialog>
+            <ToastContainer />
         </Box>
     );
 };

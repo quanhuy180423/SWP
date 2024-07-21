@@ -44,6 +44,9 @@ import EditProduct from "./AdminConponent/Mana-Product/EditProduct";
 import Material from "./page/Material";
 import PrivacyPolicy from "./conponent/PrivacyPolicy";
 import PaymentMethods from "./conponent/PaymentMethod";
+import RETURNPOLICY from "./conponent/RETURNPOLICY";
+import OrderingGuide from "./conponent/OrderingGuide";
+import EditBlog from "./AdminConponent/Mana-Blogs/EditBlogs";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -64,6 +67,8 @@ const App = () => {
             <Route path="/Jewelry" element={<JewelryPage />} />
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
             <Route path="/PaymentMethod" element={<PaymentMethods />} />
+            <Route path="/RETURNPOLICY" element={<RETURNPOLICY />} />
+            <Route path="/OrderingGuide" element={<OrderingGuide />} />
             {user !== null ? (
               <>
                 <Route path="/cart" element={<Cart />} />
@@ -104,6 +109,10 @@ const App = () => {
               )}
               <Route path="manage-blogs" element={<ListBlogs />} />
               <Route path="manage-blogs/addBlog" element={<AddBlogs />} />
+              <Route
+                path="manage-blogs/editBlog/:BlogId"
+                element={<EditBlog />}
+              />
 
               {/* Material */}
               <Route path="manage-material" element={<ListMaterial />} />

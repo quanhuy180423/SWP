@@ -108,7 +108,7 @@ const Body = () => {
           </Button>
         </Box>
         <Box display="flex" justifyContent="center" mt={4}>
-          <Box width="83%">
+          <Box width="100%">
             <hr className="my-4 border-t-2 border-gray-300" />
           </Box>
         </Box>
@@ -170,7 +170,6 @@ const Body = () => {
           <hr className="my-4 border-t-2 border-gray-300" />
         </Box>
       </Box>
-
       <Container>
         {categories.map((categoryName) =>
           renderProductsByCategoryName(categoryName)

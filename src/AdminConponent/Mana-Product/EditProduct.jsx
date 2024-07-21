@@ -96,7 +96,7 @@ function EditProduct() {
             updateProductById({ ...formData, ProductId })
                 .then(() => {
                     alert('Product updated successfully');
-                    navigate('/admin');
+                    navigate('/admin/manage-product');
                 })
                 .catch(error => {
                     console.error('Error updating product:', error);

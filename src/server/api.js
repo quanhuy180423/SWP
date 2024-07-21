@@ -117,14 +117,14 @@ export const deleteMaterial = (MaterialId) =>
 
 // Hàm lấy Blogs
 export const getAllBlogs = () => axios.get(`${API_URL}/getAllBlogs`);
-export const getBlogsById = (MaterialId) =>
-  axios.get(`${API_URL}/getBlogById?MaterialId=${MaterialId}`);
+export const getBlogsById = (BlogId) =>
+  axios.get(`${API_URL}/getBlogById?BlogId=${BlogId}`);
 export const insertBlogs = (blogs) =>
   axios.post(`${API_URL}/insertBlog`, blogs);
-export const updateBlogs = (MaterialId, category) =>
-  axios.put(`${API_URL}/updateBlogById`, { MaterialId, ...category });
-export const deleteBlogs = (blogId) =>
-  axios.delete(`${API_URL}/deleteBlogById`, { data: { blogId } });
+export const updateBlogs = (blog) =>
+  axios.put(`${API_URL}/updateBlogById`, blog);
+export const deleteBlogs = (BlogId) =>
+  axios.delete(`${API_URL}/deleteBlogById`, { data: { BlogId } });
 
 // Hàm lấy Diamond
 export const getAllGem = () => axios.get(`${API_URL}/getAllGem`);

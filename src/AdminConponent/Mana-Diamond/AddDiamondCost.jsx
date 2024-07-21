@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TextField, Button, Box, Grid, Alert } from '@mui/material';
-import { insertCostGem } from "../../server/api";  // Make sure to update the API function accordingly
+import { insertCostGem } from "../../server/api";
 
 function AddDiamondCost() {
-    const { GemId } = useParams(); // Get the GemId from the URL parameters
+    const { GemId } = useParams();
     const [formData, setFormData] = useState({
         PurchasePrice: '',
         Price: '',
-        GemId: GemId || '', // Initialize GemId with the value from the URL or an empty string
+        GemId: GemId || '',
     });
     const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        setFormData((prev) => ({ ...prev, GemId: GemId })); // Update GemId if it changes
+        setFormData((prev) => ({ ...prev, GemId: GemId }));
         console.log(GemId);
     }, [GemId]);
 
@@ -31,7 +31,13 @@ function AddDiamondCost() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validateForm()) {
-            insertCostGem(formData)  // Make sure to update the API function accordingly
+            const cleanFormData = {
+                ...formData,
+                PurchasePrice: formData.PurchasePrice.replace(/\./g, ''),
+                Price: formData.Price.replace(/\./g, '')
+            };
+
+            insertCostGem(cleanFormData)
                 .then(() => {
                     alert('Cost Gem added successfully');
                     navigate('/admin/manage-diamond');
@@ -46,8 +52,16 @@ function AddDiamondCost() {
         }
     };
 
+    const formatNumber = (number) => {
+        return number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        const rawValue = value.replace(/[^\d]/g, ""); // Remove any non-numeric characters
+        const formattedValue = formatNumber(rawValue); // Format the number with dots
+
+        setFormData({ ...formData, [name]: formattedValue });
     };
 
     return (

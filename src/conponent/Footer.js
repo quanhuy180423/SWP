@@ -51,9 +51,15 @@ const Footer = () => {
               Jewelry
             </Typography>
             <List>
-              <ListItem className="text-gray-600">Ring</ListItem>
-              <ListItem className="mt-2 text-gray-600">Necklace</ListItem>
-              <ListItem className="mt-2 text-gray-600">Bracelet</ListItem>
+              <ListItem className="text-gray-600">
+                <Link to={`/jewelry?CategoryName=Rings`}>Ring</Link>
+              </ListItem>
+              <ListItem className="mt-2 text-gray-600">
+                <Link to={`/jewelry?CategoryName=Necklaces`}>Necklace</Link>
+              </ListItem>
+              <ListItem className="mt-2 text-gray-600">
+                <Link to={`/jewelry?CategoryName=Bracelets`}>Bracelet</Link>
+              </ListItem>
             </List>
           </div>
 
@@ -73,13 +79,14 @@ const Footer = () => {
 
           <div className="w-1/5">
             <Typography variant="h6" className="text-lg text-gray-800 mb-2">
-              Customer support
+              Customer Service
             </Typography>
             <List>
-              <ListItem className="text-gray-600">Góp ý</ListItem>
-              <ListItem className="mt-2 text-gray-600">Ordering guide</ListItem>
+              <ListItem className="text-gray-600">
+                <Link to="/RETURNPOLICY">Return Policy</Link>
+              </ListItem>
               <ListItem className="mt-2 text-gray-600">
-                Instructions for checking orders
+                <Link to={"/OrderingGuide"}>Ordering guide</Link>
               </ListItem>
             </List>
           </div>

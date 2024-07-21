@@ -15,8 +15,13 @@ const OrderDetailPage = () => {
     const [isUpdatePriceOpen, setIsUpdatePriceOpen] = useState(false);
     const [isUpdateImageOpen, setIsUpdateImageOpen] = useState(false);
     const [newPrice, setNewPrice] = useState('');
+    const [calculatedProductCost, setCalculatedProductCost] = useState(0);
     const [imageFiles, setImageFiles] = useState([]);
     const [errors, setErrors] = useState({});
+
+    const formatNumber = (number) => {
+        return new Intl.NumberFormat('vi-VN').format(number);
+    };
 
     useEffect(() => {
         const fetchOrderDetail = async () => {
@@ -35,6 +40,8 @@ const OrderDetailPage = () => {
         try {
             const response = await getProductById(ProductId);
             setProductDetail(response.data);
+            const cost = response.data.MaterialCost * response.data.QuantityMaterial + response.data.GemCost;
+            setCalculatedProductCost(cost);
             setIsPopupOpen(true);
         } catch (error) {
             console.error('Error fetching product detail:', error);
@@ -47,21 +54,28 @@ const OrderDetailPage = () => {
 
     const handleUpdatePrice = () => {
         setIsUpdatePriceOpen(true);
+        setNewPrice(productDetail.ProductCost); // Set default value to current product cost
     };
 
     const handlePriceChange = (event) => {
-        setNewPrice(event.target.value);
+        const value = event.target.value.replace(/\./g, ''); // Remove existing dots
+        setNewPrice(value);
     };
 
     const handleSavePrice = async () => {
         if (newPrice && productDetail) {
-            try {
-                const updatedProduct = { ...productDetail, ProductCost: newPrice };
-                await updateProductById(updatedProduct);
-                setProductDetail(updatedProduct);
-                setIsUpdatePriceOpen(false);
-            } catch (error) {
-                console.error('Error updating product price:', error);
+            const numericPrice = parseFloat(newPrice.replace(/\./g, '')); // Convert formatted string back to number
+            if (numericPrice > calculatedProductCost) {
+                try {
+                    const updatedProduct = { ...productDetail, ProductCost: numericPrice };
+                    await updateProductById(updatedProduct);
+                    setProductDetail(updatedProduct);
+                    setIsUpdatePriceOpen(false);
+                } catch (error) {
+                    console.error('Error updating product price:', error);
+                }
+            } else {
+                setErrors({ price: 'The new price must be greater than the calculated product cost.' });
             }
         }
     };
@@ -99,10 +113,7 @@ const OrderDetailPage = () => {
             {orderDetail.length > 0 ? (
                 orderDetail.map((orderdetail) => (
                     <Box mb={3} key={orderdetail.OrderDetailId}>
-
-
                         <Box mt={2} sx={{ display: 'flex', justifyContent: 'end', marginBottom: '20px' }}>
-
                             <Button variant="contained" color="primary" onClick={() => handleProductDetail(orderdetail.ProductId)}>
                                 View Product Details
                             </Button>
@@ -149,13 +160,21 @@ const OrderDetailPage = () => {
                                                 ) : key === 'Description' ? (
                                                     <div dangerouslySetInnerHTML={{ __html: value }} />
                                                 ) : key === 'ProductCost' ? (
-                                                    <strong>{value}</strong>
+                                                    <strong>{formatNumber(value)} đ</strong>
+                                                ) : key === 'MaterialCost' ? (
+                                                    <strong>{formatNumber(value)} đ</strong>
+                                                ) : key === 'GemCost' ? (
+                                                    <strong>{formatNumber(value)} đ</strong>
                                                 ) : (
                                                     value
                                                 )}
                                             </TableCell>
                                         </TableRow>
                                     ))}
+                                    <TableRow>
+                                        <TableCell variant="head"><strong>Calculated Product Cost</strong></TableCell>
+                                        <TableCell>{formatNumber(calculatedProductCost)}</TableCell>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>
@@ -175,14 +194,16 @@ const OrderDetailPage = () => {
             <Dialog open={isUpdatePriceOpen} onClose={() => setIsUpdatePriceOpen(false)} maxWidth="sm" fullWidth>
                 <DialogTitle>Update Price</DialogTitle>
                 <DialogContent>
+                    <Typography variant="body1">Calculated Product Cost: {formatNumber(calculatedProductCost)}</Typography>
                     <TextField
                         label="New Price"
-                        value={newPrice}
+                        value={formatNumber(newPrice)}
                         onChange={handlePriceChange}
                         fullWidth
                         variant="outlined"
                         margin="normal"
                     />
+                    {errors.price && <Typography color="error">{errors.price}</Typography>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleSavePrice} color="primary">Save</Button>
@@ -194,6 +215,7 @@ const OrderDetailPage = () => {
                 <DialogTitle>Update Image</DialogTitle>
                 <DialogContent>
                     <ImageUpload orderId={OrderId} visible={true} onImagesUpload={handleImagesUpload} />
+                    {errors.Image && <Typography color="error">{errors.Image}</Typography>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleSaveImage} color="primary">Save</Button>

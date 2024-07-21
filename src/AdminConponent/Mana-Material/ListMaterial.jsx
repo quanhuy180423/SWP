@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-import { deleteMaterial, getAllMaterial, getAllCostMaterial } from "../../server/api";  // Ensure getCostMaterial is correctly imported
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, IconButton, colors, Snackbar } from "@mui/material";
+import { deleteMaterial, getAllMaterial, getAllCostMaterial } from "../../server/api";
+import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, IconButton, colors } from "@mui/material";
 import Header from "../Header/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Search from "../Header/Search";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the Toastify CSS
 
 const ListMaterial = () => {
     const [materials, setMaterials] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [materialToDelete, setMaterialToDelete] = useState(null);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -52,12 +53,8 @@ const ListMaterial = () => {
             console.log(combinedData);
         } catch (error) {
             console.error(error);
+            toast.error('Error fetching materials');
         }
-    };
-
-
-    const handleEdit = (MaterialId) => {
-        console.log("Edit material with ID:", MaterialId);
     };
 
     const handleDelete = (MaterialId) => {
@@ -70,16 +67,16 @@ const ListMaterial = () => {
             await deleteMaterial(materialToDelete);
             fetchMaterials(); // Fetch data again after successful deletion
             setDeleteDialogOpen(false);
-            setSnackbarOpen(true); // Show success message
+            toast.success('Material deleted successfully');
         } catch (error) {
             console.error('Error deleting material:', error);
+            toast.error('Error deleting material');
         }
     };
 
     const handleAddCostMaterial = (MaterialId) => {
         navigate(`/admin/manage-material/addCostMaterial/${MaterialId}`);
     };
-
 
     const columns = [
         { field: 'MaterialId', headerName: 'ID', width: 70 },
@@ -93,30 +90,23 @@ const ListMaterial = () => {
             width: 250,
             renderCell: (params) => (
                 <Box display='flex' justifyContent='space-around'>
-                    <IconButton component={Link} to='/admin/manage-material/editMaterial' >
-                        <FontAwesomeIcon icon={faEdit} />
-                    </IconButton>
                     <IconButton onClick={() => handleDelete(params.row.MaterialId)}>
                         <FontAwesomeIcon icon={faTrash} />
                     </IconButton>
                     <IconButton onClick={() => handleAddCostMaterial(params.row.MaterialId)}>
-                        <FontAwesomeIcon icon={faPlus} /> {/* Add appropriate icon for adding cost material */}
+                        <FontAwesomeIcon icon={faPlus} />
                     </IconButton>
                 </Box>
             ),
         }
     ];
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
-
     return (
         <>
             <Box>
                 <Header title='MANAGE MATERIALS' subtitle='Managing the materials' />
                 <Box display='flex' justifyContent='flex-end' m={2}>
-                    <Search />
+
                     <Button component={Link} to='AddMaterial'
                         sx={{
                             backgroundColor: colors.blue[300],
@@ -138,9 +128,9 @@ const ListMaterial = () => {
                     width='100%'
                     sx={{
                         "& .MuiDataGrid-root": {
-                            border: '1px solid gray', // Add border here
-                            borderRadius: '10px', // Add border radius here
-                            overflow: 'hidden', // Ensure rounded corners by clipping the overflow
+                            border: '1px solid gray',
+                            borderRadius: '10px',
+                            overflow: 'hidden',
                         },
                         "& .MuiDataGrid-cell": {
                             borderBottom: 'none',
@@ -176,14 +166,7 @@ const ListMaterial = () => {
                     <Button onClick={confirmDelete} color="secondary">Delete</Button>
                 </DialogActions>
             </Dialog>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-
-                onClose={handleSnackbarClose}
-                message="Material deleted successfully"
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            />
+            <ToastContainer />
         </>
     );
 }

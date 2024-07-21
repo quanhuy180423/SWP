@@ -108,6 +108,10 @@ const Product = () => {
     );
   }
 
+  const formatNumber = (number) => {
+    return Number(number).toLocaleString();
+  };
+
   return (
     <Container maxWidth="lg">
       <Box width="100%" display="flex" justifyContent="end">
@@ -159,7 +163,7 @@ const Product = () => {
               {product.Name}
             </Typography>
             <Typography variant="h5" component="div" color="error" gutterBottom>
-              {product.ProductCost}₫
+              {formatNumber(product.ProductCost)}₫
             </Typography>
             {product.CategoryName === "Rings" ? (
               <FormControl fullWidth margin="normal">
@@ -249,7 +253,7 @@ const Product = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Price</TableCell>
-                  <TableCell>{product.ProductCost}₫</TableCell>
+                  <TableCell>{formatNumber(product.ProductCost)}₫</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Material</TableCell>
@@ -281,7 +285,7 @@ const Product = () => {
                   title={relatedProduct.Name}
                   material={relatedProduct.MaterialName}
                   gem={relatedProduct.GemName}
-                  productCost={relatedProduct.ProductCost}
+                  productCost={formatNumber(relatedProduct.ProductCost)}
                 />
               </Grid>
             ))}

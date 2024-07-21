@@ -38,7 +38,7 @@ function AddAccount() {
             registerUser(formData)
                 .then(() => {
                     alert('Account added successfully');
-                    navigate('/admin');
+                    navigate('/admin/manage-account/staff');
                 })
                 .catch(error => {
                     if (error.response && error.response.status === 400) {

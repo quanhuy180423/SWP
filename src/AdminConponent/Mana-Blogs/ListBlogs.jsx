@@ -1,51 +1,51 @@
 import { useState, useEffect } from "react";
-
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, colors } from "@mui/material";
-import Header from "../Header/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import ActionButtons from "../Mana-Account/ActionButtons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Header from "../Header/Header";
 import { deleteBlogs, getAllBlogs } from "../../server/api";
-import Search from "../Header/Search";
-
+import ActionButtons from "../Mana-Account/ActionButtons";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the Toastify CSS
 
 const ListBlogs = () => {
     const [blogs, setBlogs] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [BlogsToDelete, setBlogsToDelete] = useState(null);
     const theme = useTheme();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getListBlogs = async () => {
             try {
-
                 const response = await getAllBlogs();
                 setBlogs(response.data);
-
             } catch (error) {
                 console.error(error);
             }
-        }
+        };
         getListBlogs();
     }, []);
 
-    const handleEdit = (id) => {
-        console.log("Edit user with ID:", id);
+    const handleEdit = (BlogId) => {
+        navigate(`/admin/manage-blogs/editBlog/${BlogId}`);
     };
 
-    const handleDelete = (blogId) => {
-        setBlogsToDelete(blogId);
+    const handleDelete = (BlogId) => {
+        setBlogsToDelete(BlogId);
         setDeleteDialogOpen(true);
     };
 
-    const confirmDelete = () => {
-        deleteBlogs(BlogsToDelete)
-            .then(() => {
-                setBlogs(blogs.filter(blog => blog.BlogID !== BlogsToDelete));
-                setDeleteDialogOpen(false);
-                alert('User deleted successfully');
-            })
-            .catch(error => console.error('Error deleting user:', error));
+    const confirmDelete = async () => {
+        try {
+            await deleteBlogs(BlogsToDelete);
+            setBlogs(blogs.filter(blog => blog.BlogId !== BlogsToDelete));
+            setDeleteDialogOpen(false);
+            toast.success('Blog deleted successfully');
+        } catch (error) {
+            console.error('Error deleting blog:', error);
+            toast.error('Error deleting blog');
+        }
     };
 
     const columns = [
@@ -60,8 +60,8 @@ const ListBlogs = () => {
             width: 150,
             renderCell: (params) => (
                 <ActionButtons
-                    onEdit={() => handleEdit(params.row.UserID)}
-                    onDelete={() => handleDelete(params.row.UserID)}
+                    onEdit={() => handleEdit(params.row.BlogId)}
+                    onDelete={() => handleDelete(params.row.BlogId)}
                 />
             ),
         }
@@ -73,7 +73,6 @@ const ListBlogs = () => {
         <Box>
             <Header title='MANAGE BLOGS' subtitle='Managing the blogs list' />
             <Box display='flex' justifyContent='flex-end' m={2}>
-                <Search />
                 <Button component={Link} to={'/admin/manage-blogs/addBlog'}
                     sx={{
                         backgroundColor: colors.blueGrey[300],
@@ -93,9 +92,9 @@ const ListBlogs = () => {
                 height='75vh'
                 sx={{
                     "& .MuiDataGrid-root": {
-                        border: '1px solid gray', // Add border here
-                        borderRadius: '10px', // Add border radius here
-                        overflow: 'hidden', // Ensure rounded corners by clipping the overflow
+                        border: '1px solid gray',
+                        borderRadius: '10px',
+                        overflow: 'hidden',
                     },
                     "& .MuiDataGrid-cell": {
                         borderBottom: 'none',
@@ -123,7 +122,7 @@ const ListBlogs = () => {
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete this user?
+                        Are you sure you want to delete this blog?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -131,6 +130,7 @@ const ListBlogs = () => {
                     <Button onClick={confirmDelete} color="secondary">Delete</Button>
                 </DialogActions>
             </Dialog>
+            <ToastContainer />
         </Box>
     );
 };

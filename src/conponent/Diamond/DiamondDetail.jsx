@@ -17,14 +17,13 @@ const DiamondDetail = () => {
     const [gem, setGem] = useState({});
     const [loading, setLoading] = useState(true);
     const API_URL = "http://localhost:8090/test/getGemAndPriceById";
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
     const getDiamond = async () => {
         try {
             const response = await axios.get(`${API_URL}?GemId=${GemId}`);
             console.log('API Response:', response.data); // Log dữ liệu trả về từ API để kiểm tra
-
-            // Xử lý trường hợp response.data là một mảng
-            setGem(response.data)
+            setGem(response.data);
         } catch (error) {
             console.error("Error fetching diamond data:", error);
         } finally {
@@ -49,6 +48,9 @@ const DiamondDetail = () => {
         );
     }
 
+    // Format price with thousands separators
+    const formattedPrice = Number(gem.Price).toLocaleString();
+
     return (
         <>
             <Box width='100%' display='flex' justifyContent='start' marginLeft='150px'>
@@ -64,7 +66,6 @@ const DiamondDetail = () => {
                 bgcolor="gray.100"
                 p={3}
             >
-
                 <Grid container spacing={3} maxWidth="lg">
                     <Grid item xs={12} sm={4}>
                         <Paper elevation={3}
@@ -74,7 +75,6 @@ const DiamondDetail = () => {
                             }}
                         >
                             <Box p={3}
-
                                 sx={{
                                     height: '300px',
                                     width: '300px',
@@ -94,7 +94,7 @@ const DiamondDetail = () => {
                                 <Typography variant="body1"
                                     style={{ color: colors.red[600], fontSize: '25px', fontWeight: 'bold' }}
                                     gutterBottom>
-                                    {gem.Price}₫
+                                    {formattedPrice}₫
                                 </Typography>
                                 <Typography variant="body1" gutterBottom>
                                     <strong>Color:</strong> {gem.Color}
@@ -120,7 +120,6 @@ const DiamondDetail = () => {
                 </Grid>
             </Box>
         </>
-
     );
 };
 

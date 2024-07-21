@@ -1,24 +1,51 @@
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { TextField, Button, Box, Grid, Alert, InputLabel } from '@mui/material';
-import { insertBlogs } from "../../server/api"; // Assuming you have an API function for adding blogs
+import { getBlogsById, updateBlogs } from "../../server/api"; // Assuming you have an API function for fetching and updating blogs
 import { Editor } from '@tinymce/tinymce-react';
 import handleUploadImages from '../../firebase/HandleUploadToFirebase';
 
-function AddBlogs() {
-    // Parse the user object from localStorage
+function EditBlog() {
+    const { BlogId } = useParams();
     const user = JSON.parse(localStorage.getItem("user") || '{}');
-
     const [formData, setFormData] = useState({
-        UserId: user.Id || '',
+        UserId: '',
+        BlogId: '',
         Title: '',
         Content: '',
-        Image: ','
+        Image: '',
     });
     const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     const editorRef = useRef(null);
+    const [existingImages, setExistingImages] = useState([]);
+
+    useEffect(() => {
+        const fetchBlog = async () => {
+            try {
+                const response = await getBlogsById(BlogId);
+                const blogData = response.data;
+                setFormData({
+                    UserId: user.Id,
+                    BlogId: blogData.BlogId,
+                    Title: blogData.Title,
+                    Content: blogData.Content,
+                    Image: '', // Initialize as empty, handle existing images separately
+                });
+                console.log(formData.UserId)
+                setExistingImages(blogData.Image); // Assuming blogData.Image is an array of URLs
+                if (editorRef.current) {
+                    editorRef.current.setContent(blogData.Content);
+                }
+            } catch (error) {
+                console.error('Error fetching blog data:', error);
+                setErrorMessage('Failed to fetch blog data');
+            }
+        };
+
+        fetchBlog();
+    }, [BlogId]);
 
     const validateForm = () => {
         let tempErrors = {};
@@ -29,30 +56,25 @@ function AddBlogs() {
     };
 
     const handleEditorChange = (content, editor) => {
-        if (formData) {
-            setFormData({ ...formData, Content: content });
-        }
+        setFormData({ ...formData, Content: content });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
-        console.log(user.Id)
         if (validateForm()) {
-            // Assuming you have a function addBlog in your server/api module
-            if (formData.Image.length > 0) {
-                const imageUrls = await handleUploadImages(formData.Image);
-                formData.Image = imageUrls;
+            try {
+                if (formData.Image) {
+                    const imageUrls = await handleUploadImages(formData.Image);
+                    formData.Image = imageUrls;
+                }
+                console.log(formData)
+                await updateBlogs(formData);
+                alert('Blog updated successfully');
+                navigate('/admin/manage-blogs');
+            } catch (error) {
+                console.error('Error updating blog:', error);
+                setErrorMessage('Failed to update blog');
             }
-            insertBlogs(formData)
-                .then(() => {
-                    alert('Blog added successfully');
-                    navigate('/admin/manage-blogs');
-                })
-                .catch(error => {
-                    console.error('Error adding blog:', error);
-                    setErrorMessage('Failed to add blog');
-                });
         }
     };
 
@@ -83,6 +105,14 @@ function AddBlogs() {
                 <Grid item xs={12} sm={6} md={4}>
                     <Box>
                         <InputLabel>Images</InputLabel>
+                        {/* {existingImages.length > 0 && (
+                            <div>
+                                <p>Existing Images:</p>
+                                {existingImages.map((image, index) => (
+                                    <img key={index} src={image} alt={`Existing ${index + 1}`} style={{ maxWidth: '100px', marginRight: '10px' }} />
+                                ))}
+                            </div>
+                        )} */}
                         <input
                             type="file"
                             name="Images"
@@ -96,6 +126,7 @@ function AddBlogs() {
                 <Grid item xs={12}>
                     <Editor
                         apiKey='cy6nfm793cpsebdngtbam1krs668s4g1qgwmc0otd5e4cmlc'
+                        initialValue={formData.Content}
                         init={{
                             plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofDescriptions footnotes mergetags autocorrect typography inlinecss markdown',
                             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
@@ -112,9 +143,9 @@ function AddBlogs() {
                     />
                 </Grid>
             </Grid>
-            <Button type="submit" variant="contained" style={{ marginTop: 20 }}>Add Blog</Button>
+            <Button type="submit" variant="contained" style={{ marginTop: 20 }}>Update Blog</Button>
         </Box>
     );
 }
 
-export default AddBlogs;
+export default EditBlog;

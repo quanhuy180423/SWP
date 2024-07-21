@@ -11,7 +11,9 @@ const OrderDetailUser = () => {
     const [productDetail, setProductDetail] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const { addToCart, clearCart } = useContext(CartContext);
-
+    const formatNumber = (number) => {
+        return new Intl.NumberFormat('vi-VN').format(number);
+    };
     useEffect(() => {
         const fetchOrderDetail = async () => {
             try {
@@ -162,7 +164,11 @@ const OrderDetailUser = () => {
                                                 ) : key === 'Description' ? (
                                                     <div dangerouslySetInnerHTML={{ __html: value }} />
                                                 ) : key === 'ProductCost' ? (
-                                                    <strong className='text-red-600'>{value}</strong>
+                                                    <strong style={{ color: 'red' }}>{formatNumber(value)} đ</strong>
+                                                ) : key === 'MaterialCost' ? (
+                                                    <strong>{formatNumber(value)} đ</strong>
+                                                ) : key === 'GemCost' ? (
+                                                    <strong>{formatNumber(value)} đ</strong>
                                                 ) : (
                                                     value
                                                 )}

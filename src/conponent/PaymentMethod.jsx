@@ -4,6 +4,29 @@ import { Container, Typography, Box } from '@mui/material';
 const PaymentMethods = () => {
     return (
         <Container maxWidth="md" style={{ marginTop: '20px' }}>
+
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mt={4}
+                mb={4}
+                borderColor="2px sold"
+                bgcolor="lightgreen"
+                height="60px"
+                borderRadius='15px'
+            >
+                <Typography fontWeight="bold" fontSize="20px">
+                    Jewelry production order price = [Price of material * Weight] + Wage +
+                    Price of Gem (if any)
+                </Typography>
+
+            </Box>
+            <Box display="flex" justifyContent="center" mt={4} mb={4}>
+                <Box width="83%">
+                    <hr className="my-4 border-t-2 border-gray-300" />
+                </Box>
+            </Box>
             <Typography variant="h4" gutterBottom>
                 Payment Methods
             </Typography>

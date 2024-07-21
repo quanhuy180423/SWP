@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { deleteProduct, getAllProducts } from "../../server/api";
 import { Box, Button, colors, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useTheme, IconButton } from "@mui/material";
 import Header from "../Header/Header";
@@ -6,6 +6,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ListProduct = () => {
     const [products, setProducts] = useState([]);
@@ -13,6 +15,7 @@ const ListProduct = () => {
     const [productToDelete, setProductToDelete] = useState(null);
     const theme = useTheme();
     const navigate = useNavigate();
+
     useEffect(() => {
         const getListProduct = async () => {
             try {
@@ -33,7 +36,6 @@ const ListProduct = () => {
     const handleEdit = (ProductId) => {
         console.log(ProductId)
         navigate(`manage-product/Edit-Product/${ProductId}`)
-
     };
 
     const handleDelete = (ProductId) => {
@@ -44,13 +46,13 @@ const ListProduct = () => {
     const confirmDelete = async () => {
         console.log(productToDelete)
         try {
-
             await deleteProduct(productToDelete);
             setProducts(products.filter(product => product.ProductId !== productToDelete));
             setDeleteDialogOpen(false);
-            alert('Product deleted successfully');
+            toast.success('Product deleted successfully');
         } catch (error) {
             console.error('Error deleting product:', error);
+            toast.error(`Error deleting product: ${error.response.data}`);
         }
     };
 
@@ -72,13 +74,12 @@ const ListProduct = () => {
             renderCell: (params) => (
                 <>
                     <Box display='flex' justifyContent='space-around'>
-                        <IconButton component={Link} to={`/admin/manage-product/Edit-Product/${params.row.ProductId}`} >
+                        <IconButton component={Link} to={`/admin/manage-product/Edit-Product/${params.row.ProductId}`}>
                             <FontAwesomeIcon icon={faEdit} />
                         </IconButton>
                         <IconButton onClick={() => handleDelete(params.row.ProductId)}>
                             <FontAwesomeIcon icon={faTrash} />
                         </IconButton>
-
                     </Box>
                 </>
             ),
@@ -150,6 +151,7 @@ const ListProduct = () => {
                     <Button onClick={confirmDelete} color="secondary">Delete</Button>
                 </DialogActions>
             </Dialog>
+            <ToastContainer />
         </>
     );
 };

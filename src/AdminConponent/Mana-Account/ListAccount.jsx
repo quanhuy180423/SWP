@@ -5,8 +5,10 @@ import Header from "../Header/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faBriefcase, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Search from "../Header/Search";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the Toastify CSS
 
 const ListAccount = ({ role }) => {
     const [accounts, setAccount] = useState([]);
@@ -14,6 +16,7 @@ const ListAccount = ({ role }) => {
     const [staffToDelete, setStaffToDelete] = useState(null);
     const theme = useTheme();
     const navigate = useNavigate();
+    const userRole = localStorage.getItem('userRole'); // Retrieve user role from local storage
 
     useEffect(() => {
         const getListAccount = async () => {
@@ -47,13 +50,19 @@ const ListAccount = ({ role }) => {
     };
 
     const confirmDelete = async () => {
+        if (userRole !== '1') { // Check if the user has permission to delete
+            toast.error('You do not have permission to delete this account.');
+            return;
+        }
+
         try {
             await deleteUser(staffToDelete);
             setAccount(accounts.filter(account => account.UserId !== staffToDelete));
             setDeleteDialogOpen(false);
-            alert('User deleted successfully');
+            toast.success('User deleted successfully');
         } catch (error) {
             console.error('Error deleting user:', error);
+            toast.error('Error deleting user');
         }
     };
 
@@ -147,7 +156,7 @@ const ListAccount = ({ role }) => {
             <Box>
                 <Header title='MANAGE ACCOUNT' subtitle='Managing the account members' />
                 <Box display='flex' justifyContent='flex-end' m={2}>
-                    <Search />
+
                     <Button component={Link} to={'/admin/manage-account/addUser'}
                         sx={{
                             backgroundColor: colors.blueGrey[300],
@@ -192,7 +201,6 @@ const ListAccount = ({ role }) => {
                         getRowId={(row) => row.UserId}
                     />
                 </Box>
-
             </Box>
             <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                 <DialogTitle>Confirm Delete</DialogTitle>
@@ -206,6 +214,7 @@ const ListAccount = ({ role }) => {
                     <Button onClick={confirmDelete} color="secondary">Delete</Button>
                 </DialogActions>
             </Dialog>
+            <ToastContainer />
         </>
     );
 };

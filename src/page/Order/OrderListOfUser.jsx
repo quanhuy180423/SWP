@@ -251,7 +251,7 @@ const OrderListOfUser = () => {
                                                 color="secondary"
                                                 onClick={() => handleOpenDialog(order)}
                                             >
-                                                Choose method
+                                                Choose method Delivery
                                             </Button>
                                         )}
                                     </StyledTableCell>

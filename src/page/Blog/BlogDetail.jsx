@@ -19,6 +19,7 @@ const BlogDetail = () => {
     };
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         getBlog();
     }, [BlogId]);
 

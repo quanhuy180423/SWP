@@ -79,7 +79,7 @@ function AddProduct() {
                 }
                 await insertProduct(formData);
                 alert('Product added successfully');
-                navigate('/admin');
+                navigate('/admin/manage-product');
             } catch (error) {
                 console.error('Error adding product:', error);
                 setErrorMessage('Failed to add product');
